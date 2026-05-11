@@ -7,8 +7,8 @@ public class GridSystem : MonoBehaviour
     //TUTORIAL USED: https://youtu.be/ur1TeqxFtV4?si=Tv8Fm4t4xDZQ5gSf
     public GameObject objectToPlace;
     public float gridSize = 1f;
-    private GameObject ghostObject;
-    private HashSet<Vector3> occupiedPositions = new HashSet<Vector3>();
+    public GameObject ghostObject;
+    public HashSet<Vector3> occupiedPositions = new HashSet<Vector3>();
 
     void Start()
     {
@@ -22,6 +22,8 @@ public class GridSystem : MonoBehaviour
         {
             PlaceObject();
         }
+
+        //maybe add enums for different object types and use that to switch between them instead of a list of possible objects
     }
 
     void CreateGhostObject()
