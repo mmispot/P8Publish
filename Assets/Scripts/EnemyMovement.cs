@@ -12,12 +12,15 @@ public class EnemyMovement : MonoBehaviour
     public int heavyDamage = 20;
     public float lightAttackRange = 2f;
     public float heavyAttackRange = 3f;
+    public GameObject lightAttackPoint;
+    public GameObject heavyAttackPoint;
 
 
     public float speed = 1f;
     void Start()
     {
-
+        lightAttackPoint.SetActive(false);
+        heavyAttackPoint.SetActive(false);
     }
 
     void Update()
@@ -30,28 +33,45 @@ public class EnemyMovement : MonoBehaviour
                 speed * Time.deltaTime
                 );
         }
-    }
-
-    void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject.CompareTag("Player"))
+        if (targetPosition != null)
         {
-            EnemyHealth enemyHealth = other.gameObject.GetComponent<EnemyHealth>();
-            if (enemyHealth != null)
+            if (nextAllowedHitTime <= Time.time)
             {
-                if (Time.time >= nextAllowedHitTime)
+                if (Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position) <= heavyAttackRange)
                 {
-                    enemyHealth.TakeDamage(damage);
-                    nextAllowedHitTime = Time.time + lightCooldownTime;
-                }
-                else
-                {
-                    enemyHealth.TakeDamage(damage);
+                    TurnOnHeavyAttack();
+                    Invoke("TurnOffHeavyAttack", 0.5f);
                     nextAllowedHitTime = Time.time + heavyCooldownTime;
+                }
+                else if (Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position) <= lightAttackRange)
+                    {
+                    TurnOnLightAttack();
+                    Invoke("TurnOffLightAttack", 0.5f);
+                    nextAllowedHitTime = Time.time + lightCooldownTime;
                 }
             }
         }
+
     }
+
+    public void TurnOnLightAttack()
+    {
+        lightAttackPoint.SetActive(true);
+    }
+    public void TurnOffLightAttack()
+    {
+        lightAttackPoint.SetActive(false);
+    }
+
+    public void TurnOnHeavyAttack()
+    {
+        heavyAttackPoint.SetActive(true);
+    }
+    public void TurnOffHeavyAttack()
+    {
+        heavyAttackPoint.SetActive(false);
+    }
+
 
     private void Die()
     {
