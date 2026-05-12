@@ -20,31 +20,28 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         lightAttackPoint.SetActive(false);
-        heavyAttackPoint.SetActive(false);
     }
 
     void Update()
     {
         if (targetPosition != null)
         {
-            CapsuleObject.transform.position = Vector3.MoveTowards(
-                CapsuleObject.transform.position,
-                targetPosition.transform.position,
-                speed * Time.deltaTime
-                );
+            float distancetoPlayer = Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position);
+            if (distancetoPlayer > lightAttackRange)
+            {
+                    CapsuleObject.transform.position = Vector3.MoveTowards(
+                    CapsuleObject.transform.position,
+                    targetPosition.transform.position,
+                    speed * Time.deltaTime
+                    );
+            }
         }
         if (targetPosition != null)
         {
             if (nextAllowedHitTime <= Time.time)
             {
-                if (Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position) <= heavyAttackRange)
+                if (Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position) <= lightAttackRange)
                 {
-                    TurnOnHeavyAttack();
-                    Invoke("TurnOffHeavyAttack", 0.5f);
-                    nextAllowedHitTime = Time.time + heavyCooldownTime;
-                }
-                else if (Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position) <= lightAttackRange)
-                    {
                     TurnOnLightAttack();
                     Invoke("TurnOffLightAttack", 0.5f);
                     nextAllowedHitTime = Time.time + lightCooldownTime;
@@ -56,6 +53,7 @@ public class EnemyMovement : MonoBehaviour
 
     public void TurnOnLightAttack()
     {
+        //TurnOffHeavyAttack();
         lightAttackPoint.SetActive(true);
     }
     public void TurnOffLightAttack()
@@ -63,19 +61,9 @@ public class EnemyMovement : MonoBehaviour
         lightAttackPoint.SetActive(false);
     }
 
-    public void TurnOnHeavyAttack()
-    {
-        heavyAttackPoint.SetActive(true);
-    }
-    public void TurnOffHeavyAttack()
-    {
-        heavyAttackPoint.SetActive(false);
-    }
-
-
+            
     private void Die()
     {
         Destroy(gameObject);
     }
-
 }
