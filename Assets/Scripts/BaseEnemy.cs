@@ -6,14 +6,10 @@ public class EnemyMovement : MonoBehaviour
     public GameObject targetPosition;
     public int damage;
     public float lightCooldownTime = 1f;
-    public float heavyCooldownTime = 2f;
     public float nextAllowedHitTime = 0f;
     public int lightDamage = 10;
-    public int heavyDamage = 20;
     public float lightAttackRange = 2f;
-    public float heavyAttackRange = 3f;
     public GameObject lightAttackPoint;
-    public GameObject heavyAttackPoint;
 
 
     public float speed = 1f;
