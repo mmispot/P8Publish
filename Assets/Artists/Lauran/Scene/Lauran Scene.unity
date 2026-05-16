@@ -131,6 +131,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: KipschasPlaceholder
       objectReference: {fileID: 0}
+    - target: {fileID: 1912767306689111879, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 97fb047248683724a81ba5e75bb32edd, type: 2}
     - target: {fileID: 4570942057231514268, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.5
@@ -171,6 +175,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4804891326318213257, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7b35e278f2ced6e4984c35678349fe69, type: 2}
     - target: {fileID: 5126015034290468986, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -197,6 +205,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: KipschasPlaceholder (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1912767306689111879, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5500b6db514d4124a97c1d5c4a5a9c38, type: 2}
     - target: {fileID: 4570942057231514268, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.31
@@ -237,6 +249,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4804891326318213257, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7b35e278f2ced6e4984c35678349fe69, type: 2}
     - target: {fileID: 5126015034290468986, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -452,6 +468,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: KipschasPlaceholder (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1912767306689111879, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 5500b6db514d4124a97c1d5c4a5a9c38, type: 2}
     - target: {fileID: 4570942057231514268, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 4.06
@@ -492,6 +512,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4804891326318213257, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7b35e278f2ced6e4984c35678349fe69, type: 2}
     - target: {fileID: 5126015034290468986, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -601,6 +625,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: KipschasEyes_low
       objectReference: {fileID: 0}
+    - target: {fileID: 715606048371667558, guid: 976571f4c169f324ab272b8298926545, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7b35e278f2ced6e4984c35678349fe69, type: 2}
     - target: {fileID: 919132149155446097, guid: 976571f4c169f324ab272b8298926545, type: 3}
       propertyPath: m_Name
       value: Kipschas_low
