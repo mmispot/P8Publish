@@ -49,7 +49,6 @@ public class EnemyMovement : MonoBehaviour
 
     public void TurnOnLightAttack()
     {
-        //TurnOffHeavyAttack();
         lightAttackPoint.SetActive(true);
     }
     public void TurnOffLightAttack()
