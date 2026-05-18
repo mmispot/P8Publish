@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ItemGrid : MonoBehaviour
 {
-    // Tutorial used (partially): https://www.youtube.com/watch?v=2ajD1GDbEzA&t=452s
+    // Tutorial used: https://www.youtube.com/watch?v=2ajD1GDbEzA&t=452s
 
     const float tileSizeWidth = 64;
     const float tileSizeHeight = 64;
@@ -24,10 +24,17 @@ public class ItemGrid : MonoBehaviour
         Init(gridSizeWidth, gridSizeHeight);
 
         InventoryItem inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
-        PlaceItem(inventoryItem, 3, 2);
+        //PlaceItem(inventoryItem, 3, 2);
     }
 
-    private void Init(int width, int height)
+    public InventoryItem PickupItem(int x, int y) //haalt item van een grid en geeft die terug aan de itemcontroller
+    {
+        InventoryItem toReturn = inventoryItemSlot[x, y];
+        inventoryItemSlot[x, y] = null;
+        return toReturn;
+    }
+
+    private void Init(int width, int height) //maakt een 2D array aan voor de items en zet de grootte van het grid
     {
         inventoryItemSlot = new InventoryItem[width, height];
         Vector2 size = new Vector2(width * tileSizeWidth, height * tileSizeHeight);
@@ -37,7 +44,7 @@ public class ItemGrid : MonoBehaviour
     Vector2 positionOnGrid = new Vector2();
     Vector2Int tileGridPosition = new Vector2Int();
 
-    public Vector2Int GetTileGridPosition(Vector2 mousePosition)
+    public Vector2Int GetTileGridPosition(Vector2 mousePosition) //zet de positie van de muis om naar een positie op het grid
     {
         positionOnGrid.x = mousePosition.x - rectTransform.position.x;
         positionOnGrid.y = rectTransform.position.y - mousePosition.y;
@@ -48,15 +55,15 @@ public class ItemGrid : MonoBehaviour
         return tileGridPosition;
     }
 
-    public void PlaceItem(InventoryItem inventoryItem, int posX, int posY)
+    public void PlaceItem(InventoryItem inventoryItem, int posX, int posY) //plaatst een item op de grid en zet de positie in een 2d array om bij te houden wat occupied is en wat niet
     {
         RectTransform itemRectTransform = inventoryItem.GetComponent<RectTransform>();
-        itemRectTransform.SetParent(this.rectTransform);  // use this.rectTransform for the grid
+        itemRectTransform.SetParent(rectTransform);
         inventoryItemSlot[posX, posY] = inventoryItem;
 
         Vector2 position = new Vector2();
         position.x = posX * tileSizeWidth + tileSizeWidth / 2;
-        position.y = -(posY * tileSizeHeight + tileSizeHeight / 2); // negative for Unity's Y-down UI
+        position.y = -(posY * tileSizeHeight + tileSizeHeight / 2);
 
         itemRectTransform.localPosition = position;
     }
