@@ -14,22 +14,19 @@ public class GridController : MonoBehaviour
 
     private void Update()
     {
+        DragItem();
         if (selectedItemGrid == null) { return; }
 
-        if (selectedItemGrid != null)
+        //TEMPORARY RANDOM ITEM FUNCTION
+        if (Input.GetKeyDown(KeyCode.Q) && selectedItem == null)
         {
-            DragItem();
+            CreateRandomItem();
+        }
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                LMBPress();
-            }
 
-            //TEMPORARY RANDOM ITEM FUNCTION
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                CreateRandomItem();
-            }
+        if (Input.GetMouseButtonDown(0))
+        {
+            LMBPress();
         }
     }
 
@@ -37,6 +34,7 @@ public class GridController : MonoBehaviour
     {
         InventoryItem inventoryItem = Instantiate(itemPrefab).GetComponent<InventoryItem>();
         selectedItem = inventoryItem;
+
         rectTransform = inventoryItem.GetComponent<RectTransform>();
         rectTransform.SetParent(canvasTransform);
 

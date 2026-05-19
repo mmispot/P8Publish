@@ -12,7 +12,7 @@ public class GridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public GameObject mainCamera;
 
-    private void Update()
+    private void Awake()
     {
         gridController = mainCamera.GetComponent<GridController>();
         itemGrid = GetComponent<ItemGrid>();
