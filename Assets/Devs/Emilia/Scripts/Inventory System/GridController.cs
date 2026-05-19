@@ -12,8 +12,8 @@ public class GridController : MonoBehaviour
         if (selectedItem != null)
         {
             rectTransform.position = Input.mousePosition;
-        }    
-        
+        }
+
         if (selectedItemGrid == null) { return; }
 
         if (Input.GetMouseButtonDown(0))
@@ -23,6 +23,7 @@ public class GridController : MonoBehaviour
             if (selectedItem == null)
             {
                 selectedItem = selectedItemGrid.PickupItem(tileGridPosition.x, tileGridPosition.y);
+
                 if (selectedItem != null)
                 {
                     rectTransform = selectedItem.GetComponent<RectTransform>();
