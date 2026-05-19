@@ -38,16 +38,12 @@ public class GridController : MonoBehaviour
         rectTransform = inventoryItem.GetComponent<RectTransform>();
         rectTransform.SetParent(canvasTransform);
 
+        // using canvasgroup because otherwise canvas isn't recognised (item prevents onpointerenter from working) and raycast blocking is needed to prevent picking up the item while dragging
+        CanvasGroup canvasGroup = inventoryItem.GetComponent<CanvasGroup>();
+        if (canvasGroup != null) canvasGroup.blocksRaycasts = false;
+
         int selectedItemID = Random.Range(0, items.Count);
         inventoryItem.Set(items[selectedItemID]);
-    }
-
-    private void DragItem()
-    {
-        if (selectedItem != null)
-        {
-            rectTransform.position = Input.mousePosition;
-        }
     }
 
     public void LMBPress()
@@ -61,12 +57,25 @@ public class GridController : MonoBehaviour
             if (selectedItem != null)
             {
                 rectTransform = selectedItem.GetComponent<RectTransform>();
+                CanvasGroup canvasGroup = selectedItem.GetComponent<CanvasGroup>();
+                if (canvasGroup != null) canvasGroup.blocksRaycasts = false;
             }
         }
         else
         {
+            CanvasGroup canvasGroup = selectedItem.GetComponent<CanvasGroup>();
+            if (canvasGroup != null) canvasGroup.blocksRaycasts = true;
+
             selectedItemGrid.PlaceItem(selectedItem, tileGridPosition.x, tileGridPosition.y);
             selectedItem = null;
+        }
+    }
+
+    private void DragItem()
+    {
+        if (selectedItem != null)
+        {
+            rectTransform.position = Input.mousePosition;
         }
     }
 }

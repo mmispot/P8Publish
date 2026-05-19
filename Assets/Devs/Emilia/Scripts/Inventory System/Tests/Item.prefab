@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3066062558996059744}
   - component: {fileID: 427531122583509851}
   - component: {fileID: 4070774210311371818}
+  - component: {fileID: -4531263159533458949}
   m_Layer: 5
   m_Name: Item
   m_TagString: Untagged
@@ -88,5 +89,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc936bb7cc1022c4e8ad70f8bb01bd13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItem
-  sizeWidth: 4
-  sizeHeight: 2
+  itemData: {fileID: 0}
+--- !u!225 &-4531263159533458949
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7011480718397302585}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

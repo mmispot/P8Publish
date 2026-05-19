@@ -66,7 +66,14 @@ public class ItemGrid : MonoBehaviour
     {
         RectTransform itemRectTransform = inventoryItem.GetComponent<RectTransform>();
         itemRectTransform.SetParent(rectTransform);
-        inventoryItemSlot[posX, posY] = inventoryItem;
+        
+        for (int x = 0; x < inventoryItem.itemData.width; x++)
+        {
+            for (int y = 0; y < inventoryItem.itemData.height; y++)
+            {
+                inventoryItemSlot[posX + x, posY + y] = inventoryItem;
+            }
+        }
 
         Vector2 position = new Vector2();
         position.x = posX * tileSizeWidth + tileSizeWidth * inventoryItem.itemData.width / 2;
