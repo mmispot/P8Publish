@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class GridController : MonoBehaviour
 {
@@ -7,33 +8,67 @@ public class GridController : MonoBehaviour
     [SerializeField] private InventoryItem selectedItem;
     private RectTransform rectTransform;
 
+    [SerializeField] private List<ItemData> items;
+    [SerializeField] private GameObject itemPrefab;
+    [SerializeField] private Transform canvasTransform;
+
     private void Update()
+    {
+        if (selectedItemGrid == null) { return; }
+
+        if (selectedItemGrid != null)
+        {
+            DragItem();
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                LMBPress();
+            }
+
+            //TEMPORARY RANDOM ITEM FUNCTION
+            if (Input.GetKeyDown(KeyCode.Q))
+            {
+                CreateRandomItem();
+            }
+        }
+    }
+
+    private void CreateRandomItem()
+    {
+        InventoryItem inventoryItem = Instantiate(itemPrefab).GetComponent<InventoryItem>();
+        selectedItem = inventoryItem;
+        rectTransform = inventoryItem.GetComponent<RectTransform>();
+        rectTransform.SetParent(canvasTransform);
+
+        int selectedItemID = Random.Range(0, items.Count);
+        inventoryItem.Set(items[selectedItemID]);
+    }
+
+    private void DragItem()
     {
         if (selectedItem != null)
         {
             rectTransform.position = Input.mousePosition;
         }
+    }
 
-        if (selectedItemGrid == null) { return; }
+    public void LMBPress()
+    {
+        Vector2Int tileGridPosition = selectedItemGrid.GetTileGridPosition(Input.mousePosition);
 
-        if (Input.GetMouseButtonDown(0))
+        if (selectedItem == null)
         {
-            Vector2Int tileGridPosition = selectedItemGrid.GetTileGridPosition(Input.mousePosition);
+            selectedItem = selectedItemGrid.PickupItem(tileGridPosition.x, tileGridPosition.y);
 
-            if (selectedItem == null)
+            if (selectedItem != null)
             {
-                selectedItem = selectedItemGrid.PickupItem(tileGridPosition.x, tileGridPosition.y);
-
-                if (selectedItem != null)
-                {
-                    rectTransform = selectedItem.GetComponent<RectTransform>();
-                }
+                rectTransform = selectedItem.GetComponent<RectTransform>();
             }
-            else
-            {
-                selectedItemGrid.PlaceItem(selectedItem, tileGridPosition.x, tileGridPosition.y);
-                selectedItem = null;
-            }
+        }
+        else
+        {
+            selectedItemGrid.PlaceItem(selectedItem, tileGridPosition.x, tileGridPosition.y);
+            selectedItem = null;
         }
     }
 }

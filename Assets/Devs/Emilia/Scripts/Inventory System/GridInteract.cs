@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(ItemGrid))] //geleerd van een tutorial, zorgt ervoor dat dit alles alleen werkt wanneer er ook daadwerkelijk 
+[RequireComponent(typeof(ItemGrid))] //geleerd van een tutorial, zorgt ervoor dat dit alles alleen werkt wanneer er ook daadwerkelijk een ItemGrid is
 
 public class GridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    GridController gridController;
-    ItemGrid itemGrid;
+    public GridController gridController;
+    public ItemGrid itemGrid;
 
-    private void Awake()
+    public GameObject mainCamera;
+
+    private void Update()
     {
-        gridController = FindFirstObjectByType(typeof(GridController)) as GridController;
+        gridController = mainCamera.GetComponent<GridController>();
         itemGrid = GetComponent<ItemGrid>();
     }
 

@@ -6,8 +6,9 @@ public class ItemGrid : MonoBehaviour
 {
     // Tutorial used: https://www.youtube.com/watch?v=2ajD1GDbEzA&t=452s
 
-    const float tileSizeWidth = 64;
-    const float tileSizeHeight = 64;
+    //Size in px of the individual inventory tiles! Artists beware
+    public const float tileSizeWidth = 64;
+    public const float tileSizeHeight = 64;
 
     InventoryItem[,] inventoryItemSlot;
 
@@ -23,14 +24,14 @@ public class ItemGrid : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
         Init(gridSizeWidth, gridSizeHeight);
 
-        InventoryItem inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
-        PlaceItem(inventoryItem, 1, 1);
+        //InventoryItem inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
+        //PlaceItem(inventoryItem, 1, 1);
 
-        inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
-        PlaceItem(inventoryItem, 5, 2);
+        //inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
+        //PlaceItem(inventoryItem, 5, 2);
 
-        inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
-        PlaceItem(inventoryItem, 8, 2);
+        //inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
+        //PlaceItem(inventoryItem, 8, 2);
     }
 
     public InventoryItem PickupItem(int x, int y) //haalt item van een grid en geeft die terug aan de itemcontroller
@@ -68,8 +69,8 @@ public class ItemGrid : MonoBehaviour
         inventoryItemSlot[posX, posY] = inventoryItem;
 
         Vector2 position = new Vector2();
-        position.x = posX * tileSizeWidth + tileSizeWidth / 2;
-        position.y = -(posY * tileSizeHeight + tileSizeHeight / 2);
+        position.x = posX * tileSizeWidth + tileSizeWidth * inventoryItem.itemData.width / 2;
+        position.y = -(posY * tileSizeHeight + tileSizeHeight * inventoryItem.itemData.height / 2);
 
         itemRectTransform.localPosition = position;
     }

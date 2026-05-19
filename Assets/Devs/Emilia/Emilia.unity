@@ -380,6 +380,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GridController
   selectedItemGrid: {fileID: 1031670159}
   selectedItem: {fileID: 0}
+  items:
+  - {fileID: 11400000, guid: d38f2e3ae28b37a4bb9b7bce68113a7e, type: 2}
+  - {fileID: 11400000, guid: fc4537de2184c3d478fede3af3e85e5e, type: 2}
+  - {fileID: 11400000, guid: d770ae1da96f5fa4d8f6550d53ae4fa7, type: 2}
+  itemPrefab: {fileID: 7011480718397302585, guid: 0e8f127c7561cdd4ca4772c7e38aef1e, type: 3}
+  canvasTransform: {fileID: 1494121425}
 --- !u!1 &901376170
 GameObject:
   m_ObjectHideFlags: 0
@@ -492,7 +498,7 @@ GameObject:
   - component: {fileID: 1031670162}
   m_Layer: 5
   m_Name: InventoryGrid
-  m_TagString: Grid
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -581,6 +587,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3ebedb787084c746afa4187adbe11fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridInteract
+  gridController: {fileID: 0}
+  itemGrid: {fileID: 0}
+  mainCamera: {fileID: 841115619}
 --- !u!1 &1268167173
 GameObject:
   m_ObjectHideFlags: 0
