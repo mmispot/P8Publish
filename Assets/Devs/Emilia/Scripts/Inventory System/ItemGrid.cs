@@ -23,7 +23,7 @@ public class ItemGrid : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
         Init(gridSizeWidth, gridSizeHeight);
 
-        InventoryItem inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
+        //InventoryItem inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
         //PlaceItem(inventoryItem, 3, 2);
     }
 
