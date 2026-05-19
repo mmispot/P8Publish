@@ -16,6 +16,7 @@ public class EnemyMovement : MonoBehaviour
     void Start()
     {
         lightAttackPoint.SetActive(false);
+        targetPosition = GameObject.FindGameObjectWithTag("Player");
     }
 
     void Update()

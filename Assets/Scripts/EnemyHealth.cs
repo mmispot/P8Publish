@@ -5,17 +5,36 @@ public class EnemyHealth : MonoBehaviour
     public int maxHealth = 100;
     public int currentHealth;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public Renderer enemyRenderer;
+    private MaterialPropertyBlock propBlock;
+
+    void Awake()
+    {
+        enemyRenderer = GetComponent<Renderer>();
+        propBlock = new MaterialPropertyBlock();
+    }
+
     void Start()
     {
         currentHealth = maxHealth;
     }
-    
-    public void TakeDamage(int damage) {
+
+    public void TakeDamage(int damage)
+    {
         currentHealth -= damage;
-        if (currentHealth <= 0) {
+        if (currentHealth <= 0)
+        {
             Die();
         }
+        UpdateShader();
+    }
+
+    void UpdateShader()
+    {
+        float bloodValue = 1f - (float)currentHealth / maxHealth;
+        enemyRenderer.GetPropertyBlock(propBlock);
+        propBlock.SetFloat("_BloodAmount", bloodValue);
+        enemyRenderer.SetPropertyBlock(propBlock);
     }
 
     private void Die() {
@@ -23,7 +42,6 @@ public class EnemyHealth : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // Update is called once per frame
     void Update()
     {
         
