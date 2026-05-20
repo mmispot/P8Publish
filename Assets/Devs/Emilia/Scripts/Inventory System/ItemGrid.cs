@@ -66,13 +66,22 @@ public class ItemGrid : MonoBehaviour
     Vector2 positionOnGrid = new Vector2();
     Vector2Int tileGridPosition = new Vector2Int();
 
-    public Vector2Int GetTileGridPosition(Vector2 mousePosition) //zet de positie van de muis om naar een positie op het grid
+    public Vector2Int GetTileGridPosition(Vector2 mousePosition)
     {
-        positionOnGrid.x = mousePosition.x - rectTransform.position.x;
-        positionOnGrid.y = rectTransform.position.y - mousePosition.y;
+        //convert screen space naar rectangle, anders werkt het niet op andere resoluties/pcs
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform,
+            mousePosition,
+            null,
+            out Vector2 localPoint
+        );
 
-        tileGridPosition.x = (int)(positionOnGrid.x / tileSizeWidth);
-        tileGridPosition.y = (int)(positionOnGrid.y / tileSizeHeight);
+        // Offset from top-left corner
+        localPoint.x += rectTransform.rect.width / 2;
+        localPoint.y = rectTransform.rect.height / 2 - localPoint.y;
+
+        tileGridPosition.x = (int)(localPoint.x / tileSizeWidth);
+        tileGridPosition.y = (int)(localPoint.y / tileSizeHeight);
 
         return tileGridPosition;
     }
@@ -162,7 +171,7 @@ public class ItemGrid : MonoBehaviour
         return true;
     }
 
-    private bool BoundaryCheck(int posX, int posY, int width, int height) //checkt of een positie binnen de boundaries
+    private bool BoundaryCheck(int posX, int posY, int width, int height) //checkt of een positie binnen de boundaries is
     {
         if (PositionCheck(posX, posY) == false) { return false; }
 
