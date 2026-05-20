@@ -52,22 +52,35 @@ public class GridController : MonoBehaviour
 
         if (selectedItem == null)
         {
-            selectedItem = selectedItemGrid.PickupItem(tileGridPosition.x, tileGridPosition.y);
-
-            if (selectedItem != null)
-            {
-                rectTransform = selectedItem.GetComponent<RectTransform>();
-                CanvasGroup canvasGroup = selectedItem.GetComponent<CanvasGroup>();
-                if (canvasGroup != null) canvasGroup.blocksRaycasts = false;
-            }
+            PickUpItem(tileGridPosition)
         }
         else
         {
-            CanvasGroup canvasGroup = selectedItem.GetComponent<CanvasGroup>();
-            if (canvasGroup != null) canvasGroup.blocksRaycasts = true;
+            PlaceItem(tileGridPosition);
+        }
+    }
 
-            selectedItemGrid.PlaceItem(selectedItem, tileGridPosition.x, tileGridPosition.y);
+    private void PlaceItem(Vector2Int tileGridPosition)
+    {
+        CanvasGroup canvasGroup = selectedItem.GetComponent<CanvasGroup>();
+        if (canvasGroup != null) canvasGroup.blocksRaycasts = true;
+
+        bool complete = selectedItemGrid.PlaceItem(selectedItem, tileGridPosition.x, tileGridPosition.y);
+        if (complete)
+        {
             selectedItem = null;
+        }
+    }
+
+    private void PickUpItem(Vector2Int tileGridPosition)
+    {
+        selectedItem = selectedItemGrid.PickupItem(tileGridPosition.x, tileGridPosition.y);
+
+        if (selectedItem != null)
+        {
+            rectTransform = selectedItem.GetComponent<RectTransform>();
+            CanvasGroup canvasGroup = selectedItem.GetComponent<CanvasGroup>();
+            if (canvasGroup != null) canvasGroup.blocksRaycasts = false;
         }
     }
 

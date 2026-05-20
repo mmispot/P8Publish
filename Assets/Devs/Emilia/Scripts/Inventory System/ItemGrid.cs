@@ -62,8 +62,14 @@ public class ItemGrid : MonoBehaviour
         return tileGridPosition;
     }
 
-    public void PlaceItem(InventoryItem inventoryItem, int posX, int posY) //plaatst een item op de grid en zet de positie in een 2d array om bij te houden wat occupied is en wat niet
+    public bool PlaceItem(InventoryItem inventoryItem, int posX, int posY) //plaatst een item op de grid en zet de positie in een 2d array om bij te houden wat occupied is en wat niet
     {
+        if (BoundaryCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height) == false)
+        {
+            Debug.Log("Item doesn't fit in the grid");
+            return false;
+        }
+
         RectTransform itemRectTransform = inventoryItem.GetComponent<RectTransform>();
         itemRectTransform.SetParent(rectTransform);
         
@@ -80,5 +86,34 @@ public class ItemGrid : MonoBehaviour
         position.y = -(posY * tileSizeHeight + tileSizeHeight * inventoryItem.itemData.height / 2);
 
         itemRectTransform.localPosition = position;
+
+        return true;
+    }
+
+    bool PositionCheck(int posX, int posY)
+    {
+        if (posX < 0 || posY < 0)
+        {
+            return false;
+        }
+
+        if (posX >= gridSizeWidth || posY >= gridSizeHeight)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool BoundaryCheck(int posX, int posY, int width, int height)
+    {
+        if (PositionCheck(posX, posY) == false) { return false; }
+
+        posX += width-1;
+        posY += height-1;
+
+        if (PositionCheck(posX, posY) == false) { return false; }
+
+        return true;
     }
 }
