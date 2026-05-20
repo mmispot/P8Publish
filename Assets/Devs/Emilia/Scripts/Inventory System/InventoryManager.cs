@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class InventoryManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E)) //CHANGE THIS TO INTERACT KEY LATER IN PLAYER ACTION MAP
+        if (Keyboard.current.eKey.wasPressedThisFrame) //CHANGE THIS TO INTERACT KEY LATER IN PLAYER ACTION MAP
         {
             inventoryGrid.SetActive(!inventoryGrid.activeSelf);
         }

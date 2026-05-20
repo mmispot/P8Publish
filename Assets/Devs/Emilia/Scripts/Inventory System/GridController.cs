@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using System.Collections.Generic;
 
 public class GridController : MonoBehaviour
@@ -19,13 +20,13 @@ public class GridController : MonoBehaviour
         if (selectedItemGrid == null) { return; }
 
         //TEMPORARY RANDOM ITEM FUNCTION
-        if (Input.GetKeyDown(KeyCode.Q) && selectedItem == null)
+        if (Keyboard.current.qKey.wasPressedThisFrame && selectedItem == null)
         {
             CreateRandomItem();
         }
 
 
-        if (Input.GetMouseButtonDown(0))
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             LMBPress();
         }
@@ -49,7 +50,7 @@ public class GridController : MonoBehaviour
 
     public void LMBPress()
     {
-        Vector2Int tileGridPosition = selectedItemGrid.GetTileGridPosition(Input.mousePosition);
+        Vector2Int tileGridPosition = selectedItemGrid.GetTileGridPosition(Mouse.current.position.ReadValue());
 
         if (selectedItem == null)
         {
@@ -95,7 +96,7 @@ public class GridController : MonoBehaviour
     {
         if (selectedItem != null)
         {
-            rectTransform.position = Input.mousePosition;
+            rectTransform.position = Mouse.current.position.ReadValue();
         }
     }
 }

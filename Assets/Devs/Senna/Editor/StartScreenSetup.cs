@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.Events;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 using TMPro;
 
 public static class StartScreenSetup
@@ -46,6 +48,19 @@ public static class StartScreenSetup
         so.ApplyModifiedProperties();
 
         pausePanel.SetActive(false);
+
+        // EventSystem is required for button clicks — create one if the scene doesn't have it
+        if (Object.FindObjectOfType<EventSystem>() == null)
+        {
+            var esGO = new GameObject("EventSystem");
+            Undo.RegisterCreatedObjectUndo(esGO, "Setup Start Screen UI");
+            esGO.AddComponent<EventSystem>();
+            esGO.AddComponent<InputSystemUIInputModule>();
+        }
+
+        // Mark scene dirty so Unity saves all the wired references
+        UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
+            UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene());
 
         Debug.Log("[StartScreenSetup] Done.");
     }
