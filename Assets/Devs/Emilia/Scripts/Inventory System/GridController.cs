@@ -52,6 +52,8 @@ public class GridController : MonoBehaviour
     {
         Vector2Int tileGridPosition = selectedItemGrid.GetTileGridPosition(Mouse.current.position.ReadValue());
 
+        if (!selectedItemGrid.PositionCheck(tileGridPosition.x, tileGridPosition.y)) { return; }
+
         if (selectedItem == null)
         {
             PickUpItem(tileGridPosition);
@@ -96,7 +98,14 @@ public class GridController : MonoBehaviour
     {
         if (selectedItem != null)
         {
-            rectTransform.position = Mouse.current.position.ReadValue();
+            RectTransform canvasRect = canvasTransform as RectTransform;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                canvasRect,
+                Mouse.current.position.ReadValue(),
+                null,
+                out Vector2 localPoint
+            );
+            rectTransform.position = canvasRect.TransformPoint(localPoint);
         }
     }
 }

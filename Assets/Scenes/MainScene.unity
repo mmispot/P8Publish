@@ -2285,7 +2285,7 @@ PrefabInstance:
     - target: {fileID: 171233935355071592, guid: b1a6b274638d0f24c99f9f687447dfee, type: 3}
       propertyPath: itemGrid
       value: 
-      objectReference: {fileID: 1410535619}
+      objectReference: {fileID: 0}
     - target: {fileID: 171233935355071592, guid: b1a6b274638d0f24c99f9f687447dfee, type: 3}
       propertyPath: mainCamera
       value: 

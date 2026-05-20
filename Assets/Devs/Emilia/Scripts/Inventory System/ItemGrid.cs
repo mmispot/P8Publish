@@ -13,6 +13,7 @@ public class ItemGrid : MonoBehaviour
     InventoryItem[,] inventoryItemSlot;
 
     RectTransform rectTransform;
+    Canvas parentCanvas;
 
     [SerializeField] int gridSizeWidth = 20;
     [SerializeField] int gridSizeHeight = 10;
@@ -22,6 +23,7 @@ public class ItemGrid : MonoBehaviour
     private void Start()
     {
         rectTransform = GetComponent<RectTransform>();
+        parentCanvas = GetComponentInParent<Canvas>();
         Init(gridSizeWidth, gridSizeHeight);
 
         //InventoryItem inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
@@ -69,16 +71,17 @@ public class ItemGrid : MonoBehaviour
     public Vector2Int GetTileGridPosition(Vector2 mousePosition)
     {
         //convert screen space naar rectangle, anders werkt het niet op andere resoluties/pcs
+        Camera cam = (parentCanvas != null && parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay) ? null : parentCanvas?.worldCamera;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             rectTransform,
             mousePosition,
-            null,
+            cam,
             out Vector2 localPoint
         );
 
-        // Offset from top-left corner
-        localPoint.x += rectTransform.rect.width / 2;
-        localPoint.y = rectTransform.rect.height / 2 - localPoint.y;
+        // Convert pivot-relative local point to top-left-relative (works for any pivot)
+        localPoint.x -= rectTransform.rect.xMin;
+        localPoint.y = rectTransform.rect.yMax - localPoint.y;
 
         tileGridPosition.x = (int)(localPoint.x / tileSizeWidth);
         tileGridPosition.y = (int)(localPoint.y / tileSizeHeight);
@@ -156,7 +159,7 @@ public class ItemGrid : MonoBehaviour
         return true;
     }
 
-    private bool PositionCheck(int posX, int posY) //checkt of een positie binnen de grenzen van het grid ligt (MATH)
+    public bool PositionCheck(int posX, int posY) //checkt of een positie binnen de grenzen van het grid ligt (MATH)
     {
         if (posX < 0 || posY < 0)
         {
