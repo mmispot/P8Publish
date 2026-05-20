@@ -45,7 +45,7 @@ public class ItemGrid : MonoBehaviour
         return toReturn;
     }
 
-    private void CleanGridReference(InventoryItem item)
+    private void CleanGridReference(InventoryItem item) //pakt reference van een item en maakt alle plekken op het grid waar dat item stond weer leeg
     {
         for (int ix = 0; ix < item.itemData.width; ix++)
         {
@@ -77,15 +77,15 @@ public class ItemGrid : MonoBehaviour
         return tileGridPosition;
     }
 
-    public bool PlaceItem(InventoryItem inventoryItem, int posX, int posY, ref InventoryItem overlapItem)
+    public bool PlaceItem(InventoryItem inventoryItem, int posX, int posY, ref InventoryItem overlapItem) //places item MAAR checkt eerst
     {
-        if (BoundaryCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height) == false)
+        if (BoundaryCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height) == false) //checks of item in de grid past
         {
             Debug.Log("Item doesn't fit in the grid");
             return false;
         }
 
-        if (OverlapCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height, ref overlapItem) == false)
+        if (OverlapCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height, ref overlapItem) == false) //checkt of item overlapt met een ander item
         {
             Debug.Log("Item overlaps with another item");
             overlapItem = null;
@@ -106,7 +106,7 @@ public class ItemGrid : MonoBehaviour
         {
             for (int y = 0; y < inventoryItem.itemData.height; y++)
             {
-                inventoryItemSlot[posX + x, posY + y] = inventoryItem;
+                inventoryItemSlot[posX + x, posY + y] = inventoryItem; //actual plaatsen van het item in de grid array
             }
         }
 
@@ -119,7 +119,7 @@ public class ItemGrid : MonoBehaviour
         return true;
     }
 
-    private bool OverlapCheck(int posX, int posY, int width, int height, ref InventoryItem overlapItem)
+    private bool OverlapCheck(int posX, int posY, int width, int height, ref InventoryItem overlapItem) //checkt voor overlap met ander item
     {
         for (int x = 0; x < width; x++)
         {
@@ -147,7 +147,7 @@ public class ItemGrid : MonoBehaviour
         return true;
     }
 
-    private bool PositionCheck(int posX, int posY)
+    private bool PositionCheck(int posX, int posY) //checkt of een positie binnen de grenzen van het grid ligt (MATH)
     {
         if (posX < 0 || posY < 0)
         {
@@ -162,7 +162,7 @@ public class ItemGrid : MonoBehaviour
         return true;
     }
 
-    private bool BoundaryCheck(int posX, int posY, int width, int height)
+    private bool BoundaryCheck(int posX, int posY, int width, int height) //checkt of een positie binnen de boundaries
     {
         if (PositionCheck(posX, posY) == false) { return false; }
 
