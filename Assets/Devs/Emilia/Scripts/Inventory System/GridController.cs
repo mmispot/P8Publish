@@ -6,6 +6,7 @@ public class GridController : MonoBehaviour
     public ItemGrid selectedItemGrid;
 
     [SerializeField] private InventoryItem selectedItem;
+    private InventoryItem overlapItem;
     private RectTransform rectTransform;
 
     [SerializeField] private List<ItemData> items;
@@ -52,7 +53,7 @@ public class GridController : MonoBehaviour
 
         if (selectedItem == null)
         {
-            PickUpItem(tileGridPosition)
+            PickUpItem(tileGridPosition);
         }
         else
         {
@@ -60,19 +61,25 @@ public class GridController : MonoBehaviour
         }
     }
 
-    private void PlaceItem(Vector2Int tileGridPosition)
+    public void PlaceItem(Vector2Int tileGridPosition)
     {
         CanvasGroup canvasGroup = selectedItem.GetComponent<CanvasGroup>();
         if (canvasGroup != null) canvasGroup.blocksRaycasts = true;
 
-        bool complete = selectedItemGrid.PlaceItem(selectedItem, tileGridPosition.x, tileGridPosition.y);
+        bool complete = selectedItemGrid.PlaceItem(selectedItem, tileGridPosition.x, tileGridPosition.y, ref overlapItem);
         if (complete)
         {
             selectedItem = null;
+            if (overlapItem != null)
+            {
+                selectedItem = overlapItem;
+                overlapItem = null;
+                rectTransform = selectedItem.GetComponent<RectTransform>();
+            }
         }
     }
 
-    private void PickUpItem(Vector2Int tileGridPosition)
+    public void PickUpItem(Vector2Int tileGridPosition)
     {
         selectedItem = selectedItemGrid.PickupItem(tileGridPosition.x, tileGridPosition.y);
 

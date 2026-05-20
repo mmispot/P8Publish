@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class InventoryItem : MonoBehaviour
 {
     public ItemData itemData;
+    public Vector2Int tileGridPosition;
 
     public void Set(ItemData itemData)
     {

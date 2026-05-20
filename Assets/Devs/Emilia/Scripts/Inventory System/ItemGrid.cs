@@ -37,8 +37,23 @@ public class ItemGrid : MonoBehaviour
     public InventoryItem PickupItem(int x, int y) //haalt item van een grid en geeft die terug aan de itemcontroller
     {
         InventoryItem toReturn = inventoryItemSlot[x, y];
-        inventoryItemSlot[x, y] = null;
+
+        if (toReturn == null) { return null; }
+
+        CleanGridReference(toReturn);
+        
         return toReturn;
+    }
+
+    private void CleanGridReference(InventoryItem item)
+    {
+        for (int ix = 0; ix < item.itemData.width; ix++)
+        {
+            for (int iy = 0; iy < item.itemData.height; iy++)
+            {
+                inventoryItemSlot[item.tileGridPosition.x + ix, item.tileGridPosition.y + iy] = null;
+            }
+        }
     }
 
     private void Init(int width, int height) //maakt een 2D array aan voor de items en zet de grootte van het grid
@@ -62,7 +77,7 @@ public class ItemGrid : MonoBehaviour
         return tileGridPosition;
     }
 
-    public bool PlaceItem(InventoryItem inventoryItem, int posX, int posY) //plaatst een item op de grid en zet de positie in een 2d array om bij te houden wat occupied is en wat niet
+    public bool PlaceItem(InventoryItem inventoryItem, int posX, int posY, ref InventoryItem overlapItem)
     {
         if (BoundaryCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height) == false)
         {
@@ -70,9 +85,23 @@ public class ItemGrid : MonoBehaviour
             return false;
         }
 
+        if (OverlapCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height, ref overlapItem) == false)
+        {
+            Debug.Log("Item overlaps with another item");
+            overlapItem = null;
+            return false;
+        }
+
+        if (overlapItem != null)
+        {
+            CleanGridReference(overlapItem);
+        }
+
         RectTransform itemRectTransform = inventoryItem.GetComponent<RectTransform>();
         itemRectTransform.SetParent(rectTransform);
-        
+
+        inventoryItem.tileGridPosition = new Vector2Int(posX, posY);
+
         for (int x = 0; x < inventoryItem.itemData.width; x++)
         {
             for (int y = 0; y < inventoryItem.itemData.height; y++)
@@ -90,7 +119,35 @@ public class ItemGrid : MonoBehaviour
         return true;
     }
 
-    bool PositionCheck(int posX, int posY)
+    private bool OverlapCheck(int posX, int posY, int width, int height, ref InventoryItem overlapItem)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (inventoryItemSlot[posX + x, posY + y] != null)
+                {
+                    if (overlapItem == null)
+                    {
+                        overlapItem = inventoryItemSlot[posX + x, posY + y];
+                    }
+                    else
+                    {
+                        {
+                            if (overlapItem != inventoryItemSlot[posX + x, posY + y])
+                            {
+                                return false; 
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private bool PositionCheck(int posX, int posY)
     {
         if (posX < 0 || posY < 0)
         {
@@ -105,7 +162,7 @@ public class ItemGrid : MonoBehaviour
         return true;
     }
 
-    bool BoundaryCheck(int posX, int posY, int width, int height)
+    private bool BoundaryCheck(int posX, int posY, int width, int height)
     {
         if (PositionCheck(posX, posY) == false) { return false; }
 
