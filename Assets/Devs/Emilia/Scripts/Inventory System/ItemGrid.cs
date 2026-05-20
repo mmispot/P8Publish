@@ -79,6 +79,8 @@ public class ItemGrid : MonoBehaviour
 
     public bool PlaceItem(InventoryItem inventoryItem, int posX, int posY, ref InventoryItem overlapItem) //places item MAAR checkt eerst
     {
+        overlapItem = null;
+
         if (BoundaryCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height) == false) //checks of item in de grid past
         {
             Debug.Log("Item doesn't fit in the grid");
