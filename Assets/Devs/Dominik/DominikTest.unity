@@ -1020,7 +1020,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1792356141}
-  - component: {fileID: 1792356142}
   - component: {fileID: 1792356143}
   - component: {fileID: 1792356140}
   - component: {fileID: 1792356139}
@@ -1060,14 +1059,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3df89d450b903054f87d5117ea63d824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  speed: 12
-  gravity: -19.62
-  jumpHeight: 3
-  groundCheck: {fileID: 951816469}
-  groundDistance: 0.4
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 64
+  rb: {fileID: 1792356144}
+  cameraTransform: {fileID: 0}
+  moveSpeed: 5
+  movement: {fileID: -1508487216724830361, guid: 21517aea0c2a8a744b5ff060cb9e34a0, type: 3}
+  smoothTime: 0.05
 --- !u!4 &1792356141
 Transform:
   m_ObjectHideFlags: 0
@@ -1086,31 +1082,6 @@ Transform:
   - {fileID: 951816469}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!143 &1792356142
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1792356137}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Height: 3.7
-  m_Radius: 0.6
-  m_SlopeLimit: 45
-  m_StepOffset: 0.7
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0
-  m_Center: {x: -1.15, y: 2.1, z: -0.3}
 --- !u!114 &1792356143
 MonoBehaviour:
   m_ObjectHideFlags: 0
