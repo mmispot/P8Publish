@@ -1,9 +1,15 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryHighlight : MonoBehaviour
 {
     //this script takes care of the highlight of inv slots (makes it more visible when using pngs)
-    [SerializeField] RectTransform highlighter;
+    public RectTransform highlighter;
+
+    public void Show(bool visible)
+    {
+        highlighter.gameObject.SetActive(visible);
+    }
 
     public void SetHighlightSize(InventoryItem targetItem)
     {
@@ -13,12 +19,10 @@ public class InventoryHighlight : MonoBehaviour
         highlighter.sizeDelta = size;
     }
 
-    public void SetPosition(ItemGrid targetGrid, InventoryItem targetItem, Vector2Int gridPosition)
+    public void SetPosition(ItemGrid targetGrid, InventoryItem targetItem, int posX, int posY)
     {
-        highlighter.SetParent(targetGrid.GetComponent<RectTransform>());
-
-        Vector2 pos = targetGrid.CalculatePositionOnGrid(targetItem, gridPosition.x, gridPosition.y);
-
+        highlighter.SetParent(targetGrid.GetComponent<RectTransform>()); // RectTransform, not Transform
+        Vector2 pos = targetGrid.CalculatePositionOnGrid(targetItem, posX, posY);
         highlighter.localPosition = pos;
     }
 }

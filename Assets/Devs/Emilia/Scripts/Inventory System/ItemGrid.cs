@@ -13,7 +13,6 @@ public class ItemGrid : MonoBehaviour
     InventoryItem[,] inventoryItemSlot;
 
     RectTransform rectTransform;
-    Canvas parentCanvas;
 
     [SerializeField] int gridSizeWidth = 20;
     [SerializeField] int gridSizeHeight = 10;
@@ -23,17 +22,7 @@ public class ItemGrid : MonoBehaviour
     private void Start()
     {
         rectTransform = GetComponent<RectTransform>();
-        parentCanvas = GetComponentInParent<Canvas>();
         Init(gridSizeWidth, gridSizeHeight);
-
-        //InventoryItem inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
-        //PlaceItem(inventoryItem, 1, 1);
-
-        //inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
-        //PlaceItem(inventoryItem, 5, 2);
-
-        //inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
-        //PlaceItem(inventoryItem, 8, 2);
     }
 
     public InventoryItem PickupItem(int x, int y) //haalt item van een grid en geeft die terug aan de itemcontroller
@@ -73,23 +62,13 @@ public class ItemGrid : MonoBehaviour
     Vector2 positionOnGrid = new Vector2();
     Vector2Int tileGridPosition = new Vector2Int();
 
-    public Vector2Int GetTileGridPosition(Vector2 mousePosition)
+    public Vector2Int GetTileGridPosition(Vector2 mousePosition) //zet de positie van de muis om naar een positie op het grid
     {
-        //convert screen space naar rectangle, anders werkt het niet op andere resoluties/pcs
-        Camera cam = (parentCanvas != null && parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay) ? null : parentCanvas?.worldCamera;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            rectTransform,
-            mousePosition,
-            cam,
-            out Vector2 localPoint
-        );
+        positionOnGrid.x = mousePosition.x - rectTransform.position.x;
+        positionOnGrid.y = rectTransform.position.y - mousePosition.y;
 
-        // Convert pivot-relative local point to top-left-relative (works for any pivot)
-        localPoint.x -= rectTransform.rect.xMin;
-        localPoint.y = rectTransform.rect.yMax - localPoint.y;
-
-        tileGridPosition.x = (int)(localPoint.x / tileSizeWidth);
-        tileGridPosition.y = (int)(localPoint.y / tileSizeHeight);
+        tileGridPosition.x = (int)(positionOnGrid.x / tileSizeWidth);
+        tileGridPosition.y = (int)(positionOnGrid.y / tileSizeHeight);
 
         return tileGridPosition;
     }
@@ -172,7 +151,7 @@ public class ItemGrid : MonoBehaviour
         return true;
     }
 
-    public bool PositionCheck(int posX, int posY) //checkt of een positie binnen de grenzen van het grid ligt (MATH)
+    private bool PositionCheck(int posX, int posY) //checkt of een positie binnen de grenzen van het grid ligt (MATH)
     {
         if (posX < 0 || posY < 0)
         {
@@ -187,7 +166,7 @@ public class ItemGrid : MonoBehaviour
         return true;
     }
 
-    private bool BoundaryCheck(int posX, int posY, int width, int height) //checkt of een positie binnen de boundaries is
+    public bool BoundaryCheck(int posX, int posY, int width, int height) //checkt of een positie binnen de boundaries
     {
         if (PositionCheck(posX, posY) == false) { return false; }
 
