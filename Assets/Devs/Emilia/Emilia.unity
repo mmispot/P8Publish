@@ -311,8 +311,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d38f2e3ae28b37a4bb9b7bce68113a7e, type: 2}
   - {fileID: 11400000, guid: fc4537de2184c3d478fede3af3e85e5e, type: 2}
   - {fileID: 11400000, guid: d770ae1da96f5fa4d8f6550d53ae4fa7, type: 2}
+  - {fileID: 11400000, guid: 20f7219e52461a442880f0d3b5fe640f, type: 2}
+  - {fileID: 11400000, guid: 69e5e90fdf6e23240a56f5caa3667a16, type: 2}
+  - {fileID: 11400000, guid: 82802ddb32e3ffc4eb6e4f95004f7bb9, type: 2}
+  - {fileID: 11400000, guid: 960044ee362e6114dbaf2e87b430e9b5, type: 2}
   itemPrefab: {fileID: 7011480718397302585, guid: 0e8f127c7561cdd4ca4772c7e38aef1e, type: 3}
   canvasTransform: {fileID: 1494121425}
+  inventoryHighlight: {fileID: 0}
 --- !u!114 &841115624
 MonoBehaviour:
   m_ObjectHideFlags: 0
