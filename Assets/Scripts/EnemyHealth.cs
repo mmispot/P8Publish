@@ -1,27 +1,29 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class EnemyHealth : MonoBehaviour
 {
+    public Renderer enemyRenderer;
+    private MaterialPropertyBlock propBlock;
+    [SerializeField] private TextMeshProUGUI healthText;
     public int maxHealth = 100;
     public int currentHealth;
 
-    public Renderer enemyRenderer;
-    private MaterialPropertyBlock propBlock;
-
-    void Awake()
-    {
-        enemyRenderer = GetComponent<Renderer>();
-        propBlock = new MaterialPropertyBlock();
-    }
-
     void Start()
     {
+        healthText.text = "Health: " + currentHealth.ToString();
         currentHealth = maxHealth;
     }
-
-    public void TakeDamage(int damage)
+     void Update()
     {
-        currentHealth -= damage;
+        healthText.text = "Health: " + currentHealth.ToString();
+    }
+
+    public void TakeDamage(int damageAmount)
+    {
+        currentHealth -= damageAmount;
+        Debug.Log("Player took damage! Health is now: " + currentHealth);
         if (currentHealth <= 0)
         {
             Die();
@@ -29,21 +31,21 @@ public class EnemyHealth : MonoBehaviour
         UpdateShader();
     }
 
+    void Awake()
+    {
+        propBlock = new MaterialPropertyBlock();
+    }
+
     void UpdateShader()
     {
-        float bloodValue = 1f - (float)currentHealth / maxHealth;
+        float bloodValue = (float)currentHealth / maxHealth;
         enemyRenderer.GetPropertyBlock(propBlock);
         propBlock.SetFloat("_BloodAmount", bloodValue);
         enemyRenderer.SetPropertyBlock(propBlock);
     }
-
-    private void Die() {
- 
-        Destroy(gameObject);
-    }
-
-    void Update()
+    private void Die()
     {
-        
+
+        Destroy(gameObject);
     }
 }

@@ -76,12 +76,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4570942057231514268}
-  - component: {fileID: 1630608066347483652}
-  - component: {fileID: 909509378775070646}
-  - component: {fileID: 7131517968179256736}
-  - component: {fileID: 4697223183455435404}
-  - component: {fileID: 6517363866487777506}
+  - component: {fileID: 1872649101645205284}
   - component: {fileID: 5437374101163310679}
+  - component: {fileID: 5012495353198709182}
   m_Layer: 0
   m_Name: KipschasPlaceholder
   m_TagString: Player
@@ -108,92 +105,29 @@ Transform:
   - {fileID: 6697192665131623729}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1630608066347483652
-MonoBehaviour:
+--- !u!136 &1872649101645205284
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1440579260982955974}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbcb5df83143fe6468f8d0256c4b3ef0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 100
-  currentHealth: 0
-  enemyRenderer: {fileID: 1912767306689111879}
---- !u!114 &909509378775070646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1440579260982955974}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b0b53ca030910e42bc66e4c01f38244, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  CapsuleObject: {fileID: 1440579260982955974}
-  targetPosition: {fileID: 0}
-  damage: 10
-  lightCooldownTime: 1
-  nextAllowedHitTime: 0
-  lightDamage: 10
-  lightAttackRange: 3
-  lightAttackPoint: {fileID: 6771359471444652483}
-  speed: 5
---- !u!114 &7131517968179256736
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1440579260982955974}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bcfc5c2ec77b7f42bdf91a2f1928fe0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  healthText: {fileID: 4433703836566646985}
-  health: 100
---- !u!114 &4697223183455435404
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1440579260982955974}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbcb5df83143fe6468f8d0256c4b3ef0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
-  maxHealth: 100
-  currentHealth: 0
-  enemyRenderer: {fileID: 1912767306689111879}
---- !u!114 &6517363866487777506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1440579260982955974}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b0b53ca030910e42bc66e4c01f38244, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  CapsuleObject: {fileID: 1440579260982955974}
-  targetPosition: {fileID: 0}
-  damage: 10
-  lightCooldownTime: 1
-  nextAllowedHitTime: 0
-  lightDamage: 10
-  lightAttackRange: 3
-  lightAttackPoint: {fileID: 764169979700651589}
-  speed: 5
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 3.5651186
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.2825593, z: 0}
 --- !u!54 &5437374101163310679
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -221,6 +155,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 94
   m_CollisionDetection: 0
+--- !u!114 &5012495353198709182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1440579260982955974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bcfc5c2ec77b7f42bdf91a2f1928fe0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  enemyRenderer: {fileID: 1912767306689111879}
+  healthText: {fileID: 4433703836566646985}
+  maxHealth: 100
+  currentHealth: 0
 --- !u!1 &2402128990392197213
 GameObject:
   m_ObjectHideFlags: 0
