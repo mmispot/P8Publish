@@ -14,9 +14,19 @@ public class GridController : MonoBehaviour
     [SerializeField] private GameObject itemPrefab;
     [SerializeField] private Transform canvasTransform;
 
+    public InventoryHighlight inventoryHighlight;
+
+    private void Awake()
+    {
+        inventoryHighlight = GetComponent<InventoryHighlight>();
+    }
+
     private void Update()
     {
         DragItem();
+
+        HandleHighlight();
+
         if (selectedItemGrid == null) { return; }
 
         //TEMPORARY RANDOM ITEM FUNCTION
@@ -29,6 +39,29 @@ public class GridController : MonoBehaviour
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             LMBPress();
+        }
+    }
+
+    InventoryItem itemToHighlight;
+
+    private void HandleHighlight()
+    {
+        Vector2Int positionOnGrid = GetTileGridPosition();
+
+        if (selectedItem == null)
+        {
+            itemToHighlight = selectedItemGrid.GetItem(positionOnGrid.x, positionOnGrid.y);
+
+            if (itemToHighlight != null)
+            {
+                inventoryHighlight.SetHighlightSize(itemToHighlight);
+                inventoryHighlight.SetPosition(selectedItemGrid, itemToHighlight, itemToHighlight.tileGridPosition);
+            }
+        }
+        else
+        {
+            inventoryHighlight.SetHighlightSize(selectedItem);
+            inventoryHighlight.SetPosition(selectedItemGrid, selectedItem, positionOnGrid);
         }
     }
 
@@ -50,7 +83,7 @@ public class GridController : MonoBehaviour
 
     public void LMBPress()
     {
-        Vector2Int tileGridPosition = selectedItemGrid.GetTileGridPosition(Mouse.current.position.ReadValue());
+        Vector2Int tileGridPosition = GetTileGridPosition();
 
         if (selectedItem == null)
         {
@@ -60,6 +93,12 @@ public class GridController : MonoBehaviour
         {
             PlaceItem(tileGridPosition);
         }
+    }
+
+    public Vector2Int GetTileGridPosition()
+    {
+        Vector2Int tileGridPosition = selectedItemGrid.GetTileGridPosition(Mouse.current.position.ReadValue());
+        return tileGridPosition; 
     }
 
     public void PlaceItem(Vector2Int tileGridPosition)
@@ -97,6 +136,8 @@ public class GridController : MonoBehaviour
         if (selectedItem != null)
         {
             rectTransform.position = Mouse.current.position.ReadValue();
+
+
         }
     }
 }

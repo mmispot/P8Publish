@@ -62,6 +62,11 @@ public class ItemGrid : MonoBehaviour
         Vector2 size = new Vector2(width * tileSizeWidth, height * tileSizeHeight);
         rectTransform.sizeDelta = size;
     }
+    
+    internal InventoryItem GetItem(int x, int y)
+    {
+        return inventoryItemSlot[x, y];
+    }
 
     Vector2 positionOnGrid = new Vector2();
     Vector2Int tileGridPosition = new Vector2Int();
@@ -112,13 +117,19 @@ public class ItemGrid : MonoBehaviour
             }
         }
 
-        Vector2 position = new Vector2();
-        position.x = posX * tileSizeWidth + tileSizeWidth * inventoryItem.itemData.width / 2;
-        position.y = -(posY * tileSizeHeight + tileSizeHeight * inventoryItem.itemData.height / 2);
+        Vector2 position = CalculatePositionOnGrid(inventoryItem, posX, posY);
 
         itemRectTransform.localPosition = position;
 
         return true;
+    }
+
+    public Vector2 CalculatePositionOnGrid(InventoryItem inventoryItem, int posX, int posY)
+    {
+        Vector2 position = new Vector2();
+        position.x = posX * tileSizeWidth + tileSizeWidth * inventoryItem.itemData.width / 2;
+        position.y = -(posY * tileSizeHeight + tileSizeHeight * inventoryItem.itemData.height / 2);
+        return position;
     }
 
     private bool OverlapCheck(int posX, int posY, int width, int height, ref InventoryItem overlapItem) //checkt voor overlap met ander item
