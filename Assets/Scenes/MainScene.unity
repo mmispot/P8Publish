@@ -1839,10 +1839,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1158229084994412974, guid: 26162b76b68ed3c459ac9714dae6da65, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 1869444781}
     - target: {fileID: 8481699948394360656, guid: 26162b76b68ed3c459ac9714dae6da65, type: 3}
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 9043840498165895592, guid: 26162b76b68ed3c459ac9714dae6da65, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 1869444781}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2234,7 +2242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0089c544917155a49a857c82f2691a48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GridController
-  selectedItemGrid: {fileID: 1978374082}
+  selectedItemGrid: {fileID: 0}
   selectedItem: {fileID: 0}
   items:
   - {fileID: 11400000, guid: d38f2e3ae28b37a4bb9b7bce68113a7e, type: 2}
@@ -2395,17 +2403,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1978374082 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3419549758459734770, guid: 26162b76b68ed3c459ac9714dae6da65, type: 3}
-  m_PrefabInstance: {fileID: 1128280605}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0efb9c9eab705e843ac49444de92dbda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemGrid
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
