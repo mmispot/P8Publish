@@ -23,15 +23,6 @@ public class ItemGrid : MonoBehaviour
     {
         rectTransform = GetComponent<RectTransform>();
         Init(gridSizeWidth, gridSizeHeight);
-
-        //InventoryItem inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
-        //PlaceItem(inventoryItem, 1, 1);
-
-        //inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
-        //PlaceItem(inventoryItem, 5, 2);
-
-        //inventoryItem = Instantiate(inventoryItemPrefab, transform).GetComponent<InventoryItem>();
-        //PlaceItem(inventoryItem, 8, 2);
     }
 
     public InventoryItem PickupItem(int x, int y) //haalt item van een grid en geeft die terug aan de itemcontroller
@@ -175,7 +166,7 @@ public class ItemGrid : MonoBehaviour
         return true;
     }
 
-    private bool BoundaryCheck(int posX, int posY, int width, int height) //checkt of een positie binnen de boundaries
+    public bool BoundaryCheck(int posX, int posY, int width, int height) //checkt of een positie binnen de boundaries
     {
         if (PositionCheck(posX, posY) == false) { return false; }
 
