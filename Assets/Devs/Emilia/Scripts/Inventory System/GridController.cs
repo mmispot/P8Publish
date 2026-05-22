@@ -41,11 +41,23 @@ public class GridController : MonoBehaviour
 
         }
 
+        if (Keyboard.current.cKey.wasPressedThisFrame)
+        {
+            DeleteHeldItem();
+        }
+
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             LMBPress();
         }
+    }
+
+    public void DeleteHeldItem()
+    {
+        if (selectedItem == null) return;
+        Destroy(selectedItem.gameObject);
+        selectedItem = null;
     }
 
     private void InsertRandomItem()
