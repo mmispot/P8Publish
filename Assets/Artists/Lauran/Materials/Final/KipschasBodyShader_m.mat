@@ -150,7 +150,7 @@ Material:
     m_Floats:
     - _BUILTIN_QueueControl: 0
     - _BUILTIN_QueueOffset: 0
-    - _BloodAmount: 1
+    - _BloodAmount: 0.951
     - _BloodCount: 1
     - _BumpScale: 1
     - _Cutoff: 0.5
