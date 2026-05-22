@@ -655,6 +655,22 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 841115619}
+    - target: {fileID: 2449465682021021482, guid: b1a6b274638d0f24c99f9f687447dfee, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 1245
+      objectReference: {fileID: 0}
+    - target: {fileID: 2449465682021021482, guid: b1a6b274638d0f24c99f9f687447dfee, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -51
+      objectReference: {fileID: 0}
+    - target: {fileID: 4574080869583290618, guid: b1a6b274638d0f24c99f9f687447dfee, type: 3}
+      propertyPath: gridSizeWidth
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4574080869583290618, guid: b1a6b274638d0f24c99f9f687447dfee, type: 3}
+      propertyPath: gridSizeHeight
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 6547827021704001412, guid: b1a6b274638d0f24c99f9f687447dfee, type: 3}
       propertyPath: mainCamera
       value: 
