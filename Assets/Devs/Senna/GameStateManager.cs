@@ -7,6 +7,7 @@ public class GameStateManager : MonoBehaviour
 
     [SerializeField] private GameObject startPanel;
     [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject confirmPanel;
 
     private bool _playing;
 
@@ -56,6 +57,26 @@ public class GameStateManager : MonoBehaviour
         Time.timeScale = 0f;
         _playing = false;
     }
+
+    public void OnStopPlayingPressed()
+    {
+        pausePanel.SetActive(false);
+        confirmPanel.SetActive(true);
+    }
+
+    public void OnConfirmYesPressed() => Application.Quit();
+
+    public void OnConfirmNoPressed()
+    {
+        confirmPanel.SetActive(false);
+        pausePanel.SetActive(true);
+    }
+
+    public void OnContinuePressed() => OnStartPressed();
+
+    public void OnSettingsPressed() => Debug.Log("Settings not yet implemented");
+
+    public void OnCreditsPressed() => Debug.Log("Credits not yet implemented");
 
     public void OnQuitPressed() => Application.Quit();
 }
