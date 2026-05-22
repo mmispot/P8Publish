@@ -2,64 +2,116 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
-    public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
-    public Rigidbody rb;
-    public Transform cameraTransform;      // assign your camera (used for yaw)
+    [Header("Beweging")]
     public float moveSpeed = 5f;
-    public InputActionReference movement;
-
-    private Vector2 _moveInput;
-    private Vector3 _smoothVelocity;
-
-    [Tooltip("Smoothing time for horizontal velocity.")]
     public float smoothTime = 0.05f;
+
+    [Header("Springen")]
+    public float jumpForce = 5f;
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.2f;
+    public LayerMask groundLayer;
+
+    [Header("Input Actions")]
+    public InputActionReference movementAction;
+    public InputActionReference jumpAction;
+
+    [Header("Referenties")]
+    public MouseLook mouseLook;
+
+    private Rigidbody rb;
+    private Vector2 moveInput;
+    private Vector3 smoothVelocity;
+    private bool jumpRequested = false;
 
     private void Awake()
     {
-        if (rb == null) rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX
+                       | RigidbodyConstraints.FreezeRotationY
+                       | RigidbodyConstraints.FreezeRotationZ;
     }
 
     private void OnEnable()
     {
-        if (movement?.action != null) movement.action.Enable();
+        movementAction?.action.Enable();
+        jumpAction?.action.Enable();
+
+        if (jumpAction?.action != null)
+            jumpAction.action.performed += OnJump;
     }
 
     private void OnDisable()
     {
-        if (movement?.action != null) movement.action.Disable();
+        movementAction?.action.Disable();
+        jumpAction?.action.Disable();
+
+        if (jumpAction?.action != null)
+            jumpAction.action.performed -= OnJump;
+    }
+
+    private void OnJump(InputAction.CallbackContext ctx)
+    {
+        if (IsGrounded())
+            jumpRequested = true;
+        Debug.Log("Player Grounded");
     }
 
     private void Update()
     {
-        if (movement?.action != null)
-            _moveInput = movement.action.ReadValue<Vector2>();
+        if (movementAction?.action != null)
+            moveInput = movementAction.action.ReadValue<Vector2>();
     }
 
     private void FixedUpdate()
     {
         if (rb == null) return;
 
-        // Compute yaw-only basis so pitch doesn't affect movement
-        float yaw = (cameraTransform != null) ? cameraTransform.eulerAngles.y : transform.eulerAngles.y;
+        // Gebruik camera yaw als vooruit-richting, body roteert niet zelf
+        float yaw = mouseLook != null ? mouseLook.GetYaw() : transform.eulerAngles.y;
+
         Vector3 forward = Quaternion.Euler(0f, yaw, 0f) * Vector3.forward;
         Vector3 right = Quaternion.Euler(0f, yaw, 0f) * Vector3.right;
 
-        // Desired horizontal velocity
-        Vector3 targetDir = (right * _moveInput.x + forward * _moveInput.y);
+        Vector3 targetDir = right * moveInput.x + forward * moveInput.y;
         if (targetDir.sqrMagnitude > 1f) targetDir.Normalize();
-        Vector3 targetHorizontalVel = targetDir * moveSpeed;
 
-        // Smooth horizontal velocity (preserve vertical velocity from physics)
-        Vector3 currentHorizontalVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-        Vector3 smoothHorizontalVel = Vector3.SmoothDamp(currentHorizontalVel, targetHorizontalVel, ref _smoothVelocity, smoothTime, Mathf.Infinity, Time.fixedDeltaTime);
+        Vector3 targetHVel = targetDir * moveSpeed;
 
-        // Move using MovePosition to avoid jitter from directly setting velocity
-        Vector3 displacement = smoothHorizontalVel * Time.fixedDeltaTime;
-        Vector3 verticalDisplacement = Vector3.up * rb.linearVelocity.y * Time.fixedDeltaTime;
-        rb.MovePosition(rb.position + displacement + verticalDisplacement);
+        // Vloeiend naar doelsnelheid
+        Vector3 currentHVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+        Vector3 smoothHVel = Vector3.SmoothDamp(
+            currentHVel, targetHVel, ref smoothVelocity,
+            smoothTime, Mathf.Infinity, Time.fixedDeltaTime);
+
+        // Positie updaten, verticale physics behouden
+        Vector3 hDisplacement = smoothHVel * Time.fixedDeltaTime;
+        Vector3 vDisplacement = Vector3.up * rb.linearVelocity.y * Time.fixedDeltaTime;
+        rb.MovePosition(rb.position + hDisplacement + vDisplacement);
+
+        // Springen
+        if (jumpRequested)
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            jumpRequested = false;
+        }
+    }
+
+    private bool IsGrounded()
+    {
+        if (groundCheck == null) return true;
+        return Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheck == null) return;
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 }
