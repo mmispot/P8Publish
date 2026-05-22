@@ -26,11 +26,11 @@ public class EnemyMovement : MonoBehaviour
             float distancetoPlayer = Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position);
             if (distancetoPlayer > lightAttackRange)
             {
-                    CapsuleObject.transform.position = Vector3.MoveTowards(
-                    CapsuleObject.transform.position,
-                    targetPosition.transform.position,
-                    speed * Time.deltaTime
-                    );
+                CapsuleObject.transform.position = Vector3.MoveTowards(
+                CapsuleObject.transform.position,
+                targetPosition.transform.position,
+                speed * Time.deltaTime
+                );
             }
         }
         if (targetPosition != null)
@@ -57,7 +57,7 @@ public class EnemyMovement : MonoBehaviour
         lightAttackPoint.SetActive(false);
     }
 
-            
+
     private void Die()
     {
         Destroy(gameObject);

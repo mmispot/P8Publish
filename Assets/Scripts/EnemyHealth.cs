@@ -4,48 +4,51 @@ using TMPro;
 
 public class EnemyHealth : MonoBehaviour
 {
-    public Renderer enemyRenderer;
-    private MaterialPropertyBlock propBlock;
-    [SerializeField] private TextMeshProUGUI healthText;
     public int maxHealth = 100;
     public int currentHealth;
 
-    void Start()
-    {
-        healthText.text = "Health: " + currentHealth.ToString();
-        currentHealth = maxHealth;
-    }
-     void Update()
-    {
-        healthText.text = "Health: " + currentHealth.ToString();
-    }
-
-    public void TakeDamage(int damageAmount)
-    {
-        currentHealth -= damageAmount;
-        Debug.Log("Player took damage! Health is now: " + currentHealth);
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-        UpdateShader();
-    }
+    public Renderer enemyRenderer;
+    private MaterialPropertyBlock propBlock;
 
     void Awake()
     {
+        enemyRenderer = GetComponent<Renderer>();
         propBlock = new MaterialPropertyBlock();
     }
 
-    void UpdateShader()
+    void Start()
     {
-        float bloodValue = (float)currentHealth / maxHealth;
-        enemyRenderer.GetPropertyBlock(propBlock);
-        propBlock.SetFloat("_BloodAmount", bloodValue);
-        enemyRenderer.SetPropertyBlock(propBlock);
+        currentHealth = maxHealth;
     }
-    private void Die()
+
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            if (currentHealth <= 0)
+            {
+                Die();
+            }
+            UpdateShader();
+        }
+
+        void UpdateShader()
+        {
+            float bloodValue = 1f - (float)currentHealth / maxHealth;
+            enemyRenderer.GetPropertyBlock(propBlock);
+            propBlock.SetFloat("_BloodAmount", bloodValue);
+            enemyRenderer.SetPropertyBlock(propBlock);
+        }
+    }
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+
+    void Update()
     {
 
-        Destroy(gameObject);
     }
 }
