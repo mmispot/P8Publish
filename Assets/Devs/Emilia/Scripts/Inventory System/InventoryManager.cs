@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using TMPro;
 
 public class InventoryManager : MonoBehaviour
 {
@@ -9,6 +11,8 @@ public class InventoryManager : MonoBehaviour
 
     public GameObject inventoryGrid;
     public GameObject mainCamera;
+
+    public TMP_Text guideTxt;
 
     void Start()
     {
@@ -21,7 +25,13 @@ public class InventoryManager : MonoBehaviour
     {
         if (Keyboard.current.eKey.wasPressedThisFrame) //CHANGE THIS TO INTERACT KEY LATER IN PLAYER ACTION MAP
         {
-            inventoryGrid.SetActive(!inventoryGrid.activeSelf);
+            ToggleInventory();
         }
+    }
+
+    void ToggleInventory()
+    {
+        inventoryGrid.SetActive(!inventoryGrid.activeSelf);
+        guideTxt.gameObject.SetActive(!guideTxt.gameObject.activeSelf);
     }
 }

@@ -34,12 +34,51 @@ public class GridController : MonoBehaviour
         {
             CreateRandomItem();
         }
+        
+        if (Keyboard.current.rKey.wasPressedThisFrame)
+        {
+            InsertRandomItem();
+
+        }
+
+        if (Keyboard.current.cKey.wasPressedThisFrame)
+        {
+            DeleteHeldItem();
+        }
 
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             LMBPress();
         }
+    }
+
+    public void DeleteHeldItem()
+    {
+        if (selectedItem == null) return;
+        Destroy(selectedItem.gameObject);
+        selectedItem = null;
+    }
+
+    private void InsertRandomItem()
+    {
+        CreateRandomItem(); //change this to param for item to be picked up to auto add to inv
+        InventoryItem itemToInsert = selectedItem;
+        selectedItem = null;
+        InsertItem(itemToInsert);
+    }
+
+    public void InsertItem(InventoryItem itemToInsert)
+    {
+        Vector2Int posOnGrid = selectedItemGrid.FindSpaceForObject(itemToInsert);
+
+        if (posOnGrid.x == -1) // sentinel value for "not found", positie op de grid kan nooit -1 zijn, en Vector2Int? werkt niet
+        {
+            Debug.Log("no space for item");
+            return;
+        }
+
+        selectedItemGrid.PlaceItem(itemToInsert, posOnGrid.x, posOnGrid.y);
     }
 
     InventoryItem itemToHighlight;
