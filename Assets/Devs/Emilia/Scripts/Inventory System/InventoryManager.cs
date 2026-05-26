@@ -14,16 +14,23 @@ public class InventoryManager : MonoBehaviour
 
     public TMP_Text guideTxt;
 
+    public GameObject player;
+    [SerializeField] private PlayerMovement playerMovement; // Add this
+    [SerializeField] private MouseLook playerMouseLook;
+
     void Start()
     {
         gridScript = inventoryGrid.GetComponent<ItemGrid>();
         interactScript = inventoryGrid.GetComponent<GridInteract>();
         gridControllerScript = mainCamera.GetComponent<GridController>();
+
+        playerMovement = player.GetComponent<PlayerMovement>();
+        playerMouseLook = player.GetComponent<MouseLook>();
     }
 
     void Update()
     {
-        if (Keyboard.current.eKey.wasPressedThisFrame) //CHANGE THIS TO INTERACT KEY LATER IN PLAYER ACTION MAP
+        if (Keyboard.current.eKey.wasPressedThisFrame)
         {
             ToggleInventory();
         }
@@ -31,7 +38,20 @@ public class InventoryManager : MonoBehaviour
 
     void ToggleInventory()
     {
-        inventoryGrid.SetActive(!inventoryGrid.activeSelf);
-        guideTxt.gameObject.SetActive(!guideTxt.gameObject.activeSelf);
+        bool isOpen = !inventoryGrid.activeSelf;
+
+        inventoryGrid.SetActive(isOpen);
+        guideTxt.gameObject.SetActive(isOpen);
+
+        if (isOpen)
+        {
+            playerMovement?.DisableMovement();
+            playerMouseLook?.DisableMouseLook();
+        }
+        else
+        {
+            playerMovement?.EnableMovement();
+            playerMouseLook?.EnableMouseLook();
+        }
     }
 }
