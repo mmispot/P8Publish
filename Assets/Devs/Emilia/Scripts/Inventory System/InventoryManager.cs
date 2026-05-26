@@ -15,8 +15,8 @@ public class InventoryManager : MonoBehaviour
     public TMP_Text guideTxt;
 
     public GameObject player;
-    [SerializeField] private PlayerMovement playerMovement; // Add this
-    [SerializeField] private MouseLook playerMouseLook;
+    //[SerializeField] private PlayerMovement playerMovement;
+    //[SerializeField] private MouseLook playerMouseLook;
 
     void Start()
     {
@@ -24,8 +24,8 @@ public class InventoryManager : MonoBehaviour
         interactScript = inventoryGrid.GetComponent<GridInteract>();
         gridControllerScript = mainCamera.GetComponent<GridController>();
 
-        playerMovement = player.GetComponent<PlayerMovement>();
-        playerMouseLook = player.GetComponent<MouseLook>();
+        //playerMovement = player.GetComponent<PlayerMovement>();
+        //playerMouseLook = player.GetComponent<MouseLook>();
     }
 
     void Update()
@@ -45,13 +45,11 @@ public class InventoryManager : MonoBehaviour
 
         if (isOpen)
         {
-            playerMovement?.DisableMovement();
-            playerMouseLook?.DisableMouseLook();
+            //stop movement when open
         }
         else
         {
-            playerMovement?.EnableMovement();
-            playerMouseLook?.EnableMouseLook();
+            //resume movement when closed
         }
     }
 }
