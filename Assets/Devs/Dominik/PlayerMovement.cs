@@ -8,6 +8,10 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public float smoothTime = 0.05f;
 
+    [Header("Sprint")]
+    public float sprintSpeed = 9f;
+    public InputActionReference sprintAction;
+
     [Header("Springen")]
     public float jumpForce = 5f;
     public Transform groundCheck;
@@ -25,6 +29,11 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     private Vector3 smoothVelocity;
     private bool jumpRequested = false;
+    private bool isSprinting = false;
+
+    public bool IsSprinting => isSprinting;
+    public bool IsMoving => moveInput.sqrMagnitude > 0.01f;
+    public bool IsGrounded() => groundCheck == null || Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer);
 
     private void Awake()
     {
@@ -40,6 +49,7 @@ public class PlayerMovement : MonoBehaviour
     {
         movementAction?.action.Enable();
         jumpAction?.action.Enable();
+        sprintAction?.action.Enable();
 
         if (jumpAction?.action != null)
             jumpAction.action.performed += OnJump;
@@ -49,11 +59,13 @@ public class PlayerMovement : MonoBehaviour
     {
         movementAction?.action.Disable();
         jumpAction?.action.Disable();
+        sprintAction?.action.Disable();
 
         if (jumpAction?.action != null)
             jumpAction.action.performed -= OnJump;
     }
 
+    //checks if grounded then jump otherwise it would be infinte jump
     private void OnJump(InputAction.CallbackContext ctx)
     {
         if (IsGrounded())
@@ -65,6 +77,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (movementAction?.action != null)
             moveInput = movementAction.action.ReadValue<Vector2>();
+
+        isSprinting = sprintAction?.action.IsPressed() ?? false;
     }
 
     private void FixedUpdate()
@@ -80,7 +94,8 @@ public class PlayerMovement : MonoBehaviour
         Vector3 targetDir = right * moveInput.x + forward * moveInput.y;
         if (targetDir.sqrMagnitude > 1f) targetDir.Normalize();
 
-        Vector3 targetHVel = targetDir * moveSpeed;
+        float currentSpeed = isSprinting ? sprintSpeed : moveSpeed;
+        Vector3 targetHVel = targetDir * currentSpeed;
 
         // Vloeiend naar doelsnelheid
         Vector3 currentHVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
@@ -102,12 +117,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private bool IsGrounded()
-    {
-        if (groundCheck == null) return true;
-        return Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer);
-    }
-
+    //check testing for groundcheck
     private void OnDrawGizmosSelected()
     {
         if (groundCheck == null) return;
@@ -115,15 +125,18 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 
+    //for stop walking
     public void DisableMovement()
     {
         movementAction?.action.Disable();
         jumpAction?.action.Disable();
+        sprintAction?.action.Disable();
     }
-
+    //for start walking
     public void EnableMovement()
     {
         movementAction?.action.Enable();
         jumpAction?.action.Enable();
+        sprintAction?.action.Enable();
     }
 }
