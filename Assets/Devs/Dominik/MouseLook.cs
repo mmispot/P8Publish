@@ -45,4 +45,18 @@ public class MouseLook : MonoBehaviour
     {
         return yRotation;
     }
+
+    public void DisableMouseLook()
+    {
+        enabled = false;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void EnableMouseLook()
+    {
+        enabled = true;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 }

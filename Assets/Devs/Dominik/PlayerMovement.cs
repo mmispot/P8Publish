@@ -114,4 +114,16 @@ public class PlayerMovement : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
+
+    public void DisableMovement()
+    {
+        movementAction?.action.Disable();
+        jumpAction?.action.Disable();
+    }
+
+    public void EnableMovement()
+    {
+        movementAction?.action.Enable();
+        jumpAction?.action.Enable();
+    }
 }
