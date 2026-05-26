@@ -42,16 +42,5 @@ public class InventoryManager : MonoBehaviour
 
         inventoryGrid.SetActive(isOpen);
         guideTxt.gameObject.SetActive(isOpen);
-
-        if (isOpen)
-        {
-            playerMovement?.DisableMovement();
-            playerMouseLook?.DisableMouseLook();
-        }
-        else
-        {
-            playerMovement?.EnableMovement();
-            playerMouseLook?.EnableMouseLook();
-        }
     }
 }

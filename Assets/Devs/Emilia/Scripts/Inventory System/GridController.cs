@@ -183,8 +183,6 @@ public class GridController : MonoBehaviour
         if (selectedItem != null)
         {
             rectTransform.position = Mouse.current.position.ReadValue();
-
-
         }
     }
 }
