@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d38f41623f9b5f646a1125d895e1bff1
+guid: b95e20f823602e94fb327c8582d0f539
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -60,11 +60,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: TT33Rig|ArmatureAction.001
-      takeName: TT33Rig|ArmatureAction.001
-      internalID: 4685391881354130825
+      name: TT33Rig|GunIdle
+      takeName: TT33Rig|GunIdle
+      internalID: -8893472879779567270
       firstFrame: 0
-      lastFrame: 0
+      lastFrame: 69
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
