@@ -9,12 +9,16 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject confirmPanel;
 
+    public GameObject playerActive;
+
     private bool _playing;
 
     void Awake()
     {
         if (Instance != null) { Destroy(gameObject); return; }
         Instance = this;
+
+        playerActive.SetActive(false);
     }
 
     void Start()
@@ -42,6 +46,8 @@ public class GameStateManager : MonoBehaviour
         pausePanel.SetActive(false);
         Time.timeScale = 1f;
         _playing = true;
+
+        playerActive.SetActive(true);
     }
 
     public void OnResumePressed()
