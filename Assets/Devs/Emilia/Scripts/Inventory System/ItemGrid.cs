@@ -75,8 +75,8 @@ public class ItemGrid : MonoBehaviour
 
     public Vector2Int FindSpaceForObject(InventoryItem itemToInsert)
     {
-        int height = gridSizeHeight - itemToInsert.itemData.height;
-        int width = gridSizeWidth - itemToInsert.itemData.width;
+        int height = gridSizeHeight - itemToInsert.itemData.height +1;
+        int width = gridSizeWidth - itemToInsert.itemData.width +1;
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)

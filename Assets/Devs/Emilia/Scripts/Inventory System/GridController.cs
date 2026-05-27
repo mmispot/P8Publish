@@ -28,26 +28,20 @@ public class GridController : MonoBehaviour
         HandleHighlight();
 
         if (selectedItemGrid == null) { return; }
-
-        //TEMPORARY RANDOM ITEM FUNCTION
-        if (Keyboard.current.qKey.wasPressedThisFrame && selectedItem == null)
-        {
-            CreateRandomItem();
-        }
         
-        if (Keyboard.current.rKey.wasPressedThisFrame)
+        if (Keyboard.current.rKey.wasPressedThisFrame && selectedItem == null) //creates random item and places it, if it cant place it holds in hand
         {
             InsertRandomItem();
 
         }
 
-        if (Keyboard.current.cKey.wasPressedThisFrame)
+        if (Keyboard.current.cKey.wasPressedThisFrame) //delete item in hand, if there is one
         {
             DeleteHeldItem();
         }
 
 
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (Mouse.current.leftButton.wasPressedThisFrame) 
         {
             LMBPress();
         }
@@ -72,9 +66,10 @@ public class GridController : MonoBehaviour
     {
         Vector2Int posOnGrid = selectedItemGrid.FindSpaceForObject(itemToInsert);
 
-        if (posOnGrid.x == -1) // sentinel value for "not found", positie op de grid kan nooit -1 zijn, en Vector2Int? werkt niet
+        if (posOnGrid.x == -1)
         {
-            Debug.Log("no space for item");
+            Debug.Log("No space for item");
+            selectedItem = itemToInsert; // player holds it instead
             return;
         }
 
