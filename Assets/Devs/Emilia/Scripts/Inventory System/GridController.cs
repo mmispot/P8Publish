@@ -32,7 +32,6 @@ public class GridController : MonoBehaviour
         if (Keyboard.current.rKey.wasPressedThisFrame && selectedItem == null) //creates random item and places it, if it cant place it holds in hand
         {
             InsertRandomItem();
-
         }
 
         if (Keyboard.current.cKey.wasPressedThisFrame) //delete item in hand, if there is one
@@ -59,6 +58,7 @@ public class GridController : MonoBehaviour
         CreateRandomItem(); //change this to param for item to be picked up to auto add to inv
         InventoryItem itemToInsert = selectedItem;
         selectedItem = null;
+
         InsertItem(itemToInsert);
     }
 
