@@ -483,6 +483,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHealth: 100
   currentHealth: 0
+  enemyRenderer: {fileID: 0}
 --- !u!1 &1201546317
 GameObject:
   m_ObjectHideFlags: 0

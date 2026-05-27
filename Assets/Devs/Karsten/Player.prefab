@@ -70,7 +70,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -156,7 +156,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bcfc5c2ec77b7f42bdf91a2f1928fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  enemyRenderer: {fileID: 0}
   healthText: {fileID: 6470680619610102632}
+  maxHealth: 100
+  currentHealth: 0
   health: 100
 --- !u!1 &7241525589809358148
 GameObject:

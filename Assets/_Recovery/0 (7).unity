@@ -745,6 +745,7 @@ MonoBehaviour:
   healthText: {fileID: 0}
   maxHealth: 100
   currentHealth: 0
+  health: 100
 --- !u!1 &1783879609 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4900669999021910590, guid: 2caaac763860857408591c8c7ee0e6c8, type: 3}

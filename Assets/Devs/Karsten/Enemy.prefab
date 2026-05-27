@@ -242,7 +242,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -305,14 +305,10 @@ MonoBehaviour:
   targetPosition: {fileID: 0}
   damage: 10
   lightCooldownTime: 1
-  heavyCooldownTime: 2
   nextAllowedHitTime: 0
   lightDamage: 10
-  heavyDamage: 20
   lightAttackRange: 2
-  heavyAttackRange: 3
   lightAttackPoint: {fileID: 5640428677180742399}
-  heavyAttackPoint: {fileID: 4900669999021910590}
   speed: 5
 --- !u!114 &1023516073617084759
 MonoBehaviour:
@@ -328,6 +324,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
   maxHealth: 100
   currentHealth: 0
+  enemyRenderer: {fileID: 0}
 --- !u!54 &3709977320909076386
 Rigidbody:
   m_ObjectHideFlags: 0
