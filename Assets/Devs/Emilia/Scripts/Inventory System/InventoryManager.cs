@@ -18,7 +18,11 @@ public class InventoryManager : MonoBehaviour
         gridScript = inventoryGrid.GetComponent<ItemGrid>();
         interactScript = inventoryGrid.GetComponent<GridInteract>();
         gridControllerScript = mainCamera.GetComponent<GridController>();
-        player = player.GetComponent<PlayerMovement>();
+
+        if (player != null)
+        {
+            player = player.GetComponent<PlayerMovement>();
+        }
     }
 
     void Update()

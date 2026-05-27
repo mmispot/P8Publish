@@ -38,9 +38,9 @@ public class ItemGrid : MonoBehaviour
 
     private void CleanGridReference(InventoryItem item) //pakt reference van een item en maakt alle plekken op het grid waar dat item stond weer leeg
     {
-        for (int ix = 0; ix < item.itemData.width; ix++)
+        for (int ix = 0; ix < item.WIDTH; ix++)
         {
-            for (int iy = 0; iy < item.itemData.height; iy++)
+            for (int iy = 0; iy < item.HEIGHT; iy++)
             {
                 inventoryItemSlot[item.tileGridPosition.x + ix, item.tileGridPosition.y + iy] = null;
             }
@@ -75,13 +75,13 @@ public class ItemGrid : MonoBehaviour
 
     public Vector2Int FindSpaceForObject(InventoryItem itemToInsert)
     {
-        int height = gridSizeHeight - itemToInsert.itemData.height +1;
-        int width = gridSizeWidth - itemToInsert.itemData.width +1;
+        int height = gridSizeHeight - itemToInsert.HEIGHT +1;
+        int width = gridSizeWidth - itemToInsert.WIDTH +1;
         for (int y = 0; y < height; y++)
         {
             for (int x = 0; x < width; x++)
             {
-                if (CheckAvailableSpace(x, y, itemToInsert.itemData.width, itemToInsert.itemData.height))
+                if (CheckAvailableSpace(x, y, itemToInsert.WIDTH, itemToInsert.HEIGHT))
                 {
                     return new Vector2Int(x, y);
                 }
@@ -94,13 +94,13 @@ public class ItemGrid : MonoBehaviour
     {
         overlapItem = null;
 
-        if (BoundaryCheck(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height) == false) //checks of item in de grid past
+        if (BoundaryCheck(posX, posY, inventoryItem.WIDTH, inventoryItem.HEIGHT) == false) //checks of item in de grid past
         {
             Debug.Log("Item doesn't fit in the grid");
             return false;
         }
 
-        if (CheckAvailableSpace(posX, posY, inventoryItem.itemData.width, inventoryItem.itemData.height) == false) //checkt of item overlapt met een ander item
+        if (CheckAvailableSpace(posX, posY, inventoryItem.WIDTH, inventoryItem.HEIGHT) == false) //checkt of item overlapt met een ander item
         {
             Debug.Log("Item overlaps with another item");
             overlapItem = null;
@@ -124,9 +124,9 @@ public class ItemGrid : MonoBehaviour
 
         inventoryItem.tileGridPosition = new Vector2Int(posX, posY);
 
-        for (int x = 0; x < inventoryItem.itemData.width; x++)
+        for (int x = 0; x < inventoryItem.WIDTH; x++)
         {
-            for (int y = 0; y < inventoryItem.itemData.height; y++)
+            for (int y = 0; y < inventoryItem.HEIGHT; y++)
             {
                 inventoryItemSlot[posX + x, posY + y] = inventoryItem; //actual plaatsen van het item in de grid array
             }
@@ -142,8 +142,8 @@ public class ItemGrid : MonoBehaviour
     public Vector2 CalculatePositionOnGrid(InventoryItem inventoryItem, int posX, int posY)
     {
         Vector2 position = new Vector2();
-        position.x = posX * tileSizeWidth + tileSizeWidth * inventoryItem.itemData.width / 2;
-        position.y = -(posY * tileSizeHeight + tileSizeHeight * inventoryItem.itemData.height / 2);
+        position.x = posX * tileSizeWidth + tileSizeWidth * inventoryItem.WIDTH / 2;
+        position.y = -(posY * tileSizeHeight + tileSizeHeight * inventoryItem.HEIGHT / 2);
         return position;
     }
 

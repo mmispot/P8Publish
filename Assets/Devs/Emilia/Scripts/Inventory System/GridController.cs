@@ -29,9 +29,14 @@ public class GridController : MonoBehaviour
 
         if (selectedItemGrid == null) { return; }
         
-        if (Keyboard.current.rKey.wasPressedThisFrame && selectedItem == null) //creates random item and places it, if it cant place it holds in hand
+        if (Keyboard.current.qKey.wasPressedThisFrame && selectedItem == null) //creates random item and places it, if it cant place it holds in hand
         {
             InsertRandomItem();
+        }
+
+        if (Keyboard.current.rKey.wasPressedThisFrame && selectedItem != null) //rotates item in hand
+        {
+            RotateItem();
         }
 
         if (Keyboard.current.cKey.wasPressedThisFrame) //delete item in hand, if there is one
@@ -44,6 +49,13 @@ public class GridController : MonoBehaviour
         {
             LMBPress();
         }
+    }
+
+    public void RotateItem()
+    {
+        if (selectedItem == null) { return; }
+
+        selectedItem.Rotate();
     }
 
     public void DeleteHeldItem()
@@ -100,7 +112,7 @@ public class GridController : MonoBehaviour
         }
         else
         {
-            inventoryHighlight.Show(selectedItemGrid.BoundaryCheck(positionOnGrid.x, positionOnGrid.y, selectedItem.itemData.width, selectedItem.itemData.height));
+            inventoryHighlight.Show(selectedItemGrid.BoundaryCheck(positionOnGrid.x, positionOnGrid.y, selectedItem.WIDTH, selectedItem.HEIGHT));
             inventoryHighlight.SetHighlightSize(selectedItem);
             //inventoryHighlight.SetParent(selectedItemGrid);
             inventoryHighlight.SetPosition(selectedItemGrid, selectedItem, positionOnGrid.x, positionOnGrid.y);
@@ -125,6 +137,8 @@ public class GridController : MonoBehaviour
 
     public void LMBPress()
     {
+        if (selectedItemGrid == null) { return; }
+
         Vector2Int tileGridPosition = GetTileGridPosition();
 
         if (selectedItem == null)
@@ -139,6 +153,7 @@ public class GridController : MonoBehaviour
 
     public Vector2Int GetTileGridPosition()
     {
+
         Vector2Int tileGridPosition = selectedItemGrid.GetTileGridPosition(Mouse.current.position.ReadValue());
         return tileGridPosition; 
     }
