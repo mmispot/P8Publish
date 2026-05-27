@@ -40,6 +40,9 @@ public class SchootingRaycast : MonoBehaviour
         shootAction?.action.Disable();
     }
 
+    public void DisableShoot() => shootAction?.action.Disable();
+    public void EnableShoot()  => shootAction?.action.Enable();
+
     private void OnShoot(InputAction.CallbackContext ctx) => Shoot();
 
     private void Shoot()

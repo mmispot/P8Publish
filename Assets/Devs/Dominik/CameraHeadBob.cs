@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CameraHeadBob : MonoBehaviour
 {
-    [Header("Referenties")]
+    [Header("References")]
     [SerializeField] private PlayerMovement playerMovement;
 
     [Header("Walk Bob")]
@@ -21,62 +21,78 @@ public class CameraHeadBob : MonoBehaviour
     [SerializeField] private float bobTransitionSpeed = 8f;
     [SerializeField] private float returnSpeed = 10f;
 
-    private Vector3 startPos;
-    private float bobTimer;
-    private float currentAmplitude;
-    private float currentFrequency;
-    private float landingBump;
-    private bool wasGrounded;
+    private Vector3 _startPos;
+    private float _bobTimer;
+    private float _currentAmplitude;
+    private float _currentFrequency;
+    private float _landingBump;
+    private bool _wasGrounded;
 
     private void Start()
     {
-        startPos = transform.localPosition;
-        wasGrounded = playerMovement != null && playerMovement.IsGrounded();
+        //store the initial local position as the rest position
+        _startPos = transform.localPosition;
+        _wasGrounded = playerMovement != null && playerMovement.IsGrounded;
     }
 
     private void Update()
     {
+        //do nothing if there is no player movement reference
         if (playerMovement == null) return;
 
-        bool grounded  = playerMovement.IsGrounded();
-        bool moving    = playerMovement.IsMoving;
+        bool grounded = playerMovement.IsGrounded;
+        bool moving = playerMovement.IsMoving;
         bool sprinting = playerMovement.IsSprinting;
 
-        // Camera dips down on landing
-        if (grounded && !wasGrounded)
-            landingBump = -landingAmplitude;
-        wasGrounded = grounded;
-
-        landingBump = Mathf.Lerp(landingBump, 0f, Time.deltaTime * landingDecaySpeed);
+        HandleLandingBump(grounded);
 
         if (grounded && moving)
-        {
-            float targetAmplitude = sprinting ? runAmplitude : walkAmplitude;
-            float targetFrequency = sprinting ? runFrequency : walkFrequency;
-
-            currentAmplitude = Mathf.Lerp(currentAmplitude, targetAmplitude, Time.deltaTime * bobTransitionSpeed);
-            currentFrequency = Mathf.Lerp(currentFrequency, targetFrequency, Time.deltaTime * bobTransitionSpeed);
-
-            bobTimer += Time.deltaTime * currentFrequency;
-
-            // Figure-8: Y at full frequency, X at half (one sway per two steps)
-            float bobY = Mathf.Sin(bobTimer * Mathf.PI * 2f) * currentAmplitude;
-            float bobX = Mathf.Sin(bobTimer * Mathf.PI) * currentAmplitude * 0.5f;
-
-            transform.localPosition = new Vector3(
-                startPos.x + bobX,
-                startPos.y + bobY + landingBump,
-                startPos.z);
-        }
+            ApplyBob(sprinting);
         else
-        {
-            currentAmplitude = Mathf.Lerp(currentAmplitude, 0f, Time.deltaTime * bobTransitionSpeed);
-            currentFrequency = Mathf.Lerp(currentFrequency, 0f, Time.deltaTime * bobTransitionSpeed);
+            ReturnToRest();
+    }
 
-            transform.localPosition = Vector3.Lerp(
-                transform.localPosition,
-                new Vector3(startPos.x, startPos.y + landingBump, startPos.z),
-                Time.deltaTime * returnSpeed);
-        }
+    private void HandleLandingBump(bool grounded)
+    {
+        //trigger a downward bump when the player lands
+        if (grounded && !_wasGrounded)
+            _landingBump = -landingAmplitude;
+
+        _wasGrounded = grounded;
+        _landingBump = Mathf.Lerp(_landingBump, 0f, Time.deltaTime * landingDecaySpeed);
+    }
+
+    private void ApplyBob(bool sprinting)
+    {
+        //lerp amplitude and frequency towards walk or run targets
+        float targetAmplitude = sprinting ? runAmplitude : walkAmplitude;
+        float targetFrequency = sprinting ? runFrequency : walkFrequency;
+
+        _currentAmplitude = Mathf.Lerp(_currentAmplitude, targetAmplitude, Time.deltaTime * bobTransitionSpeed);
+        _currentFrequency = Mathf.Lerp(_currentFrequency, targetFrequency, Time.deltaTime * bobTransitionSpeed);
+
+        _bobTimer += Time.deltaTime * _currentFrequency;
+
+        //figure-8 pattern: Y bobs at full frequency, X sways at half
+        float bobY = Mathf.Sin(_bobTimer * Mathf.PI * 2f) * _currentAmplitude;
+        float bobX = Mathf.Sin(_bobTimer * Mathf.PI) * _currentAmplitude * 0.5f;
+
+        transform.localPosition = new Vector3(
+            _startPos.x + bobX,
+            _startPos.y + bobY + _landingBump,
+            _startPos.z);
+    }
+
+    private void ReturnToRest()
+    {
+        //smoothly decay amplitude and frequency back to zero
+        _currentAmplitude = Mathf.Lerp(_currentAmplitude, 0f, Time.deltaTime * bobTransitionSpeed);
+        _currentFrequency = Mathf.Lerp(_currentFrequency, 0f, Time.deltaTime * bobTransitionSpeed);
+
+        //lerp position back to rest, keeping any active landing bump
+        transform.localPosition = Vector3.Lerp(
+            transform.localPosition,
+            new Vector3(_startPos.x, _startPos.y + _landingBump, _startPos.z),
+            Time.deltaTime * returnSpeed);
     }
 }

@@ -10,6 +10,7 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameObject confirmPanel;
 
     public GameObject playerActive;
+    [SerializeField] private PlayerMovement playerMovement;
 
     private bool _playing;
 
@@ -17,6 +18,9 @@ public class GameStateManager : MonoBehaviour
     {
         if (Instance != null) { Destroy(gameObject); return; }
         Instance = this;
+
+        if (playerMovement == null && playerActive != null)
+            playerMovement = playerActive.GetComponent<PlayerMovement>();
 
         playerActive.SetActive(false);
     }
@@ -34,10 +38,27 @@ public class GameStateManager : MonoBehaviour
 
         if (Keyboard.current.escapeKey.wasPressedThisFrame)
         {
-            bool paused = pausePanel.activeSelf;
-            pausePanel.SetActive(!paused);
-            Time.timeScale = paused ? 1f : 0f;
+            if (pausePanel.activeSelf)
+                Resume();
+            else
+                Pause();
         }
+    }
+
+    private void Pause()
+    {
+        pausePanel.SetActive(true);
+        Time.timeScale = 0f;
+        playerMovement?.DisableMovement();
+        playerMovement?.DisableMouseLook();
+    }
+
+    private void Resume()
+    {
+        pausePanel.SetActive(false);
+        Time.timeScale = 1f;
+        playerMovement?.EnableMovement();
+        playerMovement?.EnableMouseLook();
     }
 
     public void OnStartPressed()
@@ -50,17 +71,13 @@ public class GameStateManager : MonoBehaviour
         playerActive.SetActive(true);
     }
 
-    public void OnResumePressed()
-    {
-        pausePanel.SetActive(false);
-        Time.timeScale = 1f;
-    }
+    public void OnResumePressed() => Resume();
 
     public void OnMainMenuPressed()
     {
+        Pause();
         pausePanel.SetActive(false);
         startPanel.SetActive(true);
-        Time.timeScale = 0f;
         _playing = false;
     }
 
