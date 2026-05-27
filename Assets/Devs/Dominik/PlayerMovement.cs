@@ -105,8 +105,7 @@ public class PlayerMovement : MonoBehaviour
 
         // Positie updaten, verticale physics behouden
         Vector3 hDisplacement = smoothHVel * Time.fixedDeltaTime;
-        Vector3 vDisplacement = Vector3.up * rb.linearVelocity.y * Time.fixedDeltaTime;
-        rb.MovePosition(rb.position + hDisplacement + vDisplacement);
+        rb.MovePosition(rb.position + hDisplacement);
 
         // Springen
         if (jumpRequested)
@@ -132,11 +131,26 @@ public class PlayerMovement : MonoBehaviour
         jumpAction?.action.Disable();
         sprintAction?.action.Disable();
     }
+
     //for start walking
     public void EnableMovement()
     {
         movementAction?.action.Enable();
         jumpAction?.action.Enable();
         sprintAction?.action.Enable();
+    }
+
+    //for stop mouse look
+    public void DisableMouseLook()
+    {
+        if (mouseLook != null)
+            mouseLook.enabled = false;
+    }
+
+    //for start mouse look
+    public void EnableMouseLook()
+    {
+        if (mouseLook != null)
+            mouseLook.enabled = true;
     }
 }
