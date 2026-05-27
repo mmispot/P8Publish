@@ -246,9 +246,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1975574134847709866, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3004264227089466526, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_Name
       value: KipschasPlaceholder (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3004264227089466526, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5399111656096041250, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6227923113253187444, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6408769030205076367, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_Enabled
@@ -262,6 +278,10 @@ PrefabInstance:
       propertyPath: enemyRenderer
       value: 
       objectReference: {fileID: 114829568}
+    - target: {fileID: 8538993988179654739, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -492,7 +512,7 @@ GameObject:
   - component: {fileID: 270309542}
   - component: {fileID: 270309541}
   - component: {fileID: 270309540}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -666,9 +686,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1975574134847709866, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3004264227089466526, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_Name
       value: KipschasPlaceholder (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3004264227089466526, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5399111656096041250, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6227923113253187444, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6408769030205076367, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_Enabled
@@ -682,6 +718,10 @@ PrefabInstance:
       propertyPath: enemyRenderer
       value: 
       objectReference: {fileID: 299202476}
+    - target: {fileID: 8538993988179654739, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -1012,9 +1052,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1975574134847709866, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3004264227089466526, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_Name
       value: KipschasPlaceholder (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3004264227089466526, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5399111656096041250, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6227923113253187444, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6408769030205076367, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_Enabled
@@ -1028,6 +1084,10 @@ PrefabInstance:
       propertyPath: enemyRenderer
       value: 
       objectReference: {fileID: 329701965}
+    - target: {fileID: 8538993988179654739, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -1204,7 +1264,7 @@ GameObject:
   - component: {fileID: 463070392}
   - component: {fileID: 463070391}
   - component: {fileID: 463070390}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1501,7 +1561,7 @@ GameObject:
   - component: {fileID: 558610204}
   - component: {fileID: 558610203}
   - component: {fileID: 558610202}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2084,7 +2144,7 @@ GameObject:
   - component: {fileID: 998955601}
   - component: {fileID: 998955600}
   - component: {fileID: 998955599}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2408,7 +2468,7 @@ GameObject:
   - component: {fileID: 1044916532}
   - component: {fileID: 1044916531}
   - component: {fileID: 1044916530}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2838,10 +2898,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1869444781}
     - target: {fileID: 1321395276322282704, guid: 26162b76b68ed3c459ac9714dae6da65, type: 3}
-      propertyPath: player
-      value: 
-      objectReference: {fileID: 1286986313}
-    - target: {fileID: 1321395276322282704, guid: 26162b76b68ed3c459ac9714dae6da65, type: 3}
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 1869444781}
@@ -2874,7 +2930,7 @@ GameObject:
   - component: {fileID: 1199918812}
   - component: {fileID: 1199918811}
   - component: {fileID: 1199918810}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3012,9 +3068,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1975574134847709866, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3004264227089466526, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_Name
       value: KipschasPlaceholder (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3004264227089466526, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5399111656096041250, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6227923113253187444, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6408769030205076367, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_Enabled
@@ -3028,6 +3100,10 @@ PrefabInstance:
       propertyPath: enemyRenderer
       value: 
       objectReference: {fileID: 1218283494}
+    - target: {fileID: 8538993988179654739, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -3156,7 +3232,7 @@ GameObject:
   - component: {fileID: 1452625690}
   - component: {fileID: 1452625689}
   - component: {fileID: 1452625688}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3389,7 +3465,7 @@ GameObject:
   - component: {fileID: 1589047741}
   - component: {fileID: 1589047740}
   - component: {fileID: 1589047739}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3783,9 +3859,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1975574134847709866, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3004264227089466526, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_Name
       value: KipschasPlaceholder (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3004264227089466526, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5399111656096041250, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6227923113253187444, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6408769030205076367, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_Enabled
@@ -3799,6 +3891,10 @@ PrefabInstance:
       propertyPath: enemyRenderer
       value: 
       objectReference: {fileID: 1720968421}
+    - target: {fileID: 8538993988179654739, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -3843,7 +3939,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5912314181287407292, guid: 4110832f71c796947a5ff5188be08b3b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.077
+      value: 0.96
       objectReference: {fileID: 0}
     - target: {fileID: 8323672892927918991, guid: 4110832f71c796947a5ff5188be08b3b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4117,7 +4213,7 @@ GameObject:
   - component: {fileID: 1877091795}
   - component: {fileID: 1877091794}
   - component: {fileID: 1877091793}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4400,7 +4496,7 @@ GameObject:
   - component: {fileID: 2097342458}
   - component: {fileID: 2097342457}
   - component: {fileID: 2097342456}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
