@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Roep dit aan in een andere script als je bijvoorbeeld bij een jump een sound nodig hebt: SoundManager.PlaySound(SoundType.JUMP);
+
 public enum SoundType
 {
-    TEST,
     JUMP,
     WALK,
     DEATH,
-    PEEPER,
+  
 }
 
 [System.Serializable]
