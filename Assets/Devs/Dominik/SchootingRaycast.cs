@@ -8,6 +8,7 @@ public class SchootingRaycast : MonoBehaviour
     [SerializeField] private Camera playerCamera;
     [SerializeField] private float range = 100f;
     [SerializeField] private LayerMask hitLayers;
+    [SerializeField] private int damage = 10;
 
     [Header("Debug Line")]
     [SerializeField] private float lineDuration = 0.3f;
@@ -56,6 +57,11 @@ public class SchootingRaycast : MonoBehaviour
         {
             endPoint = hit.point;
             Debug.Log($"Hit: {hit.collider.name} | Distance: {hit.distance:F2}m");
+            PlayerHealth target = hit.collider.GetComponent<PlayerHealth>();
+            if (target != null)
+            {
+                target.TakeDamage(damage);
+            }
         }
         else
         {
