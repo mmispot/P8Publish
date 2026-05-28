@@ -1,53 +1,58 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MouseLook : MonoBehaviour
 {
-    [Header("Gevoeligheid")]
-    public float mouseSensitivity = 500f;
+    [Header("Sensitivity")]
+    [SerializeField] private float mouseSensitivity = 0.15f;
 
-    [Header("Verticale kijk-limiet")]
-    public float topClamp = -90f;
-    public float bottomClamp = 90f;
+    [Header("Vertical clamp")]
+    [SerializeField] private float topClamp = -90f;
+    [SerializeField] private float bottomClamp = 90f;
 
-    [Header("Referenties")]
-    public Transform cameraTransform;
-    public Transform bodyTransform; // Sleep hier de Body naartoe
+    [Header("References")]
+    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private Transform bodyTransform;
 
-    private float xRotation = 0f;
-    private float yRotation = 0f;
+    private float _xRotation;
+    private float _yRotation;
 
-    void Start()
+    private void Start()
     {
+        //lock and hide the cursor on start
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        yRotation = transform.eulerAngles.y;
+
+        _yRotation = transform.eulerAngles.y;
     }
 
-    void Update()
+    private void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        // read raw per-frame mouse delta — never an absolute position, never needs Time.deltaTime
+        Vector2 delta = Mouse.current?.delta.ReadValue() ?? Vector2.zero;
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, topClamp, bottomClamp);
-        yRotation += mouseX;
+        _xRotation -= delta.y * mouseSensitivity;
+        _xRotation = Mathf.Clamp(_xRotation, topClamp, bottomClamp);
+        _yRotation += delta.x * mouseSensitivity;
 
-        // Camera kijkt omhoog/omlaag en links/rechts
+        //rotate the camera on both axes
         if (cameraTransform != null)
-            cameraTransform.rotation = Quaternion.Euler(xRotation, yRotation, 0f);
+            cameraTransform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0f);
 
-        // Body draait alleen op Y-as, blijft op zijn eigen positie
+        //rotate the body on the y axis only
         if (bodyTransform != null)
-            bodyTransform.rotation = Quaternion.Euler(0f, yRotation, 0f);
+            bodyTransform.rotation = Quaternion.Euler(0f, _yRotation, 0f);
     }
 
     public float GetYaw()
     {
-        return yRotation;
+        //return the current yaw so other scripts can align to the camera direction
+        return _yRotation;
     }
 
     public void DisableMouseLook()
     {
+        //disable this script and unlock the cursor
         enabled = false;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -55,6 +60,7 @@ public class MouseLook : MonoBehaviour
 
     public void EnableMouseLook()
     {
+        //enable this script and lock the cursor again
         enabled = true;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

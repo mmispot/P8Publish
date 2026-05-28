@@ -1,129 +1,213 @@
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Beweging")]
-    public float moveSpeed = 5f;
-    public float smoothTime = 0.05f;
+    [Header("Walk / Sprint")]
+    [SerializeField] private float walkSpeed = 5f;
+    [SerializeField] private float sprintSpeed = 9f;
+    [SerializeField] private float smoothTime = 0.05f;
 
-    [Header("Springen")]
-    public float jumpForce = 5f;
-    public Transform groundCheck;
-    public float groundCheckRadius = 0.2f;
-    public LayerMask groundLayer;
+    [Header("Jump")]
+    [SerializeField] private float jumpForce = 5f;
+    [SerializeField] private float airControlFactor = 0.3f;
+    [SerializeField] private float landingSnapRadius = 1.5f;
+    [SerializeField] private float jumpGracePeriod = 0.1f;
 
     [Header("Input Actions")]
-    public InputActionReference movementAction;
-    public InputActionReference jumpAction;
+    [SerializeField] private InputActionReference moveAction;
+    [SerializeField] private InputActionReference jumpAction;
+    [SerializeField] private InputActionReference sprintAction;
 
-    [Header("Referenties")]
-    public MouseLook mouseLook;
+    [Header("References")]
+    [SerializeField] private MouseLook mouseLook;
+    [SerializeField] private SchootingRaycast shooting;
 
-    private Rigidbody rb;
-    private Vector2 moveInput;
-    private Vector3 smoothVelocity;
-    private bool jumpRequested = false;
+    private NavMeshAgent _agent;
+
+    private Vector2 _moveInput;
+    private bool _isSprinting;
+
+    private Vector3 _smoothVelRef;
+    private Vector3 _horizontalVel;
+
+    private bool _isAirborne;
+    private float _verticalVel;
+    private float _airborneTimer;
+
+    public bool IsGrounded => !_isAirborne;
+    public bool IsMoving => _moveInput.sqrMagnitude > 0.01f;
+    public bool IsSprinting => _isSprinting;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.interpolation = RigidbodyInterpolation.Interpolate;
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-        rb.constraints = RigidbodyConstraints.FreezeRotationX
-                       | RigidbodyConstraints.FreezeRotationY
-                       | RigidbodyConstraints.FreezeRotationZ;
+        //get the navmesh agent and configure it
+        _agent = GetComponent<NavMeshAgent>();
+        _agent.updateRotation = false;
+        _agent.updateUpAxis = false;
+        _agent.autoBraking = false;
+        _agent.autoTraverseOffMeshLink = false;
+        _agent.acceleration = 50f;
+        // updatePosition must stay true — agent.Move() only moves the transform when this is on
+    }
+
+    private void Start()
+    {
+        // ensure the agent is on the navmesh at spawn — if the player spawns even slightly
+        // above the surface, isOnNavMesh stays false and Move() silently does nothing
+        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+            _agent.Warp(hit.position);
     }
 
     private void OnEnable()
     {
-        movementAction?.action.Enable();
+        //enable all input actions and subscribe to jump
+        moveAction?.action.Enable();
         jumpAction?.action.Enable();
+        sprintAction?.action.Enable();
 
-        if (jumpAction?.action != null)
-            jumpAction.action.performed += OnJump;
+        if (jumpAction != null)
+            jumpAction.action.performed += HandleJump;
     }
 
     private void OnDisable()
     {
-        movementAction?.action.Disable();
+        //disable all input actions and unsubscribe from jump
+        moveAction?.action.Disable();
         jumpAction?.action.Disable();
+        sprintAction?.action.Disable();
 
-        if (jumpAction?.action != null)
-            jumpAction.action.performed -= OnJump;
-    }
-
-    private void OnJump(InputAction.CallbackContext ctx)
-    {
-        if (IsGrounded())
-            jumpRequested = true;
-        Debug.Log("Player Grounded");
+        if (jumpAction != null)
+            jumpAction.action.performed -= HandleJump;
     }
 
     private void Update()
     {
-        if (movementAction?.action != null)
-            moveInput = movementAction.action.ReadValue<Vector2>();
+        //read input then run either grounded or airborne movement
+        ReadInput();
+
+        if (_isAirborne)
+            UpdateAirborne(Time.deltaTime);
+        else
+            UpdateGrounded(Time.deltaTime);
     }
 
-    private void FixedUpdate()
+    private void ReadInput()
     {
-        if (rb == null) return;
+        //read move and sprint input each frame
+        _moveInput = moveAction?.action.ReadValue<Vector2>() ?? Vector2.zero;
+        _isSprinting = sprintAction?.action.IsPressed() ?? false;
+    }
 
-        // Gebruik camera yaw als vooruit-richting, body roteert niet zelf
-        float yaw = mouseLook != null ? mouseLook.GetYaw() : transform.eulerAngles.y;
+    private void HandleJump(InputAction.CallbackContext ctx)
+    {
+        //jump only when grounded and on the navmesh
+        if (_isAirborne || !_agent.isOnNavMesh || !_agent.enabled)
+            return;
 
-        Vector3 forward = Quaternion.Euler(0f, yaw, 0f) * Vector3.forward;
-        Vector3 right = Quaternion.Euler(0f, yaw, 0f) * Vector3.right;
+        _verticalVel = jumpForce;
+        _isAirborne = true;
+        _airborneTimer = 0f;
+        _agent.enabled = false;
+    }
 
-        Vector3 targetDir = right * moveInput.x + forward * moveInput.y;
-        if (targetDir.sqrMagnitude > 1f) targetDir.Normalize();
+    private void UpdateGrounded(float dt)
+    {
+        Vector3 targetVel = BuildTargetVelocity();
 
-        Vector3 targetHVel = targetDir * moveSpeed;
+        _horizontalVel = Vector3.SmoothDamp(
+            _horizontalVel, targetVel,
+            ref _smoothVelRef, smoothTime);
 
-        // Vloeiend naar doelsnelheid
-        Vector3 currentHVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-        Vector3 smoothHVel = Vector3.SmoothDamp(
-            currentHVel, targetHVel, ref smoothVelocity,
-            smoothTime, Mathf.Infinity, Time.fixedDeltaTime);
-
-        // Positie updaten, verticale physics behouden
-        Vector3 hDisplacement = smoothHVel * Time.fixedDeltaTime;
-        Vector3 vDisplacement = Vector3.up * rb.linearVelocity.y * Time.fixedDeltaTime;
-        rb.MovePosition(rb.position + hDisplacement + vDisplacement);
-
-        // Springen
-        if (jumpRequested)
+        if (_horizontalVel.sqrMagnitude < 0.001f)
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            jumpRequested = false;
+            _horizontalVel = Vector3.zero;
+            _agent.velocity = Vector3.zero; // kill agent momentum
+        }
+
+        _agent.Move(_horizontalVel * dt);
+
+        if (mouseLook != null)
+            transform.rotation = Quaternion.Euler(0f, mouseLook.GetYaw(), 0f);
+    }
+
+    private void UpdateAirborne(float dt)
+    {
+        //apply gravity, air steering and move the transform manually
+        _airborneTimer += dt;
+        _verticalVel += Physics.gravity.y * dt;
+
+        _horizontalVel = Vector3.Lerp(
+            _horizontalVel,
+            BuildTargetVelocity(),
+            airControlFactor * dt);
+
+        transform.position += (_horizontalVel + Vector3.up * _verticalVel) * dt;
+
+        TryLand();
+    }
+
+    private void TryLand()
+    {
+        //snap back onto the navmesh once falling and close enough to the surface
+        bool pastGracePeriod = _airborneTimer > jumpGracePeriod;
+        bool isFalling = _verticalVel < 0f;
+
+        if (!pastGracePeriod || !isFalling)
+            return;
+
+        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, landingSnapRadius, NavMesh.AllAreas))
+        {
+            _agent.enabled = true;
+            _agent.Warp(hit.position);
+            _isAirborne = false;
+            _verticalVel = 0f;
+            _smoothVelRef = Vector3.zero; // clear stale SmoothDamp ref to avoid velocity jerk on landing
         }
     }
 
-    private bool IsGrounded()
+    private Vector3 BuildTargetVelocity()
     {
-        if (groundCheck == null) return true;
-        return Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundLayer);
-    }
+        //convert 2d input into a world space velocity aligned to the camera yaw
+        if (_moveInput.sqrMagnitude < 0.01f)
+            return Vector3.zero;
 
-    private void OnDrawGizmosSelected()
-    {
-        if (groundCheck == null) return;
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+        float yaw = mouseLook != null ? mouseLook.GetYaw() : transform.eulerAngles.y;
+        Quaternion camYaw = Quaternion.Euler(0f, yaw, 0f);
+
+        Vector3 direction = camYaw * new Vector3(_moveInput.x, 0f, _moveInput.y);
+        float speed = _isSprinting ? sprintSpeed : walkSpeed;
+
+        return direction.normalized * speed;
     }
 
     public void DisableMovement()
     {
-        movementAction?.action.Disable();
+        moveAction?.action.Disable();
         jumpAction?.action.Disable();
+        sprintAction?.action.Disable();
+        if (_agent != null) _agent.enabled = false;
+        shooting?.DisableShoot();
     }
 
     public void EnableMovement()
     {
-        movementAction?.action.Enable();
+        moveAction?.action.Enable();
         jumpAction?.action.Enable();
+        sprintAction?.action.Enable();
+        if (_agent != null) _agent.enabled = true;
+        shooting?.EnableShoot();
+    }
+
+    public void DisableMouseLook()
+    {
+        if (mouseLook != null) mouseLook.DisableMouseLook();
+    }
+
+    public void EnableMouseLook()
+    {
+        if (mouseLook != null) mouseLook.EnableMouseLook();
     }
 }
