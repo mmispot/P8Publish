@@ -17463,11 +17463,32 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1975574134847709866, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3004264227089466526, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_Name
       value: KipschasPlaceholder (1)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 3004264227089466526, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5399111656096041250, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6227923113253187444, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8538993988179654739, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6408769030205076367, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
