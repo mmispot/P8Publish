@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//als je ergens moet aaroepen bijvoorbeeld bij een player actie zet dit eronder: SoundManager.PlaySound(SoundType."de enum die je nodig hebt uit de lijst");
+//als je een sound ergens moet aaroepen bijvoorbeeld bij een player actie zet dit eronder: SoundManager.PlaySound(SoundType."de enum die je nodig hebt uit de lijst");
 
 public enum SoundType
 {
