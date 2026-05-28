@@ -57,19 +57,25 @@ public class PlayerMovement : MonoBehaviour
     {
         // ensure the agent is on the navmesh at spawn — if the player spawns even slightly
         // above the surface, isOnNavMesh stays false and Move() silently does nothing
-        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 5f, NavMesh.AllAreas))
             _agent.Warp(hit.position);
     }
 
     private void OnEnable()
     {
-        //enable all input actions and subscribe to jump
         moveAction?.action.Enable();
         jumpAction?.action.Enable();
         sprintAction?.action.Enable();
 
         if (jumpAction != null)
             jumpAction.action.performed += HandleJump;
+
+        // Re-snap to NavMesh in case the agent was warped/disabled since Start()
+        if (_agent != null && !_agent.isOnNavMesh)
+        {
+            if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+                _agent.Warp(hit.position);
+        }
     }
 
     private void OnDisable()
@@ -124,10 +130,11 @@ public class PlayerMovement : MonoBehaviour
         if (_horizontalVel.sqrMagnitude < 0.001f)
         {
             _horizontalVel = Vector3.zero;
-            _agent.velocity = Vector3.zero; // kill agent momentum
+            _agent.velocity = Vector3.zero;
         }
 
-        _agent.Move(_horizontalVel * dt);
+        if (_agent.isOnNavMesh && _agent.enabled)  // <-- guard added here so navmesh works even if the player spawns slightly above the surface
+            _agent.Move(_horizontalVel * dt);
 
         if (mouseLook != null)
             transform.rotation = Quaternion.Euler(0f, mouseLook.GetYaw(), 0f);
