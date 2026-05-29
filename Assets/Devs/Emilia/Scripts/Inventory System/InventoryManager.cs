@@ -10,7 +10,7 @@ public class InventoryManager : MonoBehaviour
     public GridController gridControllerScript;
     public GameObject inventoryGrid;
     public GameObject mainCamera;
-    public TMP_Text guideTxt;
+    //public TMP_Text guideTxt;
     public PlayerMovement player;
 
     void Start()
@@ -37,7 +37,7 @@ public class InventoryManager : MonoBehaviour
     {
         bool isOpen = !inventoryGrid.activeSelf;
         inventoryGrid.SetActive(isOpen);
-        guideTxt.gameObject.SetActive(isOpen);
+        //guideTxt.gameObject.SetActive(isOpen);
 
         if (isOpen)
         {
