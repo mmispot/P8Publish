@@ -13,6 +13,7 @@ public class EnemyMovement : MonoBehaviour
     public GameObject lightAttackPoint;
     public float speed = 1f;
     private NavMeshAgent agent;
+    public float DetectionRange = 10f;
 
     void Start()
     {
