@@ -92,7 +92,16 @@ public class GridController : MonoBehaviour
 
     private void HandleHighlight()
     {
+        if (selectedItemGrid == null) { return; }
+
         Vector2Int positionOnGrid = GetTileGridPosition();
+
+        // Guard against out-of-bounds positions (e.g. mouse over equipment slots)
+        if (!selectedItemGrid.BoundaryCheck(positionOnGrid.x, positionOnGrid.y, 1, 1))
+        {
+            inventoryHighlight.Show(false);
+            return;
+        }
 
         if (selectedItem == null)
         {
@@ -102,7 +111,6 @@ public class GridController : MonoBehaviour
             {
                 inventoryHighlight.Show(true);
                 inventoryHighlight.SetHighlightSize(itemToHighlight);
-                //inventoryHighlight.SetParent(selectedItemGrid);
                 inventoryHighlight.SetPosition(selectedItemGrid, itemToHighlight, itemToHighlight.tileGridPosition.x, itemToHighlight.tileGridPosition.y);
             }
             else
@@ -114,7 +122,6 @@ public class GridController : MonoBehaviour
         {
             inventoryHighlight.Show(selectedItemGrid.BoundaryCheck(positionOnGrid.x, positionOnGrid.y, selectedItem.WIDTH, selectedItem.HEIGHT));
             inventoryHighlight.SetHighlightSize(selectedItem);
-            //inventoryHighlight.SetParent(selectedItemGrid);
             inventoryHighlight.SetPosition(selectedItemGrid, selectedItem, positionOnGrid.x, positionOnGrid.y);
         }
     }
@@ -135,20 +142,49 @@ public class GridController : MonoBehaviour
         inventoryItem.Set(items[selectedItemID]);
     }
 
+    public EquipmentSlot hoveredEquipmentSlot;
+
     public void LMBPress()
     {
+        // Priority: try to equip into a hovered slot first
+        if (selectedItem != null && hoveredEquipmentSlot != null)
+        {
+            bool equipped = hoveredEquipmentSlot.TryEquipItem(selectedItem);
+            if (equipped)
+            {
+                selectedItem = null;
+                return;
+            }
+            else
+            {
+                Debug.Log("Wrong item type for this slot");
+                return;
+            }
+        }
+
+        // Check if we're clicking on an equipment slot to pick up
+        if (selectedItem == null && hoveredEquipmentSlot != null)
+        {
+            if (hoveredEquipmentSlot.equippedItem != null)
+            {
+                selectedItem = hoveredEquipmentSlot.UnequipItem();
+                rectTransform = selectedItem.GetComponent<RectTransform>();
+
+                // Re-parent to canvas so DragItem works correctly
+                rectTransform.SetParent(canvasTransform);
+                rectTransform.localScale = Vector3.one;
+
+                CanvasGroup cg = selectedItem.GetComponent<CanvasGroup>();
+                if (cg != null) cg.blocksRaycasts = false;
+            }
+            return;
+        }
+
         if (selectedItemGrid == null) { return; }
 
         Vector2Int tileGridPosition = GetTileGridPosition();
-
-        if (selectedItem == null)
-        {
-            PickUpItem(tileGridPosition);
-        }
-        else
-        {
-            PlaceItem(tileGridPosition);
-        }
+        if (selectedItem == null) PickUpItem(tileGridPosition);
+        else PlaceItem(tileGridPosition);
     }
 
     public Vector2Int GetTileGridPosition()
