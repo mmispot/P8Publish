@@ -10,7 +10,7 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameObject confirmPanel;
 
     public GameObject playerActive;
-    [SerializeField] private PlayerMovement playerMovement;
+    [SerializeField] private SennaPlayerMovement playerMovement;
 
     private bool _playing;
 
@@ -20,7 +20,7 @@ public class GameStateManager : MonoBehaviour
         Instance = this;
 
         if (playerMovement == null && playerActive != null)
-            playerMovement = playerActive.GetComponent<PlayerMovement>();
+            playerMovement = playerActive.GetComponent<SennaPlayerMovement>();
 
         playerActive.SetActive(false);
     }
