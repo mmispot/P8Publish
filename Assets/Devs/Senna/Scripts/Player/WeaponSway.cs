@@ -27,6 +27,13 @@ public class WeaponSway : MonoBehaviour
     [SerializeField] private float maxPitchPositionShift = 0.12f;
     [SerializeField] private float pitchPositionSpeed = 10f;
 
+    [Header("Landing Kick")]
+    [SerializeField] private float landingKickAmount = 0.05f;
+    [SerializeField] private float jumpKickAmount = 0.03f;
+    [SerializeField] private float landingKickSpring = 200f;
+    [SerializeField] private float landingKickDamping = 16f;
+    [SerializeField] private float jumpDriftScale = 0.008f;
+
     [Header("Input Actions")]
     [SerializeField] private InputActionReference lookAction;
     [SerializeField] private InputActionReference moveAction;
@@ -35,6 +42,10 @@ public class WeaponSway : MonoBehaviour
     private Quaternion _restRotation;
     private float _currentPitch;
     private float _currentPitchOffset;
+    private float _landingKickOffset;
+    private float _landingKickVelocity;
+    private float _jumpDrift;
+    private float _externalVerticalVelocity;
 
     private void Awake()
     {
@@ -67,6 +78,15 @@ public class WeaponSway : MonoBehaviour
             if (cameraPitch > 180f) cameraPitch -= 360f;
         }
 
+        // --- Landing kick ---
+        float kickSpring = -landingKickSpring * _landingKickOffset;
+        float kickDamp = -landingKickDamping * _landingKickVelocity;
+        _landingKickVelocity += (kickSpring + kickDamp) * Time.deltaTime;
+        _landingKickOffset += _landingKickVelocity * Time.deltaTime;
+
+        // --- Jump drift ---
+        _jumpDrift = Mathf.Lerp(_jumpDrift, _externalVerticalVelocity * jumpDriftScale, 8f * Time.deltaTime);
+
         // --- Position ---
         float posX = Mathf.Clamp(-look.x * swayAmount, -maxSwayAmount, maxSwayAmount);
         float posY = Mathf.Clamp(-look.y * swayAmount, -maxSwayAmount, maxSwayAmount);
@@ -77,7 +97,7 @@ public class WeaponSway : MonoBehaviour
         float targetPitchOffset = Mathf.Clamp(-cameraPitch * pitchPositionShift, -maxPitchPositionShift, maxPitchPositionShift);
         _currentPitchOffset = Mathf.Lerp(_currentPitchOffset, targetPitchOffset, pitchPositionSpeed * Time.deltaTime);
 
-        Vector3 targetPos = _restPosition + new Vector3(posX + strafeOffset, posY + _currentPitchOffset, 0f);
+        Vector3 targetPos = _restPosition + new Vector3(posX + strafeOffset, posY + _currentPitchOffset + _landingKickOffset + _jumpDrift, 0f);
         transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, swaySmoothness * Time.deltaTime);
 
         // --- Rotation ---
@@ -91,5 +111,20 @@ public class WeaponSway : MonoBehaviour
 
         Quaternion targetRot = _restRotation * Quaternion.Euler(rotX, rotY, rotZ);
         transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRot, rotSwaySmoothness * Time.deltaTime);
+    }
+
+    public void TriggerLandingKick(float impact)
+    {
+        _landingKickVelocity -= landingKickAmount * impact;
+    }
+
+    public void TriggerJumpKick()
+    {
+        _landingKickVelocity += jumpKickAmount;
+    }
+
+    public void SetVerticalVelocity(float velocity)
+    {
+        _externalVerticalVelocity = velocity;
     }
 }
