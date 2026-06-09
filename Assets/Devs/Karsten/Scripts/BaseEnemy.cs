@@ -19,11 +19,6 @@ public class EnemyMovement : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         agent.speed = speed;
-        CapsuleObject.transform.position = Vector3.MoveTowards(
-            CapsuleObject.transform.position,
-            targetPosition.transform.position,
-            speed * Time.deltaTime
-        );
         lightAttackPoint.SetActive(false);
         targetPosition = GameObject.FindGameObjectWithTag("Player");
     }
@@ -32,23 +27,24 @@ public class EnemyMovement : MonoBehaviour
     {
         if (targetPosition != null)
         {
-            float distancetoPlayer = Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position);
-            if (distancetoPlayer > lightAttackRange)
+            float distance = Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position);
+
+            Debug.Log("Distance: " + distance + " AttackRange: " + lightAttackRange);
+
+            if (distance <= DetectionRange && distance > lightAttackRange)
             {
                 agent.SetDestination(targetPosition.transform.position);
             }
-        }
-        if (targetPosition != null)
-        {
-            if (nextAllowedHitTime <= Time.time)
+            else if (distance <= lightAttackRange && nextAllowedHitTime <= Time.time)
             {
-                if (Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position) <= lightAttackRange)
-                {
-                    TurnOnLightAttack();
-                    Invoke("TurnOffLightAttack", 0.5f);
-                    nextAllowedHitTime = Time.time + lightCooldownTime;
-                    agent.ResetPath();      
-                }
+                agent.ResetPath();
+                TurnOnLightAttack();
+                Invoke("TurnOffLightAttack", 0.5f);
+                nextAllowedHitTime = Time.time + lightCooldownTime;
+            }
+            else if (distance > DetectionRange)
+            {
+                agent.ResetPath();
             }
         }
 
