@@ -59,6 +59,9 @@ public class CraftingManager : MonoBehaviour
 
         Destroy(item1.gameObject);
         Destroy(item2.gameObject);
+
+        item1 = null;
+        item2 = null;
     }
 
     public void CraftResult(ItemData item)

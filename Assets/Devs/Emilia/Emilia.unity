@@ -555,6 +555,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSlot
   equippedItem: {fileID: 0}
   acceptedType: 4
+  allowSwap: 1
 --- !u!114 &398762947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -778,6 +779,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSlot
   equippedItem: {fileID: 0}
   acceptedType: 5
+  allowSwap: 0
 --- !u!1 &629965568
 GameObject:
   m_ObjectHideFlags: 0
@@ -1084,6 +1086,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSlot
   equippedItem: {fileID: 0}
   acceptedType: 1
+  allowSwap: 1
 --- !u!1 &731293874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1206,6 +1209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSlot
   equippedItem: {fileID: 0}
   acceptedType: 2
+  allowSwap: 1
 --- !u!1 &841115619
 GameObject:
   m_ObjectHideFlags: 0
@@ -1779,6 +1783,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSlot
   equippedItem: {fileID: 0}
   acceptedType: 5
+  allowSwap: 0
 --- !u!1 &1069996122
 GameObject:
   m_ObjectHideFlags: 0
@@ -1901,6 +1906,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSlot
   equippedItem: {fileID: 0}
   acceptedType: 0
+  allowSwap: 1
 --- !u!1 &1373620042
 GameObject:
   m_ObjectHideFlags: 0
@@ -2204,6 +2210,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EquipmentSlot
   equippedItem: {fileID: 0}
   acceptedType: 3
+  allowSwap: 1
 --- !u!114 &1649091688
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -20,13 +20,16 @@ public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         return item != null && item.itemData.itemType == acceptedType;
     }
 
+    [SerializeField] public bool allowSwap = true; // disable this on crafting slots in Inspector
+
     public bool TryEquipItem(InventoryItem item)
     {
         if (!CanAcceptItem(item)) return false;
 
-        // If something is already in the slot, swap it out to the inventory
         if (equippedItem != null)
         {
+            if (!allowSwap) return false; // ← reject if slot is full and swapping is off
+
             gridController.InsertItem(equippedItem);
         }
 
