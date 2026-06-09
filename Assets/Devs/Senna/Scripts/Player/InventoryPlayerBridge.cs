@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class InventoryPlayerBridge : MonoBehaviour
 {
     [SerializeField] private SennaPlayerMovement playerMovement;
+    [SerializeField] private SchootingRaycast shooting;
 
     private bool _inventoryOpen = true;
 
@@ -21,6 +22,7 @@ public class InventoryPlayerBridge : MonoBehaviour
         {
             playerMovement?.DisableMovement();
             playerMovement?.DisableMouseLook();
+            shooting?.DisableShoot();
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
@@ -28,6 +30,7 @@ public class InventoryPlayerBridge : MonoBehaviour
         {
             playerMovement?.EnableMovement();
             playerMovement?.EnableMouseLook();
+            shooting?.EnableShoot();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }

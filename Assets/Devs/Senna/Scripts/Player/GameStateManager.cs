@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameStateManager : MonoBehaviour
 {
@@ -8,9 +9,11 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameObject startPanel;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject confirmPanel;
+    [SerializeField] private GameObject deathPanel;
 
     public GameObject playerActive;
     [SerializeField] private SennaPlayerMovement playerMovement;
+    [SerializeField] private SchootingRaycast shooting;
 
     private bool _playing;
 
@@ -29,6 +32,7 @@ public class GameStateManager : MonoBehaviour
     {
         startPanel.SetActive(true);
         pausePanel.SetActive(false);
+        deathPanel?.SetActive(false);
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -83,10 +87,8 @@ public class GameStateManager : MonoBehaviour
 
     public void OnMainMenuPressed()
     {
-        Pause();
-        pausePanel.SetActive(false);
-        startPanel.SetActive(true);
-        _playing = false;
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void OnStopPlayingPressed()
@@ -97,22 +99,39 @@ public class GameStateManager : MonoBehaviour
 
     public void OnConfirmYesPressed()
     {
-        confirmPanel.SetActive(false);
-        pausePanel.SetActive(false);
-        startPanel.SetActive(true);
-        _playing = false;
-        Time.timeScale = 0f;
-        playerMovement?.DisableMovement();
-        playerMovement?.DisableMouseLook();
-        playerActive.SetActive(false);
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void OnConfirmNoPressed()
     {
         confirmPanel.SetActive(false);
         pausePanel.SetActive(true);
+    }
+
+    public void OnPlayerDied()
+    {
+        _playing = false;
+        Time.timeScale = 0f;
+        playerMovement?.DisableMovement();
+        playerMovement?.DisableMouseLook();
+        shooting?.DisableShoot();
+        deathPanel?.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void OnRespawnPressed()
+    {
+        deathPanel?.SetActive(false);
+        playerActive.GetComponent<SennaPlayerHealth>()?.ResetHealth();
+        Time.timeScale = 1f;
+        _playing = true;
+        playerMovement?.EnableMovement();
+        playerMovement?.EnableMouseLook();
+        shooting?.EnableShoot();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public void OnContinuePressed() => OnStartPressed();

@@ -20,11 +20,11 @@ public class WeaponSway : MonoBehaviour
     [Header("Camera Follow")]
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private float pitchFollowSpeed = 25f;
-    [SerializeField] [Range(0f, 1f)] private float pitchFollowAmount = 0.5f;
+    [SerializeField] [Range(0f, 1f)] private float pitchFollowAmount = 0.65f;
 
     [Header("Pitch Position Offset")]
-    [SerializeField] private float pitchPositionShift = 0.004f;
-    [SerializeField] private float maxPitchPositionShift = 0.12f;
+    [SerializeField] private float pitchPositionShift = 0.006f;
+    [SerializeField] private float maxPitchPositionShift = 0.22f;
     [SerializeField] private float pitchPositionSpeed = 10f;
 
     [Header("Landing Kick")]

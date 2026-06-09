@@ -16,16 +16,14 @@ public class SennaPlayerMovement : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private float mouseSensitivity = 0.15f;
     [SerializeField] private float verticalClamp = 85f;
-    [SerializeField] private float downwardClamp = 60f;
+    [SerializeField] private float downwardClamp = 80f;
 
     [Header("Head Bob")]
     [SerializeField] private float bobFrequency = 2.4f;
+    [SerializeField] private float sprintBobFrequency = 3.4f;
     [SerializeField] private float bobAmplitude = 0.04f;
 
     [Header("Camera Effects")]
-    [SerializeField] private Camera playerCamera;
-    [SerializeField] private float normalFov = 75f;
-    [SerializeField] private float sprintFov = 85f;
     [SerializeField] private float strafeTiltAngle = 1.5f;
 
     [Header("Jump")]
@@ -79,9 +77,6 @@ public class SennaPlayerMovement : MonoBehaviour
         _agent.updatePosition = false;
         _agent.updateRotation = false;
         _agent.angularSpeed = 0f;
-
-        if (playerCamera == null && cameraTransform != null)
-            playerCamera = cameraTransform.GetComponent<Camera>();
 
         if (cameraTransform != null)
             _cameraRestPos = cameraTransform.localPosition;
@@ -246,7 +241,9 @@ public class SennaPlayerMovement : MonoBehaviour
             return;
         }
 
-        _bobTimer += Time.deltaTime * bobFrequency * (speed / walkSpeed);
+        bool isSprinting = sprintAction.action.IsPressed() && _isGrounded;
+        float currentBobFrequency = isSprinting ? sprintBobFrequency : bobFrequency;
+        _bobTimer += Time.deltaTime * currentBobFrequency * (speed / walkSpeed);
 
         Vector3 bob = new Vector3(
             Mathf.Sin(_bobTimer * 0.5f) * bobAmplitude * 0.5f,
@@ -259,15 +256,6 @@ public class SennaPlayerMovement : MonoBehaviour
 
     private void HandleCameraEffects()
     {
-        // Sprint FOV kick
-        if (playerCamera != null)
-        {
-            bool sprinting = _movementEnabled && sprintAction.action.IsPressed() && _smoothVelocity.magnitude > 1f;
-            float targetFov = sprinting ? sprintFov : normalFov;
-            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFov, 8f * Time.deltaTime);
-        }
-
-        // Strafe camera tilt
         Vector2 input = _movementEnabled ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
         _cameraRoll = Mathf.Lerp(_cameraRoll, -input.x * strafeTiltAngle, 8f * Time.deltaTime);
     }
