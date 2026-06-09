@@ -26,8 +26,14 @@ public class CraftingManager : MonoBehaviour
 
     public void Update()
     {
-        item1 = slotItem1.equippedItem;
-        item2 = slotItem2.equippedItem;
+        if (slotItem1 != null)
+        {
+            item1 = slotItem1.equippedItem;
+        }
+        if (slotItem2 != null)
+        {
+            item2 = slotItem2.equippedItem;
+        }
 
         //Debug.Log($"CraftingManager Update: item1 = {(item1 != null ? item1.itemData.itemName : "null")}, item2 = {(item2 != null ? item2.itemData.itemName : "null")}");
     }

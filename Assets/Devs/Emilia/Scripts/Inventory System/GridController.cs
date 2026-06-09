@@ -196,20 +196,25 @@ public class GridController : MonoBehaviour
 
     public void PlaceItem(Vector2Int tileGridPosition)
     {
-        CanvasGroup canvasGroup = selectedItem.GetComponent<CanvasGroup>();
-        if (canvasGroup != null) canvasGroup.blocksRaycasts = true;
-
         bool complete = selectedItemGrid.PlaceItem(selectedItem, tileGridPosition.x, tileGridPosition.y, ref overlapItem);
         if (complete)
         {
+            // Only re-enable raycasts once successfully placed
+            CanvasGroup canvasGroup = selectedItem.GetComponent<CanvasGroup>();
+            if (canvasGroup != null) canvasGroup.blocksRaycasts = true;
+
             selectedItem = null;
             if (overlapItem != null)
             {
                 selectedItem = overlapItem;
                 overlapItem = null;
                 rectTransform = selectedItem.GetComponent<RectTransform>();
+                // Swapped-out item is now in hand — keep its raycasts OFF
+                CanvasGroup swappedCG = selectedItem.GetComponent<CanvasGroup>();
+                if (swappedCG != null) swappedCG.blocksRaycasts = false;
             }
         }
+        // On failure: do nothing — item stays in hand with blocksRaycasts = false
     }
 
     public void PickUpItem(Vector2Int tileGridPosition)
