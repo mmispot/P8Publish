@@ -4,12 +4,9 @@ using UnityEngine;
 public class SennaCameraShake : MonoBehaviour
 {
     [Header("Shake Settings")]
-    [SerializeField] private float shakeDecay = 2.5f;
-    [SerializeField] private float positionMagnitude = 0.04f;
-    [SerializeField] private float rotationMagnitude = 1.2f;
-
-    [Header("Damage Shake")]
-    [SerializeField] private float damageTraumaAmount = 0.6f;
+    [SerializeField] private float shakeDecay = 4f;
+    [SerializeField] private float positionMagnitude = 0.05f;
+    [SerializeField] private float rotationMagnitude = 2.8f;
 
     private float _trauma;
     private float _noiseOffset;
@@ -36,11 +33,6 @@ public class SennaCameraShake : MonoBehaviour
             (Mathf.PerlinNoise(t * 2.5f, 100f) - 0.5f) * 2f * rotationMagnitude * intensity,
             (Mathf.PerlinNoise(200f, t * 2.5f) - 0.5f) * 2f * rotationMagnitude * intensity,
             0f);
-    }
-
-    public void TriggerDamageShake()
-    {
-        _trauma = Mathf.Min(1f, _trauma + damageTraumaAmount);
     }
 
     public void TriggerShake(float traumaAmount)
