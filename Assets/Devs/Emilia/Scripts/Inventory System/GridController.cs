@@ -28,29 +28,34 @@ public class GridController : MonoBehaviour
         HandleHighlight();
 
         if (selectedItemGrid == null) { return; }
-
-        //TEMPORARY RANDOM ITEM FUNCTION
-        if (Keyboard.current.qKey.wasPressedThisFrame && selectedItem == null)
-        {
-            CreateRandomItem();
-        }
         
-        if (Keyboard.current.rKey.wasPressedThisFrame)
+        if (Keyboard.current.qKey.wasPressedThisFrame && selectedItem == null) //creates random item and places it, if it cant place it holds in hand
         {
             InsertRandomItem();
-
         }
 
-        if (Keyboard.current.cKey.wasPressedThisFrame)
+        if (Keyboard.current.rKey.wasPressedThisFrame && selectedItem != null) //rotates item in hand
+        {
+            RotateItem();
+        }
+
+        if (Keyboard.current.cKey.wasPressedThisFrame) //delete item in hand, if there is one
         {
             DeleteHeldItem();
         }
 
 
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (Mouse.current.leftButton.wasPressedThisFrame) 
         {
             LMBPress();
         }
+    }
+
+    public void RotateItem()
+    {
+        if (selectedItem == null) { return; }
+
+        selectedItem.Rotate();
     }
 
     public void DeleteHeldItem()
@@ -65,6 +70,7 @@ public class GridController : MonoBehaviour
         CreateRandomItem(); //change this to param for item to be picked up to auto add to inv
         InventoryItem itemToInsert = selectedItem;
         selectedItem = null;
+
         InsertItem(itemToInsert);
     }
 
@@ -72,9 +78,10 @@ public class GridController : MonoBehaviour
     {
         Vector2Int posOnGrid = selectedItemGrid.FindSpaceForObject(itemToInsert);
 
-        if (posOnGrid.x == -1) // sentinel value for "not found", positie op de grid kan nooit -1 zijn, en Vector2Int? werkt niet
+        if (posOnGrid.x == -1)
         {
-            Debug.Log("no space for item");
+            Debug.Log("No space for item");
+            selectedItem = itemToInsert; // player holds it instead
             return;
         }
 
@@ -85,7 +92,16 @@ public class GridController : MonoBehaviour
 
     private void HandleHighlight()
     {
+        if (selectedItemGrid == null) { return; }
+
         Vector2Int positionOnGrid = GetTileGridPosition();
+
+        // Guard against out-of-bounds positions (e.g. mouse over equipment slots)
+        if (!selectedItemGrid.BoundaryCheck(positionOnGrid.x, positionOnGrid.y, 1, 1))
+        {
+            inventoryHighlight.Show(false);
+            return;
+        }
 
         if (selectedItem == null)
         {
@@ -95,7 +111,6 @@ public class GridController : MonoBehaviour
             {
                 inventoryHighlight.Show(true);
                 inventoryHighlight.SetHighlightSize(itemToHighlight);
-                //inventoryHighlight.SetParent(selectedItemGrid);
                 inventoryHighlight.SetPosition(selectedItemGrid, itemToHighlight, itemToHighlight.tileGridPosition.x, itemToHighlight.tileGridPosition.y);
             }
             else
@@ -105,9 +120,8 @@ public class GridController : MonoBehaviour
         }
         else
         {
-            inventoryHighlight.Show(selectedItemGrid.BoundaryCheck(positionOnGrid.x, positionOnGrid.y, selectedItem.itemData.width, selectedItem.itemData.height));
+            inventoryHighlight.Show(selectedItemGrid.BoundaryCheck(positionOnGrid.x, positionOnGrid.y, selectedItem.WIDTH, selectedItem.HEIGHT));
             inventoryHighlight.SetHighlightSize(selectedItem);
-            //inventoryHighlight.SetParent(selectedItemGrid);
             inventoryHighlight.SetPosition(selectedItemGrid, selectedItem, positionOnGrid.x, positionOnGrid.y);
         }
     }
@@ -128,22 +142,54 @@ public class GridController : MonoBehaviour
         inventoryItem.Set(items[selectedItemID]);
     }
 
+    public EquipmentSlot hoveredEquipmentSlot;
+
     public void LMBPress()
     {
-        Vector2Int tileGridPosition = GetTileGridPosition();
+        // Priority: try to equip into a hovered slot first
+        if (selectedItem != null && hoveredEquipmentSlot != null)
+        {
+            bool equipped = hoveredEquipmentSlot.TryEquipItem(selectedItem);
+            if (equipped)
+            {
+                selectedItem = null;
+                return;
+            }
+            else
+            {
+                Debug.Log("Wrong item type for this slot");
+                return;
+            }
+        }
 
-        if (selectedItem == null)
+        // Check if we're clicking on an equipment slot to pick up
+        if (selectedItem == null && hoveredEquipmentSlot != null)
         {
-            PickUpItem(tileGridPosition);
+            if (hoveredEquipmentSlot.equippedItem != null)
+            {
+                selectedItem = hoveredEquipmentSlot.UnequipItem();
+                rectTransform = selectedItem.GetComponent<RectTransform>();
+
+                // Re-parent to canvas so DragItem works correctly
+                rectTransform.SetParent(canvasTransform);
+                rectTransform.localScale = Vector3.one;
+
+                CanvasGroup cg = selectedItem.GetComponent<CanvasGroup>();
+                if (cg != null) cg.blocksRaycasts = false;
+            }
+            return;
         }
-        else
-        {
-            PlaceItem(tileGridPosition);
-        }
+
+        if (selectedItemGrid == null) { return; }
+
+        Vector2Int tileGridPosition = GetTileGridPosition();
+        if (selectedItem == null) PickUpItem(tileGridPosition);
+        else PlaceItem(tileGridPosition);
     }
 
     public Vector2Int GetTileGridPosition()
     {
+
         Vector2Int tileGridPosition = selectedItemGrid.GetTileGridPosition(Mouse.current.position.ReadValue());
         return tileGridPosition; 
     }
@@ -183,8 +229,6 @@ public class GridController : MonoBehaviour
         if (selectedItem != null)
         {
             rectTransform.position = Mouse.current.position.ReadValue();
-
-
         }
     }
 }

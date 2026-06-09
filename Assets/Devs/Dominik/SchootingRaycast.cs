@@ -8,6 +8,7 @@ public class SchootingRaycast : MonoBehaviour
     [SerializeField] private Camera playerCamera;
     [SerializeField] private float range = 100f;
     [SerializeField] private LayerMask hitLayers;
+    [SerializeField] private int damage = 10;
 
     [Header("Debug Line")]
     [SerializeField] private float lineDuration = 0.3f;
@@ -40,6 +41,9 @@ public class SchootingRaycast : MonoBehaviour
         shootAction?.action.Disable();
     }
 
+    public void DisableShoot() => shootAction?.action.Disable();
+    public void EnableShoot()  => shootAction?.action.Enable();
+
     private void OnShoot(InputAction.CallbackContext ctx) => Shoot();
 
     private void Shoot()
@@ -54,6 +58,11 @@ public class SchootingRaycast : MonoBehaviour
             endPoint = hit.point;
             hit.collider.GetComponent<PlayerHealth>()?.TakeDamage(10);
             Debug.Log($"Hit: {hit.collider.name} | Distance: {hit.distance:F2}m");
+            PlayerHealth target = hit.collider.GetComponent<PlayerHealth>();
+            if (target != null)
+            {
+                target.TakeDamage(damage);
+            }
         }
         else
         {
