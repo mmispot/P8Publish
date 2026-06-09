@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cda3294dd44c075499d1bc5f5ff9dd4b, type: 3}
-  m_Name: Ammo
+  m_Name: Medicine 1
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   width: 2
   height: 2
-  itemName: Ammo
-  itemIcon: {fileID: 21300000, guid: b667b7f854188b74297bd1b8a4baa013, type: 3}
+  itemName: Medicine
+  itemIcon: {fileID: 21300000, guid: cb953d62a2e776c4b815137da870c578, type: 3}
   itemType: 5

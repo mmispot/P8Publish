@@ -25,14 +25,16 @@ public class ItemGrid : MonoBehaviour
         Init(gridSizeWidth, gridSizeHeight);
     }
 
-    public InventoryItem PickupItem(int x, int y) //haalt item van een grid en geeft die terug aan de itemcontroller
+    public InventoryItem PickupItem(int x, int y)
     {
-        InventoryItem toReturn = inventoryItemSlot[x, y];
+        // Guard against out-of-bounds coordinates
+        if (x < 0 || y < 0 || x >= inventoryItemSlot.GetLength(0) || y >= inventoryItemSlot.GetLength(1))
+            return null;
 
+        InventoryItem toReturn = inventoryItemSlot[x, y];
         if (toReturn == null) { return null; }
 
         CleanGridReference(toReturn);
-        
         return toReturn;
     }
 

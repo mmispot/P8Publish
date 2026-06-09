@@ -219,8 +219,15 @@ public class GridController : MonoBehaviour
         if (selectedItem != null)
         {
             rectTransform = selectedItem.GetComponent<RectTransform>();
+            rectTransform.SetParent(canvasTransform); // re-parent for dragging
+
             CanvasGroup canvasGroup = selectedItem.GetComponent<CanvasGroup>();
             if (canvasGroup != null) canvasGroup.blocksRaycasts = false;
+
+            // Clear finalItem in CraftingManager if this was the craft result
+            CraftingManager craftingManager = FindObjectOfType<CraftingManager>();
+            if (craftingManager != null && craftingManager.finalItem == selectedItem)
+                craftingManager.finalItem = null;
         }
     }
 
