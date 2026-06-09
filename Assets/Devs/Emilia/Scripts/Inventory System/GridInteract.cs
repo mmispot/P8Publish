@@ -17,7 +17,6 @@ public class GridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log($"OnPointerEnter fired on: {gameObject.name}");
         gridController.selectedItemGrid = itemGrid;
         eventData.Use(); // stops the event bubbling up to parent grids
     }
