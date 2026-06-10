@@ -8,10 +8,15 @@ public class PlayerHealth : MonoBehaviour
     private MaterialPropertyBlock propBlock;
     public int maxHealth = 100;
     public int currentHealth;
+    private Animator animator;
+    private EnemyMovement enemymovement;
+    private int currentHitIndex = 1;
 
     void Start()
     {
         currentHealth = maxHealth;
+        animator = GetComponent<Animator>();
+        enemymovement = GetComponent<EnemyMovement>();
     }
     public int health = 100;
 
@@ -23,8 +28,15 @@ public class PlayerHealth : MonoBehaviour
         {
             Die();
         }
+        else
+        {
+            animator.Play("Hit" + currentHitIndex);
+            currentHitIndex++;
+            if (currentHitIndex > 5) currentHitIndex = 1;
+        }
         UpdateShader();
     }
+
 
     void Awake()
     {

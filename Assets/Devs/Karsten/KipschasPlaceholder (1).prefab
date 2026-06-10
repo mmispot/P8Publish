@@ -81,6 +81,7 @@ GameObject:
   - component: {fileID: 32410712192460449}
   - component: {fileID: 8007941711636303939}
   - component: {fileID: 3620733040880726679}
+  - component: {fileID: -7615676841059063510}
   m_Layer: 0
   m_Name: KipschasPlaceholder (1)
   m_TagString: Enemy
@@ -204,7 +205,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   enemyRenderer: {fileID: 7875493773023112654}
-  healthText: {fileID: 0}
   maxHealth: 100
   currentHealth: 0
   health: 100
@@ -230,6 +230,28 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!95 &-7615676841059063510
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3004264227089466526}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 976571f4c169f324ab272b8298926545, type: 3}
+  m_Controller: {fileID: 9100000, guid: 1f3234b8d63ac5f458373c3cd9e83a05, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5399111656096041250
 GameObject:
   m_ObjectHideFlags: 0

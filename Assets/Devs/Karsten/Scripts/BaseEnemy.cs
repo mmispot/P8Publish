@@ -42,6 +42,7 @@ public class EnemyMovement : MonoBehaviour
             else if (distance <= lightAttackRange && nextAllowedHitTime <= Time.time)
             {
                 agent.ResetPath();
+                PlayRandomAttack();
                 animator.SetBool("isWalking", true);
                 animator.SetBool("isAttacking", false);
                 TurnOnLightAttack();
@@ -57,6 +58,11 @@ public class EnemyMovement : MonoBehaviour
         }
 
     }
+    private void PlayRandomAttack()
+    {
+        int randomAttack = Random.Range(1, 4); // picks 1, 2, or 3
+        animator.Play("Aggro " + randomAttack);
+    }
 
     public void TurnOnLightAttack()
     {
@@ -71,8 +77,9 @@ public class EnemyMovement : MonoBehaviour
 
     private void Die()
     {
-        animator.SetTrigger("isDead");
-        //Invoke("DestroyEnemy", 2f); alleen als er een death ani komt
+        int randomDeath = Random.Range(1, 4); // picks Death 1, 2, or 3
+        animator.Play("Death " + randomDeath);
+        Invoke("DestroyEnemy", 2f); 
     }
     private void DestroyGameObject()
     {
