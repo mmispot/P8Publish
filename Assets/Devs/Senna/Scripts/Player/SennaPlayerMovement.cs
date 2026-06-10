@@ -83,6 +83,7 @@ public class SennaPlayerMovement : MonoBehaviour
     private float _cameraLandingOffset;
     private float _cameraLandingVelocity;
     private float _cameraJumpDrift;
+    private Vector3 _currentBob;
 
     private bool _isCrouching;
     private float _crouchAmount;
@@ -152,8 +153,8 @@ public class SennaPlayerMovement : MonoBehaviour
         if (_movementEnabled && crouchAction != null && crouchAction.action.WasPressedThisFrame())
             _isCrouching = !_isCrouching;
 
+        // Arms are a child of the camera, so they inherit the crouch drop automatically
         _crouchAmount = Mathf.Lerp(_crouchAmount, _isCrouching ? 1f : 0f, crouchTransitionSpeed * Time.deltaTime);
-        weaponSway?.SetCrouchOffset(-crouchCameraDrop * _crouchAmount);
 
         if (bodyCollider != null)
         {
@@ -296,26 +297,34 @@ public class SennaPlayerMovement : MonoBehaviour
         float speed = new Vector3(_smoothVelocity.x, 0f, _smoothVelocity.z).magnitude;
         Vector3 landingDip = new Vector3(0f, _cameraLandingOffset + _cameraJumpDrift - crouchCameraDrop * _crouchAmount, 0f);
 
-        if (speed < 0.3f || !_isGrounded)
+        Vector3 targetBob = Vector3.zero;
+        float smoothing = 8f;
+
+        if (speed >= 0.3f && _isGrounded)
         {
-            cameraTransform.localPosition = Vector3.Lerp(
-                cameraTransform.localPosition, _cameraRestPos + landingDip, 8f * Time.deltaTime);
+            bool isSprinting = sprintAction.action.IsPressed() && _isGrounded && !_isCrouching;
+            float currentBobFrequency = isSprinting ? sprintBobFrequency : bobFrequency;
+            float currentBobAmplitude = bobAmplitude * Mathf.Lerp(1f, crouchBobMultiplier, _crouchAmount);
+            _bobTimer += Time.deltaTime * currentBobFrequency * (speed / walkSpeed);
+
+            targetBob = new Vector3(
+                Mathf.Sin(_bobTimer * 0.5f) * currentBobAmplitude * 0.5f,
+                Mathf.Abs(Mathf.Sin(_bobTimer)) * currentBobAmplitude,
+                0f);
+            smoothing = 12f;
+        }
+        else
+        {
             _bobTimer = 0f;
-            return;
         }
 
-        bool isSprinting = sprintAction.action.IsPressed() && _isGrounded && !_isCrouching;
-        float currentBobFrequency = isSprinting ? sprintBobFrequency : bobFrequency;
-        float currentBobAmplitude = bobAmplitude * Mathf.Lerp(1f, crouchBobMultiplier, _crouchAmount);
-        _bobTimer += Time.deltaTime * currentBobFrequency * (speed / walkSpeed);
-
-        Vector3 bob = new Vector3(
-            Mathf.Sin(_bobTimer * 0.5f) * currentBobAmplitude * 0.5f,
-            Mathf.Abs(Mathf.Sin(_bobTimer)) * currentBobAmplitude,
-            0f);
-
+        _currentBob = Vector3.Lerp(_currentBob, targetBob, smoothing * Time.deltaTime);
         cameraTransform.localPosition = Vector3.Lerp(
-            cameraTransform.localPosition, _cameraRestPos + bob + landingDip, 12f * Time.deltaTime);
+            cameraTransform.localPosition, _cameraRestPos + _currentBob + landingDip, smoothing * Time.deltaTime);
+
+        // The arms are a camera child and inherit the bob — WeaponSway counters it
+        // so the gun stays steady in the world while the view bobs over it
+        weaponSway?.SetCameraBob(_currentBob);
     }
 
     private void HandleCameraEffects()

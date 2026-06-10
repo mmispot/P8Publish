@@ -671,7 +671,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   damage: 10
-  lineDuration: 0.3
   shootAction: {fileID: -807952733099999533, guid: 21517aea0c2a8a744b5ff060cb9e34a0, type: 3}
 --- !u!1 &1458958154730549750
 GameObject:
@@ -1141,7 +1140,6 @@ Transform:
   m_Children:
   - {fileID: 308288335988745892}
   - {fileID: 5605389834055383031}
-  - {fileID: 4979552165806069743}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5849709273293703158
@@ -1248,12 +1246,15 @@ MonoBehaviour:
   bobFrequency: 2.4
   sprintBobFrequency: 3.4
   bobAmplitude: 0.08
-  playerCamera: {fileID: 1693662263949923255}
-  normalFov: 75
-  sprintFov: 85
-  sprintFovEntrySpeed: 8
-  sprintFovReturnSpeed: 4
   strafeTiltAngle: 1.5
+  crouchSpeed: 2.5
+  crouchCameraDrop: 0.6
+  crouchTransitionSpeed: 10
+  crouchBobMultiplier: 0.5
+  bodyCollider: {fileID: 0}
+  crouchColliderHeight: 1
+  recoilReturnSpring: 120
+  recoilReturnDamping: 12
   jumpForce: 5
   gravity: 12
   fallMultiplier: 2.5
@@ -1277,6 +1278,7 @@ MonoBehaviour:
   sprintAction: {fileID: -8973340228857295422, guid: 21517aea0c2a8a744b5ff060cb9e34a0, type: 3}
   lookAction: {fileID: -8544684172836193603, guid: 21517aea0c2a8a744b5ff060cb9e34a0, type: 3}
   jumpAction: {fileID: -343134602647401322, guid: 21517aea0c2a8a744b5ff060cb9e34a0, type: 3}
+  crouchAction: {fileID: 0}
 --- !u!1 &2762590682521182044
 GameObject:
   m_ObjectHideFlags: 0
@@ -2006,6 +2008,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6034840298405712971}
+  - {fileID: 4979552165806069743}
   m_Father: {fileID: 6935546437743830899}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &1693662263949923255
@@ -2127,7 +2130,6 @@ MonoBehaviour:
   shakeDecay: 2.5
   positionMagnitude: 0.04
   rotationMagnitude: 1.2
-  damageTraumaAmount: 0.6
 --- !u!1 &4291559552483835483
 GameObject:
   m_ObjectHideFlags: 0
@@ -2532,14 +2534,14 @@ Transform:
   m_GameObject: {fileID: 5643358754898808149}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.028015137, y: -0.378, z: 0.013}
+  m_LocalPosition: {x: 0.028015137, y: -0.32, z: 0.028000489}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7532640364283332834}
   - {fileID: 1579633706596002192}
   - {fileID: 494756663409098048}
-  m_Father: {fileID: 6935546437743830899}
+  m_Father: {fileID: 308288335988745892}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6037015086021855635
 Animator:
@@ -2582,18 +2584,21 @@ MonoBehaviour:
   maxRotSway: 5
   rotSwaySmoothness: 8
   strafeSwayAmount: 0.03
-  strafeSwaySmoothness: 6
   cameraTransform: {fileID: 308288335988745892}
-  pitchFollowSpeed: 12
-  pitchFollowAmount: 0.65
-  pitchPositionShift: 0.006
-  maxPitchPositionShift: 0.22
-  pitchPositionSpeed: 10
+  pitchFramingShift: 0.0012
+  maxPitchFramingShift: 0.05
+  pitchFramingSpeed: 10
+  walkBobFrequency: 2.4
+  walkBobAmplitude: 0.006
   landingKickAmount: 0.2
   jumpKickAmount: 0.05
   landingKickSpring: 200
   landingKickDamping: 16
   jumpDriftScale: 0.02
+  recoilKickback: 0.05
+  recoilRotKick: 4
+  recoilSpring: 220
+  recoilDamping: 14
   lookAction: {fileID: -8544684172836193603, guid: 21517aea0c2a8a744b5ff060cb9e34a0, type: 3}
   moveAction: {fileID: -1508487216724830361, guid: 21517aea0c2a8a744b5ff060cb9e34a0, type: 3}
 --- !u!1 &5666314884153226850

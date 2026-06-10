@@ -119,4 +119,50 @@ public static class HealthHUDSetup
 
         Debug.Log("[HealthHUDSetup] Done. If UICanvas is a prefab instance, apply the overrides so HealthBar and DamageFlash end up in UICanvas.prefab.");
     }
+
+    [MenuItem("Tools/Senna/Setup Crosshair")]
+    public static void SetupCrosshair()
+    {
+        var canvasGO = GameObject.Find("UICanvas");
+        if (canvasGO == null)
+        {
+            var anyCanvas = Object.FindFirstObjectByType<Canvas>();
+            canvasGO = anyCanvas != null ? anyCanvas.gameObject : null;
+        }
+        if (canvasGO == null)
+        {
+            Debug.LogError("[HealthHUDSetup] No UICanvas found in the open scene.");
+            return;
+        }
+
+        if (canvasGO.transform.Find("Crosshair") != null)
+        {
+            Debug.Log("[HealthHUDSetup] Crosshair already exists — leaving it as is.");
+            return;
+        }
+
+        // Knob is Unity's built-in round sprite — gives a circle dot out of the box
+        var dotSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Knob.psd");
+
+        var crosshairGO = new GameObject("Crosshair");
+        Undo.RegisterCreatedObjectUndo(crosshairGO, "Setup Crosshair");
+        crosshairGO.transform.SetParent(canvasGO.transform, false);
+
+        var rt = crosshairGO.AddComponent<RectTransform>();
+        rt.anchorMin        = new Vector2(0.5f, 0.5f);
+        rt.anchorMax        = new Vector2(0.5f, 0.5f);
+        rt.pivot            = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = Vector2.zero;
+        rt.sizeDelta        = new Vector2(8f, 8f);
+
+        var img = crosshairGO.AddComponent<Image>();
+        img.sprite        = dotSprite;
+        img.color         = new Color(1f, 1f, 1f, 0.9f);
+        img.raycastTarget = false;
+
+        UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
+            UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene());
+
+        Debug.Log("[HealthHUDSetup] Crosshair dot added. Apply UICanvas prefab overrides to save it.");
+    }
 }
