@@ -14,6 +14,7 @@ public class EnemyMovement : MonoBehaviour
     public float speed = 1f;
     private NavMeshAgent agent;
     public float DetectionRange = 10f;
+    private Animator animator;
 
     void Start()
     {
@@ -21,6 +22,7 @@ public class EnemyMovement : MonoBehaviour
         agent.speed = speed;
         lightAttackPoint.SetActive(false);
         targetPosition = GameObject.FindGameObjectWithTag("Player");
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -34,10 +36,14 @@ public class EnemyMovement : MonoBehaviour
             if (distance <= DetectionRange && distance > lightAttackRange)
             {
                 agent.SetDestination(targetPosition.transform.position);
+                animator.SetBool("isWalking", true);
+                animator.SetBool("isAttacking", false);
             }
             else if (distance <= lightAttackRange && nextAllowedHitTime <= Time.time)
             {
                 agent.ResetPath();
+                animator.SetBool("isWalking", true);
+                animator.SetBool("isAttacking", false);
                 TurnOnLightAttack();
                 Invoke("TurnOffLightAttack", 0.5f);
                 nextAllowedHitTime = Time.time + lightCooldownTime;
@@ -45,6 +51,8 @@ public class EnemyMovement : MonoBehaviour
             else if (distance > DetectionRange)
             {
                 agent.ResetPath();
+                animator.SetBool("isWalking", true);
+                animator.SetBool("isAttacking", false);
             }
         }
 
@@ -57,10 +65,16 @@ public class EnemyMovement : MonoBehaviour
     public void TurnOffLightAttack()
     {
         lightAttackPoint.SetActive(false);
+        animator.SetBool("isAttacking", false);
     }
 
 
     private void Die()
+    {
+        animator.SetTrigger("isDead");
+        //Invoke("DestroyEnemy", 2f); alleen als er een death ani komt
+    }
+    private void DestroyGameObject()
     {
         Destroy(gameObject);
     }
