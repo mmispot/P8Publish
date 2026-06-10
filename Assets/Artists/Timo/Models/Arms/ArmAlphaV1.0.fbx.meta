@@ -31,11 +31,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: ArmRig|ArmsTT33_Idle
-      takeName: ArmRig|ArmsTT33_Idle
+      name: ArmRig|ArmsTT33_Fire
+      takeName: ArmRig|ArmsTT33_Fire
       internalID: 4338160695692485929
       firstFrame: 0
-      lastFrame: 69
+      lastFrame: 13
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
