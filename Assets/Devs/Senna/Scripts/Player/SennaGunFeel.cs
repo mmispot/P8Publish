@@ -1,6 +1,6 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Pool;
+using UnityEngine.VFX;
 
 // Bridges the Shoot input to recoil feedback without touching SchootingRaycast's logic.
 // Only subscribes to the action — never enables/disables it, so
@@ -8,7 +8,6 @@ using UnityEngine.Pool;
 public class SennaGunFeel : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private InputActionReference shootAction;
     [SerializeField] private WeaponSway weaponSway;
     [SerializeField] private SennaCameraShake cameraShake;
     [SerializeField] private SennaPlayerMovement playerMovement;
@@ -19,19 +18,33 @@ public class SennaGunFeel : MonoBehaviour
     [SerializeField] private float recoilCameraKick = 0.7f;
     [SerializeField] private float shakeTrauma = 0.12f;
 
+    [Header("Muzzle Flash")]
+    [SerializeField] private VisualEffect muzzleFlash;
+
     [Header("Bullet Tracer")]
     [SerializeField] private SennaBulletTracer tracerPrefab; // optional — built in code when empty
 
+    [Header("Fire Animation")]
+    // Arms + gun animators. Both get the "Fire" state force-restarted in the same
+    // frame, so the two animations can never drift apart — no parameters needed.
+    [SerializeField] private Animator[] fireAnimators;
+    [SerializeField] private string fireStateName = "Fire";
+
     private IObjectPool<SennaBulletTracer> _tracerPool;
+    private int _fireStateHash;
 
     private void Awake()
     {
+        _fireStateHash = Animator.StringToHash(fireStateName);
+
         if (weaponSway == null)      weaponSway      = GetComponentInChildren<WeaponSway>();
         if (playerMovement == null)  playerMovement  = GetComponentInParent<SennaPlayerMovement>();
         if (schootingRaycast == null) schootingRaycast = GetComponentInParent<SchootingRaycast>();
         if (schootingRaycast == null) schootingRaycast = GetComponentInChildren<SchootingRaycast>();
         if (cameraShake == null && playerMovement != null)
             cameraShake = playerMovement.GetComponentInChildren<SennaCameraShake>();
+
+        muzzleFlash?.Stop();
 
         _tracerPool = new ObjectPool<SennaBulletTracer>(
             createFunc:      CreateTracer,
@@ -57,31 +70,41 @@ public class SennaGunFeel : MonoBehaviour
 
     private void OnEnable()
     {
-        if (shootAction != null)
-            shootAction.action.started += OnShoot;
         if (schootingRaycast != null)
             schootingRaycast.onShotFired += OnShotFired;
     }
 
     private void OnDisable()
     {
-        if (shootAction != null)
-            shootAction.action.started -= OnShoot;
         if (schootingRaycast != null)
             schootingRaycast.onShotFired -= OnShotFired;
     }
 
-    private void OnShoot(InputAction.CallbackContext ctx)
+    private void OnShotFired(Vector3 start, Vector3 end)
     {
         weaponSway?.TriggerRecoil(recoilStrength);
         cameraShake?.TriggerShake(shakeTrauma);
         playerMovement?.AddRecoil(recoilCameraKick);
-    }
 
-    private void OnShotFired(Vector3 start, Vector3 end)
-    {
+        muzzleFlash?.Play();
+        PlayFireAnimations();
+
         if (_tracerPool == null) return;
         var tracer = _tracerPool.Get();
         tracer.Initialize(start, end, t => _tracerPool.Release(t));
+    }
+
+    private void PlayFireAnimations()
+    {
+        if (fireAnimators == null) return;
+
+        foreach (var animator in fireAnimators)
+        {
+            if (animator == null || !animator.isActiveAndEnabled) continue;
+            // CrossFadeInFixedTime with time 0 force-restarts the state even when it's
+            // already playing — rapid shots re-kick the animation instead of stacking
+            // like SetTrigger would
+            animator.CrossFadeInFixedTime(_fireStateHash, 0f, 0, 0f);
+        }
     }
 }
