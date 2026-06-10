@@ -18,7 +18,9 @@ public class SennaCameraShake : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (_trauma <= 0f) return;
+        // deltaTime is 0 while paused (death/pause screens); the movement script's
+        // rest-position lerp also stops then, so applying offsets would drift the camera.
+        if (_trauma <= 0f || Time.deltaTime <= 0f) return;
 
         _trauma = Mathf.Max(0f, _trauma - shakeDecay * Time.deltaTime);
         float intensity = _trauma * _trauma;

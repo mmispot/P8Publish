@@ -43,6 +43,7 @@ public class SennaPlayerHealth : MonoBehaviour
     public void ResetHealth()
     {
         currentHealth = maxHealth;
+        onHealed.Invoke(currentHealth);
     }
 
     private void Die()
