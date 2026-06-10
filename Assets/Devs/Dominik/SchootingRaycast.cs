@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,22 +9,12 @@ public class SchootingRaycast : MonoBehaviour
     [SerializeField] private LayerMask hitLayers;
     [SerializeField] private int damage = 10;
 
-    [Header("Debug Line")]
-    [SerializeField] private float lineDuration = 0.3f;
-
     [Header("Input")]
     [SerializeField] private InputActionReference shootAction;
 
-    private LineRenderer lr;
-
-    private void Awake()
-    {
-        lr = gameObject.AddComponent<LineRenderer>();
-        lr.startWidth = 0.02f;
-        lr.endWidth = 0.02f;
-        lr.positionCount = 2;
-        lr.enabled = false;
-    }
+    // Fired after each raycast with muzzle position and impact/end point.
+    // SennaGunFeel listens and spawns the bullet tracer visual.
+    public event System.Action<Vector3, Vector3> onShotFired;
 
     private void OnEnable()
     {
@@ -70,16 +59,6 @@ public class SchootingRaycast : MonoBehaviour
             Debug.Log("Shot fired — no hit");
         }
 
-        StopAllCoroutines();
-        StartCoroutine(ShowLine(firePoint.position, endPoint));
-    }
-
-    private IEnumerator ShowLine(Vector3 start, Vector3 end)
-    {
-        lr.SetPosition(0, start);
-        lr.SetPosition(1, end);
-        lr.enabled = true;
-        yield return new WaitForSeconds(lineDuration);
-        lr.enabled = false;
+        onShotFired?.Invoke(firePoint.position, endPoint);
     }
 }
