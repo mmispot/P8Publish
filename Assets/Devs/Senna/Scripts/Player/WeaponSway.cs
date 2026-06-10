@@ -34,6 +34,12 @@ public class WeaponSway : MonoBehaviour
     [SerializeField] private float landingKickDamping = 16f;
     [SerializeField] private float jumpDriftScale = 0.008f;
 
+    [Header("Recoil")]
+    [SerializeField] private float recoilKickback = 0.05f;
+    [SerializeField] private float recoilRotKick = 4f;
+    [SerializeField] private float recoilSpring = 220f;
+    [SerializeField] private float recoilDamping = 14f;
+
     [Header("Input Actions")]
     [SerializeField] private InputActionReference lookAction;
     [SerializeField] private InputActionReference moveAction;
@@ -46,6 +52,11 @@ public class WeaponSway : MonoBehaviour
     private float _landingKickVelocity;
     private float _jumpDrift;
     private float _externalVerticalVelocity;
+    private float _recoilZOffset;
+    private float _recoilZVelocity;
+    private float _recoilPitchOffset;
+    private float _recoilPitchVelocity;
+    private float _crouchOffset;
 
     private void Awake()
     {
@@ -87,6 +98,12 @@ public class WeaponSway : MonoBehaviour
         // --- Jump drift ---
         _jumpDrift = Mathf.Lerp(_jumpDrift, _externalVerticalVelocity * jumpDriftScale, 8f * Time.deltaTime);
 
+        // --- Recoil (same spring-damper as the landing kick) ---
+        _recoilZVelocity += (-recoilSpring * _recoilZOffset - recoilDamping * _recoilZVelocity) * Time.deltaTime;
+        _recoilZOffset += _recoilZVelocity * Time.deltaTime;
+        _recoilPitchVelocity += (-recoilSpring * _recoilPitchOffset - recoilDamping * _recoilPitchVelocity) * Time.deltaTime;
+        _recoilPitchOffset += _recoilPitchVelocity * Time.deltaTime;
+
         // --- Position ---
         float posX = Mathf.Clamp(-look.x * swayAmount, -maxSwayAmount, maxSwayAmount);
         float posY = Mathf.Clamp(-look.y * swayAmount, -maxSwayAmount, maxSwayAmount);
@@ -97,7 +114,7 @@ public class WeaponSway : MonoBehaviour
         float targetPitchOffset = Mathf.Clamp(-cameraPitch * pitchPositionShift, -maxPitchPositionShift, maxPitchPositionShift);
         _currentPitchOffset = Mathf.Lerp(_currentPitchOffset, targetPitchOffset, pitchPositionSpeed * Time.deltaTime);
 
-        Vector3 targetPos = _restPosition + new Vector3(posX + strafeOffset, posY + _currentPitchOffset + _landingKickOffset + _jumpDrift, 0f);
+        Vector3 targetPos = _restPosition + new Vector3(posX + strafeOffset, posY + _currentPitchOffset + _landingKickOffset + _jumpDrift + _crouchOffset, _recoilZOffset);
         transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, swaySmoothness * Time.deltaTime);
 
         // --- Rotation ---
@@ -107,10 +124,19 @@ public class WeaponSway : MonoBehaviour
 
         // Partial pitch follow — arms rotate with camera but less, keeping hands visible
         _currentPitch = Mathf.Lerp(_currentPitch, cameraPitch * pitchFollowAmount, pitchFollowSpeed * Time.deltaTime);
-        rotX += _currentPitch;
+        rotX += _currentPitch - _recoilPitchOffset;
 
         Quaternion targetRot = _restRotation * Quaternion.Euler(rotX, rotY, rotZ);
         transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRot, rotSwaySmoothness * Time.deltaTime);
+    }
+
+    public void TriggerRecoil(float strength = 1f)
+    {
+        // Impulse scaled by the spring's natural frequency so recoilKickback and
+        // recoilRotKick are the approximate peak offsets, independent of stiffness
+        float omega = Mathf.Sqrt(recoilSpring);
+        _recoilZVelocity -= recoilKickback * strength * omega;
+        _recoilPitchVelocity += recoilRotKick * strength * omega;
     }
 
     public void TriggerLandingKick(float impact)
@@ -126,5 +152,11 @@ public class WeaponSway : MonoBehaviour
     public void SetVerticalVelocity(float velocity)
     {
         _externalVerticalVelocity = velocity;
+    }
+
+    // Fed by SennaPlayerMovement so the arms/body rig sinks with the camera when crouching
+    public void SetCrouchOffset(float offset)
+    {
+        _crouchOffset = offset;
     }
 }

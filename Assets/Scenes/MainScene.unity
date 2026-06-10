@@ -228,6 +228,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryPlayerBridge
   playerMovement: {fileID: 237542294}
   shooting: {fileID: 842979807}
+--- !u!136 &237542301 stripped
+CapsuleCollider:
+  m_CorrespondingSourceObject: {fileID: 3167918422077246785, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
+  m_PrefabInstance: {fileID: 1988072730}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &237542302 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5849709273293703158, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
@@ -239,6 +244,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb4a632c6989abe48ae582d72b2733b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SennaPlayerHealth
+--- !u!114 &237542304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237542293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 542a002c55602b749a11a23bf92170a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SennaGunFeel
+  shootAction: {fileID: -807952733099999533, guid: 21517aea0c2a8a744b5ff060cb9e34a0, type: 3}
+  weaponSway: {fileID: 1830749799}
+  cameraShake: {fileID: 0}
+  playerMovement: {fileID: 0}
+  schootingRaycast: {fileID: 842979807}
+  recoilStrength: 1
+  recoilCameraKick: 0.7
+  shakeTrauma: 0.12
+  tracerPrefab: {fileID: 8922128565198995819, guid: 094b0e15b2c74f44db77ce77da567c62, type: 3}
 --- !u!1 &244618360
 GameObject:
   m_ObjectHideFlags: 0
@@ -6380,6 +6406,17 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1830749799 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6417393911067024809, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
+  m_PrefabInstance: {fileID: 1988072730}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e379475ef7a40794a9bc78ae3dcbb023, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponSway
 --- !u!1 &1869444781
 GameObject:
   m_ObjectHideFlags: 0
@@ -6677,6 +6714,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: MainPlayer 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3852588276313436016, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
+      propertyPath: m_ClearFlags
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3852588276313436016, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
     - target: {fileID: 5849709273293703158, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
       propertyPath: cameraShake
       value: 
@@ -6724,6 +6769,18 @@ PrefabInstance:
     - target: {fileID: 5849709273293703158, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
       propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5908667183517430536, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
+      propertyPath: bodyCollider
+      value: 
+      objectReference: {fileID: 237542301}
+    - target: {fileID: 5908667183517430536, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
+      propertyPath: crouchAction
+      value: 
+      objectReference: {fileID: 459180992534452474, guid: 21517aea0c2a8a744b5ff060cb9e34a0, type: 3}
+    - target: {fileID: 5908667183517430536, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
+      propertyPath: crouchColliderHeight
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6514501254127607853, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
       propertyPath: positionMagnitude
@@ -6777,6 +6834,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2628381864488614821, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 237542299}
+    - targetCorrespondingSourceObject: {fileID: 2628381864488614821, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 237542304}
   m_SourcePrefab: {fileID: 100100000, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
 --- !u!1 &2067076598
 GameObject:

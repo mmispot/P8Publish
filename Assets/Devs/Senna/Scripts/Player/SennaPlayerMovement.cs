@@ -26,6 +26,18 @@ public class SennaPlayerMovement : MonoBehaviour
     [Header("Camera Effects")]
     [SerializeField] private float strafeTiltAngle = 1.5f;
 
+    [Header("Crouch")]
+    [SerializeField] private float crouchSpeed = 2.5f;
+    [SerializeField] private float crouchCameraDrop = 0.6f;
+    [SerializeField] private float crouchTransitionSpeed = 10f;
+    [SerializeField] private float crouchBobMultiplier = 0.5f;
+    [SerializeField] private CapsuleCollider bodyCollider;
+    [SerializeField] private float crouchColliderHeight = 1f;
+
+    [Header("Camera Recoil")]
+    [SerializeField] private float recoilReturnSpring = 120f;
+    [SerializeField] private float recoilReturnDamping = 12f;
+
     [Header("Jump")]
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float gravity = 20f;
@@ -52,6 +64,7 @@ public class SennaPlayerMovement : MonoBehaviour
     [SerializeField] private InputActionReference sprintAction;
     [SerializeField] private InputActionReference lookAction;
     [SerializeField] private InputActionReference jumpAction;
+    [SerializeField] private InputActionReference crouchAction;
 
     private NavMeshAgent _agent;
     private Vector3 _smoothVelocity;
@@ -71,6 +84,14 @@ public class SennaPlayerMovement : MonoBehaviour
     private float _cameraLandingVelocity;
     private float _cameraJumpDrift;
 
+    private bool _isCrouching;
+    private float _crouchAmount;
+    private float _standColliderHeight;
+    private Vector3 _standColliderCenter;
+
+    private float _recoilPitch;
+    private float _recoilPitchVelocity;
+
     private void Awake()
     {
         _agent = GetComponent<NavMeshAgent>();
@@ -80,6 +101,12 @@ public class SennaPlayerMovement : MonoBehaviour
 
         if (cameraTransform != null)
             _cameraRestPos = cameraTransform.localPosition;
+
+        if (bodyCollider != null)
+        {
+            _standColliderHeight = bodyCollider.height;
+            _standColliderCenter = bodyCollider.center;
+        }
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -91,6 +118,7 @@ public class SennaPlayerMovement : MonoBehaviour
         sprintAction.action.Enable();
         lookAction.action.Enable();
         jumpAction.action.Enable();
+        crouchAction?.action.Enable();
     }
 
     private void OnDisable()
@@ -99,10 +127,12 @@ public class SennaPlayerMovement : MonoBehaviour
         sprintAction.action.Disable();
         lookAction.action.Disable();
         jumpAction.action.Disable();
+        crouchAction?.action.Disable();
     }
 
     private void Update()
     {
+        HandleCrouch();
         HandleJump();
         HandleMovement();
         HandleMouseLook();
@@ -114,7 +144,25 @@ public class SennaPlayerMovement : MonoBehaviour
     private void LateUpdate()
     {
         if (cameraTransform == null) return;
-        cameraTransform.localRotation = Quaternion.Euler(_verticalRotation, 0f, _cameraRoll);
+        cameraTransform.localRotation = Quaternion.Euler(_verticalRotation + _recoilPitch, 0f, _cameraRoll);
+    }
+
+    private void HandleCrouch()
+    {
+        if (_movementEnabled && crouchAction != null && crouchAction.action.WasPressedThisFrame())
+            _isCrouching = !_isCrouching;
+
+        _crouchAmount = Mathf.Lerp(_crouchAmount, _isCrouching ? 1f : 0f, crouchTransitionSpeed * Time.deltaTime);
+        weaponSway?.SetCrouchOffset(-crouchCameraDrop * _crouchAmount);
+
+        if (bodyCollider != null)
+        {
+            float height = Mathf.Lerp(_standColliderHeight, crouchColliderHeight, _crouchAmount);
+            Vector3 center = _standColliderCenter;
+            center.y -= (_standColliderHeight - height) * 0.5f;
+            bodyCollider.height = height;
+            bodyCollider.center = center;
+        }
     }
 
     private void HandleMouseLook()
@@ -129,8 +177,8 @@ public class SennaPlayerMovement : MonoBehaviour
     private void HandleMovement()
     {
         Vector2 input = _movementEnabled ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
-        bool sprinting = _movementEnabled && sprintAction.action.IsPressed();
-        float targetSpeed = sprinting ? sprintSpeed : walkSpeed;
+        bool sprinting = _movementEnabled && !_isCrouching && sprintAction.action.IsPressed();
+        float targetSpeed = _isCrouching ? crouchSpeed : (sprinting ? sprintSpeed : walkSpeed);
 
         Vector3 target = (transform.right * input.x + transform.forward * input.y) * targetSpeed;
         float rate = input.magnitude > 0.01f ? acceleration : deceleration;
@@ -199,14 +247,23 @@ public class SennaPlayerMovement : MonoBehaviour
         // Jump — fires from buffer, respects coyote window
         if (_jumpBufferTimer > 0f && (_isGrounded || _coyoteTimer > 0f) && _movementEnabled)
         {
-            _verticalVelocity = jumpForce;
-            _isGrounded = false;
-            _agent.enabled = false;
-            _coyoteTimer = 0f;
             _jumpBufferTimer = 0f;
 
-            _cameraLandingVelocity += cameraJumpImpulse;
-            weaponSway?.TriggerJumpKick();
+            if (_isCrouching)
+            {
+                // First jump press while crouched stands you up instead of jumping
+                _isCrouching = false;
+            }
+            else
+            {
+                _verticalVelocity = jumpForce;
+                _isGrounded = false;
+                _agent.enabled = false;
+                _coyoteTimer = 0f;
+
+                _cameraLandingVelocity += cameraJumpImpulse;
+                weaponSway?.TriggerJumpKick();
+            }
         }
 
         if (!_isGrounded)
@@ -224,6 +281,12 @@ public class SennaPlayerMovement : MonoBehaviour
 
         float driftTarget = _isGrounded ? 0f : _verticalVelocity * cameraJumpDriftScale;
         _cameraJumpDrift = Mathf.Lerp(_cameraJumpDrift, driftTarget, 8f * Time.deltaTime);
+
+        // Recoil pitch springs back to zero (slightly underdamped for a small settle bounce)
+        float recoilSpring = -recoilReturnSpring * _recoilPitch;
+        float recoilDamp = -recoilReturnDamping * _recoilPitchVelocity;
+        _recoilPitchVelocity += (recoilSpring + recoilDamp) * Time.deltaTime;
+        _recoilPitch += _recoilPitchVelocity * Time.deltaTime;
     }
 
     private void HandleHeadBob()
@@ -231,7 +294,7 @@ public class SennaPlayerMovement : MonoBehaviour
         if (cameraTransform == null) return;
 
         float speed = new Vector3(_smoothVelocity.x, 0f, _smoothVelocity.z).magnitude;
-        Vector3 landingDip = new Vector3(0f, _cameraLandingOffset + _cameraJumpDrift, 0f);
+        Vector3 landingDip = new Vector3(0f, _cameraLandingOffset + _cameraJumpDrift - crouchCameraDrop * _crouchAmount, 0f);
 
         if (speed < 0.3f || !_isGrounded)
         {
@@ -241,13 +304,14 @@ public class SennaPlayerMovement : MonoBehaviour
             return;
         }
 
-        bool isSprinting = sprintAction.action.IsPressed() && _isGrounded;
+        bool isSprinting = sprintAction.action.IsPressed() && _isGrounded && !_isCrouching;
         float currentBobFrequency = isSprinting ? sprintBobFrequency : bobFrequency;
+        float currentBobAmplitude = bobAmplitude * Mathf.Lerp(1f, crouchBobMultiplier, _crouchAmount);
         _bobTimer += Time.deltaTime * currentBobFrequency * (speed / walkSpeed);
 
         Vector3 bob = new Vector3(
-            Mathf.Sin(_bobTimer * 0.5f) * bobAmplitude * 0.5f,
-            Mathf.Abs(Mathf.Sin(_bobTimer)) * bobAmplitude,
+            Mathf.Sin(_bobTimer * 0.5f) * currentBobAmplitude * 0.5f,
+            Mathf.Abs(Mathf.Sin(_bobTimer)) * currentBobAmplitude,
             0f);
 
         cameraTransform.localPosition = Vector3.Lerp(
@@ -258,6 +322,12 @@ public class SennaPlayerMovement : MonoBehaviour
     {
         Vector2 input = _movementEnabled ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
         _cameraRoll = Mathf.Lerp(_cameraRoll, -input.x * strafeTiltAngle, 8f * Time.deltaTime);
+    }
+
+    // Kick the camera pitch up; the spring in HandleCameraLanding brings it back down
+    public void AddRecoil(float pitchKick)
+    {
+        _recoilPitch -= pitchKick;
     }
 
     public void EnableMovement() => _movementEnabled = true;
