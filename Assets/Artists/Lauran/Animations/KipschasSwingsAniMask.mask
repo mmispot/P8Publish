@@ -1,0 +1,163 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: KipschasSwingsAniMask
+  m_Mask: 00000000010000000100000000000000000000000100000001000000010000000100000000000000000000000000000000000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Armature
+    m_Weight: 1
+  - m_Path: Armature/Root
+    m_Weight: 1
+  - m_Path: Armature/Root/CTR_Eyes_Target
+    m_Weight: 0
+  - m_Path: Armature/Root/CTR_Eyes_Target/bellyeye_target
+    m_Weight: 0
+  - m_Path: Armature/Root/CTR_Eyes_Target/bellyeye_target/bellyeye_target_end
+    m_Weight: 0
+  - m_Path: Armature/Root/CTR_Eyes_Target/bellyeye_target/bellyeye_target_end/bellyeye_target_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/CTR_Eyes_Target/l.eye_target
+    m_Weight: 0
+  - m_Path: Armature/Root/CTR_Eyes_Target/l.eye_target/l.eye_target_end
+    m_Weight: 0
+  - m_Path: Armature/Root/CTR_Eyes_Target/l.eye_target/l.eye_target_end/l.eye_target_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/CTR_Eyes_Target/r.eye_target
+    m_Weight: 0
+  - m_Path: Armature/Root/CTR_Eyes_Target/r.eye_target/r.eye_target_end
+    m_Weight: 0
+  - m_Path: Armature/Root/CTR_Eyes_Target/r.eye_target/r.eye_target_end/r.eye_target_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/l.IK_target
+    m_Weight: 1
+  - m_Path: Armature/Root/l.IK_target/l.IK_pole_target
+    m_Weight: 1
+  - m_Path: Armature/Root/l.IK_target/l.IK_pole_target/l.IK_pole_target_end
+    m_Weight: 1
+  - m_Path: Armature/Root/l.IK_target/l.IK_pole_target/l.IK_pole_target_end/l.IK_pole_target_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/r.IK_target
+    m_Weight: 1
+  - m_Path: Armature/Root/r.IK_target/r.IK_pole_target
+    m_Weight: 1
+  - m_Path: Armature/Root/r.IK_target/r.IK_pole_target/r.IK_pole_target_end
+    m_Weight: 1
+  - m_Path: Armature/Root/r.IK_target/r.IK_pole_target/r.IK_pole_target_end/r.IK_pole_target_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/BellyEye
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/BellyEye/BellyEye_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/BellyEye/BellyEye_end/BellyEye_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/l.upperleg
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/l.upperleg/l.lowerleg
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/l.upperleg/l.lowerleg/l.foot
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/l.upperleg/l.lowerleg/l.foot/l.toes
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/l.upperleg/l.lowerleg/l.foot/l.toes/l.toes_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/l.upperleg/l.lowerleg/l.foot/l.toes/l.toes_end/l.toes_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/r.upperleg
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/r.upperleg/r.lowerleg
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/r.upperleg/r.lowerleg/r.foot
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/r.upperleg/r.lowerleg/r.foot/r.toes
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/r.upperleg/r.lowerleg/r.foot/r.toes/r.toes_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/r.upperleg/r.lowerleg/r.foot/r.toes/r.toes_end/r.toes_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/l.collarbone
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/l.collarbone/l.upperarm
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/l.collarbone/l.upperarm/l.lowerarm
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/l.collarbone/l.upperarm/l.lowerarm/l.hand
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/l.collarbone/l.upperarm/l.lowerarm/l.hand/l.fingersupper
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/l.collarbone/l.upperarm/l.lowerarm/l.hand/l.fingersupper/l.fingersupper_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/l.collarbone/l.upperarm/l.lowerarm/l.hand/l.fingersupper/l.fingersupper_end/l.fingersupper_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/l.collarbone/l.upperarm/l.lowerarm/l.thumbupper
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/l.collarbone/l.upperarm/l.lowerarm/l.thumbupper/l.thumbmiddle
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/l.collarbone/l.upperarm/l.lowerarm/l.thumbupper/l.thumbmiddle/l.thumblower
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/l.collarbone/l.upperarm/l.lowerarm/l.thumbupper/l.thumbmiddle/l.thumblower/l.thumblower_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/l.collarbone/l.upperarm/l.lowerarm/l.thumbupper/l.thumbmiddle/l.thumblower/l.thumblower_end/l.thumblower_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/Neck
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/Neck/Head
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/Neck/Head/Jaw
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/Neck/Head/Jaw/Jaw_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/Neck/Head/Jaw/Jaw_end/Jaw_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/Neck/Head/LeftEye
+    m_Weight: 0
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/Neck/Head/LeftEye/LeftEye_end
+    m_Weight: 0
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/Neck/Head/LeftEye/LeftEye_end/LeftEye_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/Neck/Head/RightEye
+    m_Weight: 0
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/Neck/Head/RightEye/RightEye_end
+    m_Weight: 0
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/Neck/Head/RightEye/RightEye_end/RightEye_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/r.collarbone
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/r.collarbone/r.upperarm
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/r.collarbone/r.upperarm/r.lowerarm
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/r.collarbone/r.upperarm/r.lowerarm/r.hand
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/r.collarbone/r.upperarm/r.lowerarm/r.hand/r.fingersupper
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/r.collarbone/r.upperarm/r.lowerarm/r.hand/r.fingersupper/r.fingersupper_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/r.collarbone/r.upperarm/r.lowerarm/r.hand/r.fingersupper/r.fingersupper_end/r.fingersupper_end_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/r.collarbone/r.upperarm/r.lowerarm/r.thumbupper
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/r.collarbone/r.upperarm/r.lowerarm/r.thumbupper/r.thumbmiddle
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/r.collarbone/r.upperarm/r.lowerarm/r.thumbupper/r.thumbmiddle/r.thumblower
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/r.collarbone/r.upperarm/r.lowerarm/r.thumbupper/r.thumbmiddle/r.thumblower/r.thumblower_end
+    m_Weight: 1
+  - m_Path: Armature/Root/SpineLower/SpineMiddle/SpineUpper/r.collarbone/r.upperarm/r.lowerarm/r.thumbupper/r.thumbmiddle/r.thumblower/r.thumblower_end/r.thumblower_end_end
+    m_Weight: 1
+  - m_Path: Kipschas_Body_low
+    m_Weight: 1
+  - m_Path: Kipschas_Eyes_low
+    m_Weight: 1
