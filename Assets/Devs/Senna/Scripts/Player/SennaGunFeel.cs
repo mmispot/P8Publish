@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Pool;
+using UnityEngine.VFX;
 
 // Bridges the Shoot input to recoil feedback without touching SchootingRaycast's logic.
 // Only subscribes to the action — never enables/disables it, so
@@ -19,6 +20,9 @@ public class SennaGunFeel : MonoBehaviour
     [SerializeField] private float recoilCameraKick = 0.7f;
     [SerializeField] private float shakeTrauma = 0.12f;
 
+    [Header("Muzzle Flash")]
+    [SerializeField] private VisualEffect muzzleFlash; // optional — auto-found in children when empty
+
     [Header("Bullet Tracer")]
     [SerializeField] private SennaBulletTracer tracerPrefab; // optional — built in code when empty
 
@@ -32,6 +36,11 @@ public class SennaGunFeel : MonoBehaviour
         if (schootingRaycast == null) schootingRaycast = GetComponentInChildren<SchootingRaycast>();
         if (cameraShake == null && playerMovement != null)
             cameraShake = playerMovement.GetComponentInChildren<SennaCameraShake>();
+        if (muzzleFlash == null)
+            muzzleFlash = GetComponentInChildren<VisualEffect>();
+
+        // The VFX asset auto-plays on enable — stop it so it only bursts on shots
+        muzzleFlash?.Stop();
 
         _tracerPool = new ObjectPool<SennaBulletTracer>(
             createFunc:      CreateTracer,
@@ -80,6 +89,8 @@ public class SennaGunFeel : MonoBehaviour
 
     private void OnShotFired(Vector3 start, Vector3 end)
     {
+        muzzleFlash?.Play();
+
         if (_tracerPool == null) return;
         var tracer = _tracerPool.Get();
         tracer.Initialize(start, end, t => _tracerPool.Release(t));
