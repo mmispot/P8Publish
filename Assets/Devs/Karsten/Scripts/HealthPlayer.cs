@@ -30,7 +30,7 @@ public class PlayerHealth : MonoBehaviour
         }
         else
         {
-            animator.Play("Hit" + currentHitIndex);
+            animator.Play("Hit " + currentHitIndex, 2); 
             currentHitIndex++;
             if (currentHitIndex > 5) currentHitIndex = 1;
         }

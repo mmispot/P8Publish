@@ -23,6 +23,7 @@ public class EnemyMovement : MonoBehaviour
         lightAttackPoint.SetActive(false);
         targetPosition = GameObject.FindGameObjectWithTag("Player");
         animator = GetComponent<Animator>();
+        Debug.Log("Enemy started, target: " + targetPosition);
     }
 
     void Update()
@@ -31,20 +32,16 @@ public class EnemyMovement : MonoBehaviour
         {
             float distance = Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position);
 
-            Debug.Log("Distance: " + distance + " AttackRange: " + lightAttackRange);
-
             if (distance <= DetectionRange && distance > lightAttackRange)
             {
                 agent.SetDestination(targetPosition.transform.position);
                 animator.SetBool("isWalking", true);
-                animator.SetBool("isAttacking", false);
             }
             else if (distance <= lightAttackRange && nextAllowedHitTime <= Time.time)
             {
                 agent.ResetPath();
                 PlayRandomAttack();
                 animator.SetBool("isWalking", true);
-                animator.SetBool("isAttacking", false);
                 TurnOnLightAttack();
                 Invoke("TurnOffLightAttack", 0.5f);
                 nextAllowedHitTime = Time.time + lightCooldownTime;
@@ -53,15 +50,15 @@ public class EnemyMovement : MonoBehaviour
             {
                 agent.ResetPath();
                 animator.SetBool("isWalking", true);
-                animator.SetBool("isAttacking", false);
             }
         }
 
     }
     private void PlayRandomAttack()
     {
-        int randomAttack = Random.Range(1, 4); // picks 1, 2, or 3
-        animator.Play("Aggro " + randomAttack);
+        int randomAttack = Random.Range(1, 4);
+        animator.SetInteger("AttackIndex", randomAttack);
+        animator.SetTrigger("Attack");
     }
 
     public void TurnOnLightAttack()
@@ -71,7 +68,6 @@ public class EnemyMovement : MonoBehaviour
     public void TurnOffLightAttack()
     {
         lightAttackPoint.SetActive(false);
-        animator.SetBool("isAttacking", false);
     }
 
 
@@ -85,4 +81,9 @@ public class EnemyMovement : MonoBehaviour
     {
         Destroy(gameObject);
     }
+    void EyesGlow() 
+    { 
+
+    }
+
 }
