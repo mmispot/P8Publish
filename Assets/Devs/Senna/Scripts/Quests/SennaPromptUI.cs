@@ -1,12 +1,14 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-// Center-screen pickup/interaction prompt. Polls like SennaQuestHUD;
-// prompt strings are cached by their targets, so the reference compare
-// only fires when the targeted object actually changes.
+// Center-screen pickup/interaction prompt on a dark auto-sized pill.
+// Polls like SennaQuestHUD; prompt strings are cached by their targets,
+// so the reference compare only fires when the targeted object changes.
 public class SennaPromptUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI promptText;
+    [SerializeField] private Image background; // pill behind the text, shown/hidden with it
 
     private string _last;
 
@@ -19,8 +21,13 @@ public class SennaPromptUI : MonoBehaviour
         if (ReferenceEquals(current, _last)) return;
         _last = current;
 
-        if (promptText == null) return;
-        promptText.text = current ?? "";
-        promptText.enabled = !string.IsNullOrEmpty(current);
+        bool show = !string.IsNullOrEmpty(current);
+        if (promptText != null)
+        {
+            promptText.text = current ?? "";
+            promptText.enabled = show;
+        }
+        if (background != null)
+            background.enabled = show;
     }
 }

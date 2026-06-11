@@ -25,7 +25,9 @@ public class SennaQuestManager : MonoBehaviour
     public event System.Action AllMainQuestsCompleted;
 
     // Cached so HUD polling can compare by reference without per-frame string work
+    public string ActiveQuestTitle { get; private set; } = "";
     public string ActiveQuestDisplayText { get; private set; } = "";
+    public string SideQuestDisplayText { get; private set; } = "";
     public string CurrentPromptText => playerInteractor != null ? playerInteractor.CurrentPromptText : null;
 
     private readonly List<ItemData> _collectedItems = new List<ItemData>();
@@ -120,19 +122,43 @@ public class SennaQuestManager : MonoBehaviour
         int active = ActiveMainQuestIndex();
         if (active < 0)
         {
+            ActiveQuestTitle = "";
             ActiveQuestDisplayText = _hasMainQuest ? "All objectives complete" : "";
-            return;
+        }
+        else
+        {
+            var quest = quests[active];
+            ActiveQuestTitle = quest.questName ?? "";
+
+            var sb = new System.Text.StringBuilder();
+            for (int i = 0; quest.objectives != null && i < quest.objectives.Length; i++)
+            {
+                var objective = quest.objectives[i];
+                if (i > 0) sb.Append('\n');
+                string label = string.IsNullOrEmpty(objective.shortLabel) ? quest.questName : objective.shortLabel;
+                sb.Append(label).Append(' ').Append(_progress[active][i]).Append('/').Append(objective.requiredCount);
+            }
+            ActiveQuestDisplayText = sb.ToString();
         }
 
-        var quest = quests[active];
+        SideQuestDisplayText = BuildSideQuestText();
+    }
+
+    private string BuildSideQuestText()
+    {
         var sb = new System.Text.StringBuilder();
-        for (int i = 0; quest.objectives != null && i < quest.objectives.Length; i++)
+        for (int q = 0; q < quests.Length; q++)
         {
-            var objective = quest.objectives[i];
-            if (i > 0) sb.Append('\n');
-            string label = string.IsNullOrEmpty(objective.shortLabel) ? quest.questName : objective.shortLabel;
-            sb.Append(label).Append(' ').Append(_progress[active][i]).Append('/').Append(objective.requiredCount);
+            if (quests[q] == null || quests[q].isMainQuest) continue;
+            var objectives = quests[q].objectives;
+            for (int i = 0; objectives != null && i < objectives.Length; i++)
+            {
+                var objective = objectives[i];
+                if (sb.Length > 0) sb.Append('\n');
+                string label = string.IsNullOrEmpty(objective.shortLabel) ? quests[q].questName : objective.shortLabel;
+                sb.Append(label).Append(' ').Append(_progress[q][i]).Append('/').Append(objective.requiredCount);
+            }
         }
-        ActiveQuestDisplayText = sb.ToString();
+        return sb.ToString();
     }
 }
