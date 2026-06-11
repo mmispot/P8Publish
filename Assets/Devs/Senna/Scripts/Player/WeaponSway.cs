@@ -1,31 +1,62 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// The arms rig must be a CHILD of the player camera (run Tools > Senna > Parent Arms To Camera).
+// The camera itself provides the full pitch/yaw follow — the view can never rotate past the
+// open edges of the mesh. This script only layers small, clamped offsets on top for feel.
+//
+// The core of the feel is the rotation lag: the arms trail every camera turn by a fraction
+// (like the old 65%-follow setup) but the lag is hard-capped, so weight without clipping.
 public class WeaponSway : MonoBehaviour
 {
     [Header("Positional Sway")]
-    [SerializeField] private float swayAmount = 0.02f;
-    [SerializeField] private float maxSwayAmount = 0.06f;
+    // Deliberately tiny — position shift from looking around should be millimeters;
+    // the rotation lag below carries the weight feel.
+    [SerializeField] private float lookSwayAmount = 0.004f;
+    [SerializeField] private float maxLookSwayAmount = 0.008f;
     [SerializeField] private float swaySmoothness = 8f;
 
-    [Header("Rotational Sway")]
-    [SerializeField] private float rotSwayAmount = 3f;
-    [SerializeField] private float maxRotSway = 5f;
-    [SerializeField] private float rotSwaySmoothness = 8f;
+    [Header("Rotation Lag")]
+    // Fraction of every degree the camera turns that the arms trail behind,
+    // spring-returned with a slight settle bounce. Capped by maxRotationLag.
+    [SerializeField] private float rotationLagAmount = 0.18f;
+    [SerializeField] private float maxRotationLag = 2.5f;
+    [SerializeField] private float rotationLagSpring = 140f;
+    [SerializeField] private float rotationLagDamping = 21f;
+    [SerializeField] private float yawRollFactor = 0.3f;
 
     [Header("Strafe Sway")]
     [SerializeField] private float strafeSwayAmount = 0.03f;
-    [SerializeField] private float strafeSwaySmoothness = 6f;
+    [SerializeField] private float strafeRollAngle = 1f;
 
-    [Header("Camera Follow")]
+    [Header("Camera Reference")]
     [SerializeField] private Transform cameraTransform;
-    [SerializeField] private float pitchFollowSpeed = 25f;
-    [SerializeField] [Range(0f, 1f)] private float pitchFollowAmount = 0.5f;
 
-    [Header("Pitch Position Offset")]
-    [SerializeField] private float pitchPositionShift = 0.004f;
-    [SerializeField] private float maxPitchPositionShift = 0.12f;
-    [SerializeField] private float pitchPositionSpeed = 10f;
+    [Header("Pitch Framing")]
+    // Composition at extreme angles: looking up pulls the arms down out of the sky view,
+    // looking down tucks them slightly up toward the camera. Keep these small.
+    [SerializeField] private float pitchFramingShift = 0.0012f;
+    [SerializeField] private float maxPitchFramingShift = 0.05f;
+    [SerializeField] private float pitchFramingSpeed = 10f;
+
+    [Header("Head Bob Counter")]
+    // The camera's head bob carries the arms with it (camera child). Countering it keeps
+    // the gun steady in the world while the view bobs over it — the classic FPS walk feel.
+    // 1 = gun fully steady (old sibling-setup look), 0 = gun glued to the view.
+    [SerializeField] [Range(0f, 1f)] private float bobCounterAmount = 1f;
+
+    [Header("Landing Kick")]
+    [SerializeField] private float landingKickAmount = 0.05f;
+    [SerializeField] private float jumpKickAmount = 0.03f;
+    [SerializeField] private float landingKickSpring = 200f;
+    [SerializeField] private float landingKickDamping = 16f;
+    [SerializeField] private float jumpDriftScale = 0.008f;
+
+    [Header("Recoil")]
+    [SerializeField] private float recoilKickback = 0.05f;
+    [SerializeField] private float recoilRotKick = 4f;
+    [SerializeField] private float recoilSpring = 220f;
+    [SerializeField] private float recoilDamping = 14f;
 
     [Header("Input Actions")]
     [SerializeField] private InputActionReference lookAction;
@@ -33,8 +64,25 @@ public class WeaponSway : MonoBehaviour
 
     private Vector3 _restPosition;
     private Quaternion _restRotation;
-    private float _currentPitch;
-    private float _currentPitchOffset;
+    private Vector2 _smoothedLook;
+    private Vector2 _smoothedMove;
+    private float _framingOffset;
+    private Vector3 _cameraBob;
+    private float _landingKickOffset;
+    private float _landingKickVelocity;
+    private float _jumpDrift;
+    private float _externalVerticalVelocity;
+    private float _recoilZOffset;
+    private float _recoilZVelocity;
+    private float _recoilPitchOffset;
+    private float _recoilPitchVelocity;
+    private float _prevCamPitch;
+    private float _prevCamYaw;
+    private float _lagPitch;
+    private float _lagPitchVelocity;
+    private float _lagYaw;
+    private float _lagYawVelocity;
+    private bool _lagInitialized;
 
     private void Awake()
     {
@@ -46,6 +94,7 @@ public class WeaponSway : MonoBehaviour
     {
         lookAction.action.Enable();
         moveAction.action.Enable();
+        _lagInitialized = false; // avoid a delta spike on (re)enable
     }
 
     private void OnDisable()
@@ -56,40 +105,105 @@ public class WeaponSway : MonoBehaviour
 
     private void Update()
     {
+        float dt = Time.deltaTime;
         Vector2 look = lookAction.action.ReadValue<Vector2>();
         Vector2 move = moveAction.action.ReadValue<Vector2>();
 
-        // Read camera pitch once — used by both position and rotation
-        float cameraPitch = 0f;
+        // Smoothed inputs: raw mouse deltas are jittery, WASD snaps 0/1 —
+        // easing them in/out is most of what makes the sway feel organic
+        _smoothedLook = Vector2.Lerp(_smoothedLook, look, swaySmoothness * dt);
+        _smoothedMove = Vector2.Lerp(_smoothedMove, move, 6f * dt);
+
+        // --- Camera angles (world, so body yaw is included) ---
+        float camPitch = 0f, camYaw = 0f;
         if (cameraTransform != null)
         {
-            cameraPitch = cameraTransform.localEulerAngles.x;
-            if (cameraPitch > 180f) cameraPitch -= 360f;
+            Vector3 e = cameraTransform.eulerAngles;
+            camPitch = e.x > 180f ? e.x - 360f : e.x;
+            camYaw = e.y;
         }
+        if (!_lagInitialized)
+        {
+            _prevCamPitch = camPitch;
+            _prevCamYaw = camYaw;
+            _lagInitialized = true;
+        }
+        float pitchDelta = Mathf.DeltaAngle(_prevCamPitch, camPitch);
+        float yawDelta = Mathf.DeltaAngle(_prevCamYaw, camYaw);
+        _prevCamPitch = camPitch;
+        _prevCamYaw = camYaw;
 
-        // --- Position ---
-        float posX = Mathf.Clamp(-look.x * swayAmount, -maxSwayAmount, maxSwayAmount);
-        float posY = Mathf.Clamp(-look.y * swayAmount, -maxSwayAmount, maxSwayAmount);
-        float strafeOffset = -move.x * strafeSwayAmount;
+        // --- Rotation lag: every camera turn injects displacement, the spring pulls it home.
+        // Slightly underdamped on purpose — the small settle bounce reads as weight. ---
+        _lagPitch = Mathf.Clamp(_lagPitch - pitchDelta * rotationLagAmount, -maxRotationLag, maxRotationLag);
+        _lagYaw = Mathf.Clamp(_lagYaw - yawDelta * rotationLagAmount, -maxRotationLag, maxRotationLag);
+        _lagPitchVelocity += (-rotationLagSpring * _lagPitch - rotationLagDamping * _lagPitchVelocity) * dt;
+        _lagPitch += _lagPitchVelocity * dt;
+        _lagYawVelocity += (-rotationLagSpring * _lagYaw - rotationLagDamping * _lagYawVelocity) * dt;
+        _lagYaw += _lagYawVelocity * dt;
 
-        // Pitch position shift: looking up pulls arms down, looking down pushes arms up
-        // This keeps the arms in frame at extreme angles (AAA trick)
-        float targetPitchOffset = Mathf.Clamp(-cameraPitch * pitchPositionShift, -maxPitchPositionShift, maxPitchPositionShift);
-        _currentPitchOffset = Mathf.Lerp(_currentPitchOffset, targetPitchOffset, pitchPositionSpeed * Time.deltaTime);
+        // --- Landing kick ---
+        _landingKickVelocity += (-landingKickSpring * _landingKickOffset - landingKickDamping * _landingKickVelocity) * dt;
+        _landingKickOffset += _landingKickVelocity * dt;
 
-        Vector3 targetPos = _restPosition + new Vector3(posX + strafeOffset, posY + _currentPitchOffset, 0f);
-        transform.localPosition = Vector3.Lerp(transform.localPosition, targetPos, swaySmoothness * Time.deltaTime);
+        // --- Jump drift ---
+        _jumpDrift = Mathf.Lerp(_jumpDrift, _externalVerticalVelocity * jumpDriftScale, 8f * dt);
 
-        // --- Rotation ---
-        float rotX = Mathf.Clamp(look.y * rotSwayAmount, -maxRotSway, maxRotSway);
-        float rotY = Mathf.Clamp(look.x * rotSwayAmount, -maxRotSway, maxRotSway);
-        float rotZ = Mathf.Clamp(-look.x * rotSwayAmount, -maxRotSway, maxRotSway);
+        // --- Recoil ---
+        _recoilZVelocity += (-recoilSpring * _recoilZOffset - recoilDamping * _recoilZVelocity) * dt;
+        _recoilZOffset += _recoilZVelocity * dt;
+        _recoilPitchVelocity += (-recoilSpring * _recoilPitchOffset - recoilDamping * _recoilPitchVelocity) * dt;
+        _recoilPitchOffset += _recoilPitchVelocity * dt;
 
-        // Partial pitch follow — arms rotate with camera but less, keeping hands visible
-        _currentPitch = Mathf.Lerp(_currentPitch, cameraPitch * pitchFollowAmount, pitchFollowSpeed * Time.deltaTime);
-        rotX += _currentPitch;
+        // --- Pitch framing: positive pitch = looking down ---
+        float targetFraming = Mathf.Clamp(camPitch * pitchFramingShift, -maxPitchFramingShift, maxPitchFramingShift);
+        _framingOffset = Mathf.Lerp(_framingOffset, targetFraming, pitchFramingSpeed * dt);
 
-        Quaternion targetRot = _restRotation * Quaternion.Euler(rotX, rotY, rotZ);
-        transform.localRotation = Quaternion.Slerp(transform.localRotation, targetRot, rotSwaySmoothness * Time.deltaTime);
+        // --- Compose. Inputs are already smoothed or spring-driven, so apply directly:
+        // an extra lerp here would just muffle the kicks. ---
+        float posX = Mathf.Clamp(-_smoothedLook.x * lookSwayAmount, -maxLookSwayAmount, maxLookSwayAmount);
+        float posY = Mathf.Clamp(-_smoothedLook.y * lookSwayAmount, -maxLookSwayAmount, maxLookSwayAmount);
+        float strafeOffset = -_smoothedMove.x * strafeSwayAmount;
+
+        transform.localPosition = _restPosition - _cameraBob * bobCounterAmount + new Vector3(
+            posX + strafeOffset,
+            posY + _framingOffset + _landingKickOffset + _jumpDrift,
+            _recoilZOffset);
+
+        float rotX = _lagPitch - _recoilPitchOffset;
+        float rotY = _lagYaw;
+        float rotZ = -_lagYaw * yawRollFactor - _smoothedMove.x * strafeRollAngle;
+
+        transform.localRotation = _restRotation * Quaternion.Euler(rotX, rotY, rotZ);
+    }
+
+    public void TriggerRecoil(float strength = 1f)
+    {
+        // Impulse scaled by the spring's natural frequency so recoilKickback and
+        // recoilRotKick are the approximate peak offsets, independent of stiffness
+        float omega = Mathf.Sqrt(recoilSpring);
+        _recoilZVelocity -= recoilKickback * strength * omega;
+        _recoilPitchVelocity += recoilRotKick * strength * omega;
+    }
+
+    public void TriggerLandingKick(float impact)
+    {
+        _landingKickVelocity -= landingKickAmount * impact;
+    }
+
+    public void TriggerJumpKick()
+    {
+        _landingKickVelocity += jumpKickAmount;
+    }
+
+    public void SetVerticalVelocity(float velocity)
+    {
+        _externalVerticalVelocity = velocity;
+    }
+
+    // Fed by SennaPlayerMovement each frame with the camera's current head-bob offset
+    public void SetCameraBob(Vector3 bob)
+    {
+        _cameraBob = bob;
     }
 }
