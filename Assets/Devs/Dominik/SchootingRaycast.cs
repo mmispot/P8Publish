@@ -9,12 +9,17 @@ public class SchootingRaycast : MonoBehaviour
     [SerializeField] private LayerMask hitLayers;
     [SerializeField] private int damage = 10;
 
+    [Header("Fire Rate")]
+    [SerializeField] private float fireCooldown = 0.3f;
+
     [Header("Input")]
     [SerializeField] private InputActionReference shootAction;
 
     // Fired after each raycast with muzzle position and impact/end point.
     // SennaGunFeel listens and spawns the bullet tracer visual.
     public event System.Action<Vector3, Vector3> onShotFired;
+
+    private float _nextFireTime;
 
     private void OnEnable()
     {
@@ -37,6 +42,9 @@ public class SchootingRaycast : MonoBehaviour
 
     private void Shoot()
     {
+        if (Time.time < _nextFireTime) return;
+        _nextFireTime = Time.time + fireCooldown;
+
         if (playerCamera == null || firePoint == null) return;
 
         Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
