@@ -1288,6 +1288,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 472270338}
   m_CullTransparentMesh: 1
+--- !u!114 &588586626 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8553972408161334891, guid: da72b7a8f2fd5fa4bb71f16d590d9641, type: 3}
+  m_PrefabInstance: {fileID: 1190576871}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 370106e8374b2664fa696e587f1b2f05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SchootingRaycast
 --- !u!1 &650465981
 GameObject:
   m_ObjectHideFlags: 0
@@ -5111,6 +5122,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &1190576876 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5788200906480703852, guid: da72b7a8f2fd5fa4bb71f16d590d9641, type: 3}
+  m_PrefabInstance: {fileID: 1190576871}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1190576872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3f842245e7cb7c4fadc1f50d1c37f43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SennaPlayerMovement
 --- !u!1 &1289180071
 GameObject:
   m_ObjectHideFlags: 0
@@ -6492,9 +6514,9 @@ MonoBehaviour:
   pausePanel: {fileID: 1048458292}
   confirmPanel: {fileID: 1396055590}
   deathPanel: {fileID: 7744321001}
-  playerActive: {fileID: 0}
-  playerMovement: {fileID: 0}
-  shooting: {fileID: 0}
+  playerActive: {fileID: 1190576872}
+  playerMovement: {fileID: 1190576876}
+  shooting: {fileID: 588586626}
 --- !u!4 &1672147385
 Transform:
   m_ObjectHideFlags: 0

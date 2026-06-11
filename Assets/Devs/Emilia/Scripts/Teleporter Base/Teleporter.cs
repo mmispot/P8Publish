@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 using System.Collections;
 
 public class Teleporter : MonoBehaviour
@@ -20,7 +21,25 @@ public class Teleporter : MonoBehaviour
             Debug.Log("Teleporter hit: " + gameObject.name + " → sending to " + spawnPoint.position);
             lastTeleportTime = Time.time;
 
-            player.transform.position = spawnPoint.position;
+            // The player is NavMeshAgent-driven (SennaPlayerMovement syncs the
+            // transform to the agent every frame), so writing transform.position
+            // alone gets snapped back to wherever the agent was. Warp moves the
+            // agent itself; the transform follows it.
+            var agent = player.GetComponent<NavMeshAgent>();
+            if (agent != null && agent.enabled)
+            {
+                if (agent.Warp(spawnPoint.position))
+                    player.transform.position = agent.nextPosition;
+                else
+                    Debug.LogError("Teleporter: no NavMesh at " + spawnPoint.position
+                        + " — bake NavMesh at the destination or move the spawnPoint onto it.");
+            }
+            else
+            {
+                // Agent is off mid-jump; the plain move works and the landing
+                // logic in SennaPlayerMovement re-snaps to the NavMesh.
+                player.transform.position = spawnPoint.position;
+            }
             //StartCoroutine(DisableTemporarily(destination));
         }
     }
