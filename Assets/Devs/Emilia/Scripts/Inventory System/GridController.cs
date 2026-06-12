@@ -51,6 +51,12 @@ public class GridController : MonoBehaviour
         }
     }
 
+    public void ToggleGrid ()
+    {
+        if (selectedItemGrid == null) { return; }
+        selectedItemGrid.gameObject.SetActive(!selectedItemGrid.gameObject.activeSelf);
+    }  
+
     public void RotateItem()
     {
         if (selectedItem == null) { return; }
