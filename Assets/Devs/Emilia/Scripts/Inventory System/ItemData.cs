@@ -10,6 +10,9 @@ public class ItemData : ScriptableObject
     public Sprite itemIcon;
     public ItemType itemType;
 
+    public bool stackable;
+    public int maxStackSize;
+
     public enum ItemType 
     {
         PrimaryWeapon,
