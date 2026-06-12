@@ -431,7 +431,6 @@ PrefabInstance:
     m_RemovedGameObjects:
     - {fileID: 3535341061764449024, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
     - {fileID: 6771359471444652483, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
-    - {fileID: 5152497361289754558, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1440579260982955974, guid: 7c01dd6080abf4d41baaeab10efd817b, type: 3}
@@ -518,14 +517,6 @@ PrefabInstance:
     - target: {fileID: 5849709273293703158, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
       propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
-    - target: {fileID: 5867178620953445619, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
-      propertyPath: m_Speed
-      value: 3.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5908667183517430536, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
-      propertyPath: walkSpeed
-      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 5908667183517430536, guid: 3e4eaedb7547c854b8b2aa9578bc834d, type: 3}
       propertyPath: bodyCollider
@@ -1151,11 +1142,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 293064783038785782, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_Height
-      value: 1.9066023
+      value: 1.8331028
       objectReference: {fileID: 0}
     - target: {fileID: 293064783038785782, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_Center.y
-      value: 0.24727064
+      value: -0.19313902
       objectReference: {fileID: 0}
     - target: {fileID: 885177923400677427, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1163,7 +1154,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 885177923400677427, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.25
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 885177923400677427, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1203,24 +1194,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3620733040880726679, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_BaseOffset
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5399111656096041250, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
-      propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6712008037409158606, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -0.514
-      objectReference: {fileID: 0}
-    - target: {fileID: 7097647570434798394, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 32410712192460449, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
-    - {fileID: 5066123177724404193, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
-    - {fileID: 848360541979881396, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:

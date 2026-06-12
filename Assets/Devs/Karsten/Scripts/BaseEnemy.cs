@@ -15,6 +15,7 @@ public class EnemyMovement : MonoBehaviour
     private NavMeshAgent agent;
     public float DetectionRange = 10f;
     private Animator animator;
+    private bool hasAgrrod = false;
 
     void Start()
     {
@@ -28,6 +29,7 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
+        transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
         if (targetPosition != null)
         {
             float distance = Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position);
@@ -36,20 +38,27 @@ public class EnemyMovement : MonoBehaviour
             {
                 agent.SetDestination(targetPosition.transform.position);
                 animator.SetBool("isWalking", true);
+                if (!hasAgrrod)
+                {
+                    hasAgrrod = true;
+                    PlayRandomAttack();
+                }
             }
             else if (distance <= lightAttackRange && nextAllowedHitTime <= Time.time)
             {
+                agent.isStopped = true;
                 agent.ResetPath();
-                PlayRandomAttack();
-                animator.SetBool("isWalking", true);
+                animator.SetBool("isWalking", false);
                 TurnOnLightAttack();
                 Invoke("TurnOffLightAttack", 0.5f);
                 nextAllowedHitTime = Time.time + lightCooldownTime;
             }
             else if (distance > DetectionRange)
             {
+                agent.isStopped = true;
                 agent.ResetPath();
-                animator.SetBool("isWalking", true);
+                animator.SetBool("isWalking", false);
+                hasAgrrod = false;
             }
         }
 
@@ -77,7 +86,7 @@ public class EnemyMovement : MonoBehaviour
         animator.Play("Death " + randomDeath);
         Invoke("DestroyEnemy", 2f); 
     }
-    private void DestroyGameObject()
+    private void DestroyEnemy()
     {
         Destroy(gameObject);
     }
