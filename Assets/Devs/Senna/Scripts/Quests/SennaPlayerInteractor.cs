@@ -27,8 +27,9 @@ public class SennaPlayerInteractor : MonoBehaviour
 
     private void Update()
     {
-        // Dead while paused, on the death screen, or before Start is pressed
-        if (Time.timeScale == 0f)
+        // Dead while paused, on the death screen, before Start is pressed,
+        // or while a UI screen owns the cursor (inventory, chest grid)
+        if (Time.timeScale == 0f || Cursor.visible)
         {
             SetTarget(null);
             return;

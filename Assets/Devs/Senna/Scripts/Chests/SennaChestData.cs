@@ -11,8 +11,9 @@ public class SennaChestData : ScriptableObject
     // Shown by SennaPromptUI; falls back to "[F] Open <chestName>" when empty.
     public string promptText;
 
-    // Chest can only be opened once (typical loot chest).
-    public bool openOnce = true;
+    // When true the chest can only be opened once (one-shot loot chest).
+    // Grid chests must stay reopenable, so leave this off for them.
+    public bool openOnce;
 
     // Contents handed out on open (granting comes with the inventory integration).
     public ItemData[] lootItems;

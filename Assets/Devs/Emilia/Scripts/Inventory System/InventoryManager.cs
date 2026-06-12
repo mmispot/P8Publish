@@ -29,6 +29,10 @@ public class InventoryManager : MonoBehaviour
 
     void Update()
     {
+        // While a chest is open it owns both panels and closes them on E
+        // itself — skip the regular toggle so E can't desync the two.
+        if (SennaChestGridUI.InventoryToggleBlocked) return;
+
         if (Keyboard.current.eKey.wasPressedThisFrame)
         {
             ToggleInventory();
