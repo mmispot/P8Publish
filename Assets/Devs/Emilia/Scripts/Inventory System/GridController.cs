@@ -51,7 +51,7 @@ public class GridController : MonoBehaviour
         }
     }
 
-    public void ToggleGrid ()
+    public void ToggleGrid() //needed for chests and stuff, toggles visibility of the grid when opening/closing chest etc
     {
         if (selectedItemGrid == null) { return; }
         selectedItemGrid.gameObject.SetActive(!selectedItemGrid.gameObject.activeSelf);
