@@ -82,12 +82,36 @@ public class GridController : MonoBehaviour
 
     public void InsertItem(InventoryItem itemToInsert)
     {
+        // Try to stack onto an existing item first
+        if (itemToInsert.itemData.stackable)
+        {
+            InventoryItem existingStack = selectedItemGrid.FindStackableItem(itemToInsert.itemData);
+
+            if (existingStack != null)
+            {
+                int added = existingStack.AddToStack(itemToInsert.currentStackSize);
+                int leftover = itemToInsert.currentStackSize - added;
+
+                if (leftover <= 0)
+                {
+                    Destroy(itemToInsert.gameObject);
+                    return; // fully merged
+                }
+                else
+                {
+                    itemToInsert.currentStackSize = leftover;
+                    itemToInsert.UpdateStackText();
+                    // fall through, place remainder as new item
+                }
+            }
+        }
+
         Vector2Int posOnGrid = selectedItemGrid.FindSpaceForObject(itemToInsert);
 
         if (posOnGrid.x == -1)
         {
             Debug.Log("No space for item");
-            selectedItem = itemToInsert; // player holds it instead
+            selectedItem = itemToInsert;
             return;
         }
 
@@ -202,6 +226,38 @@ public class GridController : MonoBehaviour
 
     public void PlaceItem(Vector2Int tileGridPosition)
     {
+        if (!selectedItemGrid.BoundaryCheck(tileGridPosition.x, tileGridPosition.y, 1, 1))
+        {
+            return; // clicked outside the grid, do nothing & prevent errors
+        }
+        
+        // Check what's currently under the cursor before attempting placement
+        InventoryItem itemUnderCursor = selectedItemGrid.GetItem(tileGridPosition.x, tileGridPosition.y);
+
+        if (itemUnderCursor != null
+            && itemUnderCursor != selectedItem
+            && selectedItem.itemData.stackable
+            && itemUnderCursor.itemData == selectedItem.itemData
+            && itemUnderCursor.currentStackSize < itemUnderCursor.itemData.maxStackSize)
+        {
+            int added = itemUnderCursor.AddToStack(selectedItem.currentStackSize);
+            int leftover = selectedItem.currentStackSize - added;
+
+            if (leftover <= 0)
+            {
+                Destroy(selectedItem.gameObject);
+                selectedItem = null;
+            }
+            else
+            {
+                selectedItem.currentStackSize = leftover;
+                selectedItem.UpdateStackText();
+                // selectedItem stays in hand with the leftover amount
+            }
+
+            return;
+        }
+
         CanvasGroup canvasGroup = selectedItem.GetComponent<CanvasGroup>();
         if (canvasGroup != null) canvasGroup.blocksRaycasts = true;
 
