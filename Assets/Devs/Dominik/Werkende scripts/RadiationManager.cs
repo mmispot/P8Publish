@@ -48,7 +48,7 @@ public class RadiationManager : MonoBehaviour
         }
 
         if (radiationText != null)
-            radiationText.text = $"Radiatie: {CurrentRadiation * 100:F0}%";
+            radiationText.text = $"Radiation: {CurrentRadiation * 100:F0}%";
     }
 
     private void ApplyStageDamage()
