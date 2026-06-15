@@ -1129,10 +1129,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -7615676841059063510, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
-      propertyPath: m_ApplyRootMotion
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 32410712192460449, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: speed
       value: 1
@@ -1167,7 +1163,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 885177923400677427, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.73
+      value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 885177923400677427, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1207,7 +1203,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3620733040880726679, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_BaseOffset
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5399111656096041250, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_IsActive
