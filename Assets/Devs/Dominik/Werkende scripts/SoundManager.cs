@@ -3,7 +3,7 @@ using UnityEngine;
 
 public enum SoundType
 {
-    TEST,
+    TOKAREV,
     JUMP,
     WALK,
     DEATH,
