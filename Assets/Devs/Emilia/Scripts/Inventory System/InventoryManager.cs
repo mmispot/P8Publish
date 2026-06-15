@@ -11,7 +11,9 @@ public class InventoryManager : MonoBehaviour
     public GameObject inventoryGrid;
     public GameObject mainCamera;
     //public TMP_Text guideTxt;
-    public PlayerMovement player;
+    public GameObject player;
+
+    public SennaPlayerMovement playerMovement;
 
     void Start()
     {
@@ -21,12 +23,16 @@ public class InventoryManager : MonoBehaviour
 
         if (player != null)
         {
-            player = player.GetComponent<PlayerMovement>();
+            playerMovement = player.GetComponent<SennaPlayerMovement>();
         }
     }
 
     void Update()
     {
+        // While a chest is open it owns both panels and closes them on E
+        // itself — skip the regular toggle so E can't desync the two.
+        if (SennaChestGridUI.InventoryToggleBlocked) return;
+
         if (Keyboard.current.eKey.wasPressedThisFrame)
         {
             ToggleInventory();
@@ -41,15 +47,13 @@ public class InventoryManager : MonoBehaviour
 
         if (isOpen)
         {
-            player.DisableMovement();
-            player.DisableMouseLook();
+            playerMovement.enabled = false;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
         else
         {
-            player.EnableMovement();
-            player.EnableMouseLook();
+            playerMovement.enabled = true;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
