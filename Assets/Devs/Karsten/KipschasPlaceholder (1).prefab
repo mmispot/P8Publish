@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8271317313165011819}
   - component: {fileID: 7747613772659029962}
-  - component: {fileID: 5066123177724404193}
   m_Layer: 0
   m_Name: AttackRange
   m_TagString: Untagged
@@ -54,18 +53,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 22
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5066123177724404193
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 153494276595288629}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04dd273459a77ec48bfdebde93fa0318, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AttackRange
 --- !u!1 &3004264227089466526
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,8 +64,8 @@ GameObject:
   - component: {fileID: 885177923400677427}
   - component: {fileID: 293064783038785782}
   - component: {fileID: 6589865429211045324}
+  - component: {fileID: 7550124684535668372}
   - component: {fileID: 8375281293163301919}
-  - component: {fileID: 32410712192460449}
   - component: {fileID: 8007941711636303939}
   - component: {fileID: 3620733040880726679}
   - component: {fileID: -7615676841059063510}
@@ -127,9 +114,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2.3979473
+  m_Height: 1.9066023
   m_Direction: 1
-  m_Center: {x: 0, y: 0.69897366, z: 0}
+  m_Center: {x: 0, y: 0.24727064, z: 0}
 --- !u!54 &6589865429211045324
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -157,20 +144,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 46
   m_CollisionDetection: 0
---- !u!114 &8375281293163301919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3004264227089466526}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a2a978d3a3e25142b551984f92d7324, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyDamage
-  damage: 0
---- !u!114 &32410712192460449
+--- !u!114 &7550124684535668372
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -190,8 +164,21 @@ MonoBehaviour:
   lightDamage: 10
   lightAttackRange: 3
   lightAttackPoint: {fileID: 5399111656096041250}
-  speed: 5
-  DetectionRange: 35
+  speed: 3
+  DetectionRange: 22
+--- !u!114 &8375281293163301919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3004264227089466526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a2a978d3a3e25142b551984f92d7324, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDamage
+  damage: 0
 --- !u!114 &8007941711636303939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,7 +214,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0.09
+  m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!95 &-7615676841059063510
@@ -243,7 +230,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 1f3234b8d63ac5f458373c3cd9e83a05, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -269,7 +256,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7097647570434798394
 Transform:
   m_ObjectHideFlags: 0
@@ -279,7 +266,7 @@ Transform:
   m_GameObject: {fileID: 5399111656096041250}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -333,7 +320,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 976571f4c169f324ab272b8298926545, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.09
+      value: -0.514
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 976571f4c169f324ab272b8298926545, type: 3}
       propertyPath: m_LocalPosition.z
@@ -387,7 +374,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kipschas_low
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5866666021909216657, guid: 976571f4c169f324ab272b8298926545, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
