@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05e2688cf9b85db42a32c862a1e7c33a, type: 3}
+  m_Name: Quest_Side_Scrap
+  m_EditorClassIdentifier: Assembly-CSharp::SennaQuestData
+  questName: Scrap Run
+  description: Grab spare scrap metal for crafting.
+  isMainQuest: 0
+  objectives:
+  - type: 0
+    targetItem: {fileID: 11400000, guid: d42bcbcbb971d424fa2148aecea2916d, type: 2}
+    requiredCount: 2
+    shortLabel: Collect scrap
+  rewardItems:
+  - {fileID: 11400000, guid: d42bcbcbb971d424fa2148aecea2916d, type: 2}

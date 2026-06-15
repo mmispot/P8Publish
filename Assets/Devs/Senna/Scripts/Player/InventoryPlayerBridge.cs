@@ -10,6 +10,10 @@ public class InventoryPlayerBridge : MonoBehaviour
 
     private void Update()
     {
+        // The chest UI owns the cursor/movement while it's open and closes
+        // everything on E itself — don't fight it (see SennaChestGridUI).
+        if (SennaChestGridUI.InventoryToggleBlocked) return;
+
         if (Keyboard.current.eKey.wasPressedThisFrame)
             Toggle();
     }

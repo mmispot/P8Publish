@@ -25,6 +25,28 @@ public class ItemGrid : MonoBehaviour
         Init(gridSizeWidth, gridSizeHeight);
     }
 
+    public InventoryItem FindStackableItem(ItemData itemData)
+    {
+        if (!itemData.stackable) return null;
+
+        for (int y = 0; y < gridSizeHeight; y++)
+        {
+            for (int x = 0; x < gridSizeWidth; x++)
+            {
+                InventoryItem item = inventoryItemSlot[x, y];
+
+                if (item != null
+                    && item.itemData == itemData
+                    && item.currentStackSize < itemData.maxStackSize)
+                {
+                    return item;
+                }
+            }
+        }
+
+        return null;
+    }
+
     public InventoryItem PickupItem(int x, int y) //haalt item van een grid en geeft die terug aan de itemcontroller
     {
         InventoryItem toReturn = inventoryItemSlot[x, y];
