@@ -29,7 +29,7 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+        //transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
         if (targetPosition != null)
         {
             float distance = Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position);
