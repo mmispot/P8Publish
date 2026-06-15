@@ -60,7 +60,8 @@ public class EnemyMovement : MonoBehaviour
                 animator.SetBool("isWalking", false);
                 hasAgrrod = false;
             }
-        }
+        } else
+            targetPosition = GameObject.FindGameObjectWithTag("Player");
 
     }
     private void PlayRandomAttack()
