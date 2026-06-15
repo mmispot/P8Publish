@@ -92,6 +92,7 @@ public class SennaGunFeel : MonoBehaviour
         if (_tracerPool == null) return;
         var tracer = _tracerPool.Get();
         tracer.Initialize(start, end, t => _tracerPool.Release(t));
+        SoundManager.PlaySound(SoundType.TOKAREV);
     }
 
     private void PlayFireAnimations()
