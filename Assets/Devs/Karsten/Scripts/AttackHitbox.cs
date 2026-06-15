@@ -17,8 +17,7 @@ public class AttackHitbox : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            PlayerHealth playerHealth = other.gameObject.GetComponent<PlayerHealth>();
-            if (playerHealth != null)
+            if (other.gameObject.TryGetComponent<SennaPlayerHealth>(out var playerHealth))
             {
                 playerHealth.TakeDamage(Damage);
             }

@@ -8,7 +8,7 @@ public class RadiationManager : MonoBehaviour
     [SerializeField] private float decayPerSecond = 0.005f;
 
     [Header("Stage Thresholds")]
-    [SerializeField] private float stage2Threshold = 0.60f;
+    [SerializeField] private float stage2Threshold = 0.40f;
     [SerializeField] private float stage3Threshold = 0.80f;
 
     [Header("Stage Damage")]
@@ -23,11 +23,13 @@ public class RadiationManager : MonoBehaviour
     private float _radiationRate = 0f;
     private bool _inZone = false;
 
-    private PlayerHealth _playerHealth;
+    private SennaPlayerHealth _playerHealth;
 
     private void Awake()
     {
-        _playerHealth = GetComponent<PlayerHealth>();
+        _playerHealth = GetComponent<SennaPlayerHealth>();
+        if (_playerHealth == null)
+            Debug.LogWarning("[RadiationManager] No SennaPlayerHealth on this GameObject; radiation will not damage the player.");
     }
 
     private void Update()
@@ -53,16 +55,21 @@ public class RadiationManager : MonoBehaviour
 
     private void ApplyStageDamage()
     {
+        if (_playerHealth == null) return;
+
         if (CurrentRadiation >= maxRadiation)
         {
-            _playerHealth.TakeDamage(_playerHealth.currentHealth); 
+            _playerHealth.TakeDamage(_playerHealth.CurrentHealth);
             return;
         }
 
+        // Pass float damage directly — the old Mathf.RoundToInt rounded
+        // sub-frame damage (rate * deltaTime) to 0 every frame, so the stage
+        // rates never actually applied. SennaPlayerHealth.TakeDamage takes a float.
         if (CurrentRadiation >= stage3Threshold)
-            _playerHealth.TakeDamage(Mathf.RoundToInt(stage3DamagePerSecond * Time.deltaTime));
+            _playerHealth.TakeDamage(stage3DamagePerSecond * Time.deltaTime);
         else if (CurrentRadiation >= stage2Threshold)
-            _playerHealth.TakeDamage(Mathf.RoundToInt(stage2DamagePerSecond * Time.deltaTime));
+            _playerHealth.TakeDamage(stage2DamagePerSecond * Time.deltaTime);
     }
 
     public void EnterZone(float ratePerSecond)

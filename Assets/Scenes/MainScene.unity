@@ -6038,6 +6038,26 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 8951146842623000898, guid: da72b7a8f2fd5fa4bb71f16d590d9641, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8951146842623000898, guid: da72b7a8f2fd5fa4bb71f16d590d9641, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 1672147384}
+    - target: {fileID: 8951146842623000898, guid: da72b7a8f2fd5fa4bb71f16d590d9641, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8951146842623000898, guid: da72b7a8f2fd5fa4bb71f16d590d9641, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnPlayerDied
+      objectReference: {fileID: 0}
+    - target: {fileID: 8951146842623000898, guid: da72b7a8f2fd5fa4bb71f16d590d9641, type: 3}
+      propertyPath: onDeath.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: GameStateManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6137,7 +6157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RadiationManager
   maxRadiation: 1
   decayPerSecond: 0.005
-  stage2Threshold: 0.6
+  stage2Threshold: 0.4
   stage3Threshold: 0.8
   stage2DamagePerSecond: 5
   stage3DamagePerSecond: 10
