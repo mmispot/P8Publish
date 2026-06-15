@@ -6,35 +6,37 @@ public class PlayerHealth : MonoBehaviour
 {
     public Renderer enemyRenderer;
     private MaterialPropertyBlock propBlock;
-    [SerializeField] private TextMeshProUGUI healthText;
     public int maxHealth = 100;
     public int currentHealth;
+    private Animator animator;
+    private EnemyMovement enemymovement;
+    private int currentHitIndex = 1;
 
     void Start()
     {
-        healthText.text = "Health: " + health.ToString();
-        healthText.text = "Health: " + currentHealth.ToString();
         currentHealth = maxHealth;
-    }
-    void Update()
-    {
-        healthText.text = "Health: " + health.ToString();
-        healthText.text = "Health: " + currentHealth.ToString();
+        animator = GetComponent<Animator>();
+        enemymovement = GetComponent<EnemyMovement>();
     }
     public int health = 100;
 
     public void TakeDamage(int damageAmount)
     {
         health -= damageAmount;
-        Debug.Log("Player took damage! Health is now: " + health);
         currentHealth -= damageAmount;
-        Debug.Log("Player took damage! Health is now: " + currentHealth);
         if (currentHealth <= 0)
         {
             Die();
         }
+        else
+        {
+            animator.Play("Hit " + currentHitIndex, 2); 
+            currentHitIndex++;
+            if (currentHitIndex > 5) currentHitIndex = 1;
+        }
         UpdateShader();
     }
+
 
     void Awake()
     {
