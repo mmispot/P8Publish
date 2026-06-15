@@ -1102,13 +1102,44 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+<<<<<<< HEAD
+=======
+    - target: {fileID: 32410712192460449, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: speed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 32410712192460449, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: CapsuleObject
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 32410712192460449, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: DetectionRange
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 32410712192460449, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: lightAttackPoint
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 32410712192460449, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: lightAttackRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 293064783038785782, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Height
+      value: 1.9066023
+      objectReference: {fileID: 0}
+    - target: {fileID: 293064783038785782, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_Center.y
+      value: 0.24727064
+      objectReference: {fileID: 0}
+>>>>>>> parent of b9ce611 (fix: enemy Ground bug)
     - target: {fileID: 885177923400677427, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 885177923400677427, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.73
+      value: 1.25
       objectReference: {fileID: 0}
     - target: {fileID: 885177923400677427, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1146,7 +1177,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: KipschasPlaceholder (1)
       objectReference: {fileID: 0}
+<<<<<<< HEAD
     m_RemovedComponents: []
+=======
+    - target: {fileID: 3620733040880726679, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_BaseOffset
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5399111656096041250, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6712008037409158606, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.514
+      objectReference: {fileID: 0}
+    - target: {fileID: 7097647570434798394, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 32410712192460449, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+    - {fileID: 5066123177724404193, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+    - {fileID: 848360541979881396, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+>>>>>>> parent of b9ce611 (fix: enemy Ground bug)
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
