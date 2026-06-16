@@ -7329,6 +7329,10 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 1869444781}
+    - target: {fileID: 4394145701251558773, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
+      propertyPath: m_MatchWidthOrHeight
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4806392105922567302, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
       propertyPath: m_Name
       value: Inventory
@@ -9354,3 +9358,4 @@ SceneRoots:
   - {fileID: 1385094140}
   - {fileID: 584170152}
   - {fileID: 854565240}
+  - {fileID: 1830832012}
