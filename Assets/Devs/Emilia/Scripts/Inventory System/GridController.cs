@@ -13,8 +13,15 @@ public class GridController : MonoBehaviour
     [SerializeField] private List<ItemData> items;
     [SerializeField] private GameObject itemPrefab;
     [SerializeField] private Transform canvasTransform;
+    [SerializeField] private ItemGrid defaultItemGrid;
+
+    public GameObject ItemPrefab => itemPrefab;
+    public Transform CanvasTransform => canvasTransform;
 
     public InventoryHighlight inventoryHighlight;
+    public EquipmentSlot hoveredEquipmentSlot;
+
+    InventoryItem itemToHighlight;
 
     private void Awake()
     {
@@ -24,43 +31,33 @@ public class GridController : MonoBehaviour
     private void Update()
     {
         DragItem();
-
         HandleHighlight();
 
         if (selectedItemGrid == null) { return; }
-        
-        if (Keyboard.current.qKey.wasPressedThisFrame && selectedItem == null) //creates random item and places it, if it cant place it holds in hand
-        {
-            InsertRandomItem();
-        }
 
-        if (Keyboard.current.rKey.wasPressedThisFrame && selectedItem != null) //rotates item in hand
-        {
+        if (Keyboard.current.rKey.wasPressedThisFrame && selectedItem != null)
             RotateItem();
-        }
 
-        if (Keyboard.current.cKey.wasPressedThisFrame) //delete item in hand, if there is one
-        {
+        if (Keyboard.current.cKey.wasPressedThisFrame)
             DeleteHeldItem();
-        }
 
-
-        if (Mouse.current.leftButton.wasPressedThisFrame) 
-        {
+        if (Mouse.current.leftButton.wasPressedThisFrame)
             LMBPress();
-        }
     }
 
-    public void ToggleGrid() //needed for chests and stuff, toggles visibility of the grid when opening/closing chest etc
+    // ─── Grid Toggle ────────────────────────────────────────────────────────────
+
+    public void ToggleGrid()
     {
         if (selectedItemGrid == null) { return; }
         selectedItemGrid.gameObject.SetActive(!selectedItemGrid.gameObject.activeSelf);
-    }  
+    }
+
+    // ─── Item Management ────────────────────────────────────────────────────────
 
     public void RotateItem()
     {
         if (selectedItem == null) { return; }
-
         selectedItem.Rotate();
     }
 
@@ -71,136 +68,75 @@ public class GridController : MonoBehaviour
         selectedItem = null;
     }
 
-    private void InsertRandomItem()
-    {
-        CreateRandomItem(); //change this to param for item to be picked up to auto add to inv
-        InventoryItem itemToInsert = selectedItem;
-        selectedItem = null;
-
-        InsertItem(itemToInsert);
-    }
-
     public void InsertItem(InventoryItem itemToInsert)
     {
-        // Try to stack onto an existing item first
+        if (selectedItemGrid == null)
+            selectedItemGrid = defaultItemGrid;
+
+        if (selectedItemGrid == null)
+        {
+            Debug.LogWarning("InsertItem: No grid available.");
+            Destroy(itemToInsert.gameObject);
+            return;
+        }
+
         if (itemToInsert.itemData.stackable)
         {
-            InventoryItem existingStack = selectedItemGrid.FindStackableItem(itemToInsert.itemData);
+            Debug.Log($"Looking to stack: {itemToInsert.itemData.name}, stackable={itemToInsert.itemData.stackable}, maxStack={itemToInsert.itemData.maxStackSize}");
 
-            if (existingStack != null)
+            InventoryItem existingStack;
+            while ((existingStack = selectedItemGrid.FindStackableItem(itemToInsert.itemData)) != null)
             {
-                int added = existingStack.AddToStack(itemToInsert.currentStackSize);
-                int leftover = itemToInsert.currentStackSize - added;
+                Debug.Log($"Found existing stack: {existingStack.itemData.name}, currentSize={existingStack.currentStackSize}");
 
-                if (leftover <= 0)
+                int added = existingStack.AddToStack(itemToInsert.currentStackSize);
+                itemToInsert.currentStackSize -= added;
+
+                if (itemToInsert.currentStackSize <= 0)
                 {
                     Destroy(itemToInsert.gameObject);
-                    return; // fully merged
-                }
-                else
-                {
-                    itemToInsert.currentStackSize = leftover;
-                    itemToInsert.UpdateStackText();
-                    // fall through, place remainder as new item
+                    return;
                 }
             }
+
+            Debug.Log("No existing stack found, placing as new item.");
         }
 
         Vector2Int posOnGrid = selectedItemGrid.FindSpaceForObject(itemToInsert);
 
         if (posOnGrid.x == -1)
         {
-            Debug.Log("No space for item");
+            Debug.Log("InsertItem: No space in grid.");
             selectedItem = itemToInsert;
             return;
         }
 
+        itemToInsert.UpdateStackText();
         selectedItemGrid.PlaceItem(itemToInsert, posOnGrid.x, posOnGrid.y);
     }
 
-    InventoryItem itemToHighlight;
-
-    private void HandleHighlight()
-    {
-        if (selectedItemGrid == null) { return; }
-
-        Vector2Int positionOnGrid = GetTileGridPosition();
-
-        // Guard against out-of-bounds positions (e.g. mouse over equipment slots)
-        if (!selectedItemGrid.BoundaryCheck(positionOnGrid.x, positionOnGrid.y, 1, 1))
-        {
-            inventoryHighlight.Show(false);
-            return;
-        }
-
-        if (selectedItem == null)
-        {
-            itemToHighlight = selectedItemGrid.GetItem(positionOnGrid.x, positionOnGrid.y);
-
-            if (itemToHighlight != null)
-            {
-                inventoryHighlight.Show(true);
-                inventoryHighlight.SetHighlightSize(itemToHighlight);
-                inventoryHighlight.SetPosition(selectedItemGrid, itemToHighlight, itemToHighlight.tileGridPosition.x, itemToHighlight.tileGridPosition.y);
-            }
-            else
-            {
-                inventoryHighlight.Show(false);
-            }
-        }
-        else
-        {
-            inventoryHighlight.Show(selectedItemGrid.BoundaryCheck(positionOnGrid.x, positionOnGrid.y, selectedItem.WIDTH, selectedItem.HEIGHT));
-            inventoryHighlight.SetHighlightSize(selectedItem);
-            inventoryHighlight.SetPosition(selectedItemGrid, selectedItem, positionOnGrid.x, positionOnGrid.y);
-        }
-    }
-
-    private void CreateRandomItem()
-    {
-        InventoryItem inventoryItem = Instantiate(itemPrefab).GetComponent<InventoryItem>();
-        selectedItem = inventoryItem;
-
-        rectTransform = inventoryItem.GetComponent<RectTransform>();
-        rectTransform.SetParent(canvasTransform);
-
-        // using canvasgroup because otherwise canvas isn't recognised (item prevents onpointerenter from working) and raycast blocking is needed to prevent picking up the item while dragging
-        CanvasGroup canvasGroup = inventoryItem.GetComponent<CanvasGroup>();
-        if (canvasGroup != null) canvasGroup.blocksRaycasts = false;
-
-        int selectedItemID = Random.Range(0, items.Count);
-        inventoryItem.Set(items[selectedItemID]);
-    }
-
-    public EquipmentSlot hoveredEquipmentSlot;
+    // ─── Input ──────────────────────────────────────────────────────────────────
 
     public void LMBPress()
     {
-        // Priority: try to equip into a hovered slot first
+        // Equip held item into hovered equipment slot
         if (selectedItem != null && hoveredEquipmentSlot != null)
         {
             bool equipped = hoveredEquipmentSlot.TryEquipItem(selectedItem);
             if (equipped)
-            {
                 selectedItem = null;
-                return;
-            }
             else
-            {
                 Debug.Log("Wrong item type for this slot");
-                return;
-            }
+            return;
         }
 
-        // Check if we're clicking on an equipment slot to pick up
+        // Pick up from hovered equipment slot
         if (selectedItem == null && hoveredEquipmentSlot != null)
         {
             if (hoveredEquipmentSlot.equippedItem != null)
             {
                 selectedItem = hoveredEquipmentSlot.UnequipItem();
                 rectTransform = selectedItem.GetComponent<RectTransform>();
-
-                // Re-parent to canvas so DragItem works correctly
                 rectTransform.SetParent(canvasTransform);
                 rectTransform.localScale = Vector3.one;
 
@@ -213,27 +149,28 @@ public class GridController : MonoBehaviour
         if (selectedItemGrid == null) { return; }
 
         Vector2Int tileGridPosition = GetTileGridPosition();
-        if (selectedItem == null) PickUpItem(tileGridPosition);
-        else PlaceItem(tileGridPosition);
+
+        if (selectedItem == null)
+            PickUpItem(tileGridPosition);
+        else
+            PlaceItem(tileGridPosition);
     }
+
+    // ─── Grid Interaction ───────────────────────────────────────────────────────
 
     public Vector2Int GetTileGridPosition()
     {
-
-        Vector2Int tileGridPosition = selectedItemGrid.GetTileGridPosition(Mouse.current.position.ReadValue());
-        return tileGridPosition; 
+        return selectedItemGrid.GetTileGridPosition(Mouse.current.position.ReadValue());
     }
 
     public void PlaceItem(Vector2Int tileGridPosition)
     {
         if (!selectedItemGrid.BoundaryCheck(tileGridPosition.x, tileGridPosition.y, 1, 1))
-        {
-            return; // clicked outside the grid, do nothing & prevent errors
-        }
-        
-        // Check what's currently under the cursor before attempting placement
+            return;
+
         InventoryItem itemUnderCursor = selectedItemGrid.GetItem(tileGridPosition.x, tileGridPosition.y);
 
+        // Stack onto item under cursor if compatible
         if (itemUnderCursor != null
             && itemUnderCursor != selectedItem
             && selectedItem.itemData.stackable
@@ -252,9 +189,7 @@ public class GridController : MonoBehaviour
             {
                 selectedItem.currentStackSize = leftover;
                 selectedItem.UpdateStackText();
-                // selectedItem stays in hand with the leftover amount
             }
-
             return;
         }
 
@@ -286,11 +221,73 @@ public class GridController : MonoBehaviour
         }
     }
 
+    // ─── Highlight ──────────────────────────────────────────────────────────────
+
+    private void HandleHighlight()
+    {
+        if (selectedItemGrid == null) { return; }
+
+        Vector2Int positionOnGrid = GetTileGridPosition();
+
+        if (!selectedItemGrid.BoundaryCheck(positionOnGrid.x, positionOnGrid.y, 1, 1))
+        {
+            inventoryHighlight.Show(false);
+            return;
+        }
+
+        if (selectedItem == null)
+        {
+            itemToHighlight = selectedItemGrid.GetItem(positionOnGrid.x, positionOnGrid.y);
+
+            if (itemToHighlight != null)
+            {
+                inventoryHighlight.Show(true);
+                inventoryHighlight.SetHighlightSize(itemToHighlight);
+                inventoryHighlight.SetPosition(selectedItemGrid, itemToHighlight, itemToHighlight.tileGridPosition.x, itemToHighlight.tileGridPosition.y);
+            }
+            else
+            {
+                inventoryHighlight.Show(false);
+            }
+        }
+        else
+        {
+            inventoryHighlight.Show(selectedItemGrid.BoundaryCheck(positionOnGrid.x, positionOnGrid.y, selectedItem.WIDTH, selectedItem.HEIGHT));
+            inventoryHighlight.SetHighlightSize(selectedItem);
+            inventoryHighlight.SetPosition(selectedItemGrid, selectedItem, positionOnGrid.x, positionOnGrid.y);
+        }
+    }
+
+    // ─── Drag ───────────────────────────────────────────────────────────────────
+
     private void DragItem()
     {
         if (selectedItem != null)
-        {
             rectTransform.position = Mouse.current.position.ReadValue();
-        }
+    }
+
+    // ─── Random Item (debug) ────────────────────────────────────────────────────
+
+    private void InsertRandomItem()
+    {
+        CreateRandomItem();
+        InventoryItem itemToInsert = selectedItem;
+        selectedItem = null;
+        InsertItem(itemToInsert);
+    }
+
+    private void CreateRandomItem()
+    {
+        InventoryItem inventoryItem = Instantiate(itemPrefab).GetComponent<InventoryItem>();
+        selectedItem = inventoryItem;
+
+        rectTransform = inventoryItem.GetComponent<RectTransform>();
+        rectTransform.SetParent(canvasTransform);
+
+        CanvasGroup canvasGroup = inventoryItem.GetComponent<CanvasGroup>();
+        if (canvasGroup != null) canvasGroup.blocksRaycasts = false;
+
+        int selectedItemID = Random.Range(0, items.Count);
+        inventoryItem.Set(items[selectedItemID]);
     }
 }

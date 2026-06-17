@@ -10,6 +10,7 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject confirmPanel;
     [SerializeField] private GameObject deathPanel;
+    [SerializeField] private GameObject settingsPanel;
 
     public GameObject playerActive;
     [SerializeField] private SennaPlayerMovement playerMovement;
@@ -142,7 +143,17 @@ public class GameStateManager : MonoBehaviour
 
     public void OnContinuePressed() => OnStartPressed();
 
-    public void OnSettingsPressed() => Debug.Log("Settings not yet implemented");
+    public void OnSettingsPressed()
+    {
+        startPanel.SetActive(false);        // or pausePanel, depending on caller
+        settingsPanel.SetActive(true);
+    }
+
+    public void OnSettingsClosed()
+    {
+        settingsPanel.SetActive(false);
+        startPanel.SetActive(true);         // return to whichever panel opened it
+    }
 
     public void OnCreditsPressed() => Debug.Log("Credits not yet implemented");
 
