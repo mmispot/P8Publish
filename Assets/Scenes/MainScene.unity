@@ -8953,6 +8953,7 @@ MonoBehaviour:
   playerActive: {fileID: 1190576872}
   playerMovement: {fileID: 1190576876}
   shooting: {fileID: 588586626}
+  scoreManager: {fileID: 363964708}
 --- !u!4 &1672147385
 Transform:
   m_ObjectHideFlags: 0
