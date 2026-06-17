@@ -31,11 +31,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: TT33Rig|GunTT33_Fire (1)
-      takeName: TT33Rig|GunTT33_Fire
+      name: TT33Rig|GunTT33_Reload
+      takeName: TT33Rig|GunTT33_Reload
       internalID: 789623918660892956
       firstFrame: 0
-      lastFrame: 6
+      lastFrame: 119
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
