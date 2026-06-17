@@ -29,7 +29,6 @@ public class EnemyMovement : MonoBehaviour
 
     void Update()
     {
-        //transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
         if (targetPosition != null)
         {
             float distance = Vector3.Distance(CapsuleObject.transform.position, targetPosition.transform.position);
@@ -38,6 +37,7 @@ public class EnemyMovement : MonoBehaviour
             {
                 agent.SetDestination(targetPosition.transform.position);
                 animator.SetBool("isWalking", true);
+                animator.SetBool("isAttacking", false);
                 if (!hasAgrrod)
                 {
                     hasAgrrod = true;
@@ -49,6 +49,7 @@ public class EnemyMovement : MonoBehaviour
                 agent.isStopped = true;
                 agent.ResetPath();
                 animator.SetBool("isWalking", false);
+                animator.SetBool("isAttacking", true);
                 TurnOnLightAttack();
                 Invoke("TurnOffLightAttack", 0.5f);
                 nextAllowedHitTime = Time.time + lightCooldownTime;
@@ -58,6 +59,7 @@ public class EnemyMovement : MonoBehaviour
                 agent.isStopped = true;
                 agent.ResetPath();
                 animator.SetBool("isWalking", false);
+                animator.SetBool("isAttacking", false);
                 hasAgrrod = false;
             }
         } else
