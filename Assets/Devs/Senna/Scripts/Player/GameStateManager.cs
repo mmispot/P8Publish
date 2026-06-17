@@ -15,6 +15,8 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private SennaPlayerMovement playerMovement;
     [SerializeField] private SchootingRaycast shooting;
 
+    public ScoreManager scoreManager;
+
     private bool _playing;
 
     void Awake()
@@ -82,6 +84,7 @@ public class GameStateManager : MonoBehaviour
         Cursor.visible = false;
 
         playerActive.SetActive(true);
+        scoreManager?.StartTimer();
     }
 
     public void OnResumePressed() => Resume();
@@ -117,6 +120,7 @@ public class GameStateManager : MonoBehaviour
         playerMovement?.DisableMovement();
         playerMovement?.DisableMouseLook();
         shooting?.DisableShoot();
+        scoreManager?.OnPlayerDeath();
         deathPanel?.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -131,6 +135,7 @@ public class GameStateManager : MonoBehaviour
         playerMovement?.EnableMovement();
         playerMovement?.EnableMouseLook();
         shooting?.EnableShoot();
+        scoreManager?.StartTimer();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
