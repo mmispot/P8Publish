@@ -15,6 +15,10 @@ public class SchootingRaycast : MonoBehaviour
     [Header("Input")]
     [SerializeField] private InputActionReference shootAction;
 
+    [Header("Ammo")]
+    // Optional: leave empty and the gun fires as before (other scenes are unaffected).
+    [SerializeField] private SennaAmmoSystem ammo;
+
     // Fired after each raycast with muzzle position and impact/end point.
     // SennaGunFeel listens and spawns the bullet tracer visual.
     public event System.Action<Vector3, Vector3> onShotFired;
@@ -43,6 +47,10 @@ public class SchootingRaycast : MonoBehaviour
     private void Shoot()
     {
         if (Time.time < _nextFireTime) return;
+
+        // Empty mag -> no shot, and don't burn the cooldown. (dry-fire click could trigger here later)
+        if (ammo != null && !ammo.TryConsume()) return;
+
         _nextFireTime = Time.time + fireCooldown;
 
         if (playerCamera == null || firePoint == null) return;

@@ -25,6 +25,7 @@ public class GameStateManager : MonoBehaviour
         if (playerMovement == null && playerActive != null)
             playerMovement = playerActive.GetComponent<SennaPlayerMovement>();
 
+
         playerActive.SetActive(false);
     }
 
