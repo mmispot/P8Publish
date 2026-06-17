@@ -19,6 +19,10 @@ public class SchootingRaycast : MonoBehaviour
     // Optional: leave empty and the gun fires as before (other scenes are unaffected).
     [SerializeField] private SennaAmmoSystem ammo;
 
+    [Header("Reload")]
+    // Optional: when set, firing is blocked while the reload animation is playing.
+    [SerializeField] private SennaGunReload reload;
+
     // Fired after each raycast with muzzle position and impact/end point.
     // SennaGunFeel listens and spawns the bullet tracer visual.
     public event System.Action<Vector3, Vector3> onShotFired;
@@ -46,6 +50,9 @@ public class SchootingRaycast : MonoBehaviour
 
     private void Shoot()
     {
+        // No firing mid-reload — and don't burn the cooldown on the blocked click.
+        if (reload != null && reload.IsReloading) return;
+
         if (Time.time < _nextFireTime) return;
 
         // Empty mag -> no shot, and don't burn the cooldown. (dry-fire click could trigger here later)
