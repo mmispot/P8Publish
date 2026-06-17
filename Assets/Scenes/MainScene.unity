@@ -755,6 +755,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3011325184418978179, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
   m_PrefabInstance: {fileID: 1507713193}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &91246896 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1006909050930688316, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
+  m_PrefabInstance: {fileID: 1507713193}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91246894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0efb9c9eab705e843ac49444de92dbda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemGrid
 --- !u!1 &92474915
 GameObject:
   m_ObjectHideFlags: 0
@@ -918,6 +929,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1593432598}
+  - {fileID: 1302208470}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &137903528
@@ -6798,11 +6810,6 @@ RectTransform:
   m_AnchoredPosition: {x: -816, y: -395}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &846528444 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7235698415025147077, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
-  m_PrefabInstance: {fileID: 1507713193}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &854565237
 GameObject:
   m_ObjectHideFlags: 0
@@ -8385,7 +8392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e182c3d15a85acd4ca9b469819291c94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SennaChestGridUI
-  chestGridPanel: {fileID: 846528444}
+  chestGridPanel: {fileID: 0}
   inventoryPanel: {fileID: 91246894}
   playerMovement: {fileID: 1190576876}
   shooting: {fileID: 588586626}
@@ -8671,6 +8678,137 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: b73107e67807a814fbc7910ad99ae4c0, type: 3}
   m_PrefabInstance: {fileID: 1298069215}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1302208469
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1302208470}
+  - component: {fileID: 1302208474}
+  - component: {fileID: 1302208473}
+  - component: {fileID: 1302208472}
+  - component: {fileID: 1302208471}
+  m_Layer: 0
+  m_Name: Scrap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1302208470
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1302208469}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -21.32, y: 3.529, z: 13.71}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 128613022}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1302208471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1302208469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66eedf26d6b780b4a977e608e83bedac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SennaQuestItem
+  itemData: {fileID: 11400000, guid: d42bcbcbb971d424fa2148aecea2916d, type: 2}
+  displayName: Scrap Metal
+  gridController: {fileID: 1869444785}
+  onPickedUp:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!23 &1302208472
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1302208469}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1302208473
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1302208469}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &1302208474
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1302208469}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1339136432
 GameObject:
   m_ObjectHideFlags: 0
@@ -9460,9 +9598,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3295530405277347032, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
+      propertyPath: itemGrid
+      value: 
+      objectReference: {fileID: 91246896}
+    - target: {fileID: 3295530405277347032, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 1869444781}
+    - target: {fileID: 3295530405277347032, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
+      propertyPath: gridController
+      value: 
+      objectReference: {fileID: 1869444785}
     - target: {fileID: 4394145701251558773, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
       propertyPath: m_MatchWidthOrHeight
       value: 0.5
@@ -9499,6 +9645,7 @@ PrefabInstance:
     - {fileID: 6612701660400938779, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
     - {fileID: 916769759033663561, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
     - {fileID: 2716411410384706605, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
+    - {fileID: 7235698415025147077, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23ee683cfbc42f64bb872b2e442f3212, type: 3}
@@ -9759,7 +9906,7 @@ GameObject:
   - component: {fileID: 1593432600}
   - component: {fileID: 1593432599}
   m_Layer: 0
-  m_Name: Scrap_1
+  m_Name: Scrap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9794,6 +9941,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SennaQuestItem
   itemData: {fileID: 11400000, guid: d42bcbcbb971d424fa2148aecea2916d, type: 2}
   displayName: Scrap Metal
+  gridController: {fileID: 1869444785}
   onPickedUp:
     m_PersistentCalls:
       m_Calls: []
@@ -10971,6 +11119,7 @@ MonoBehaviour:
   itemPrefab: {fileID: 7011480718397302585, guid: 0e8f127c7561cdd4ca4772c7e38aef1e, type: 3}
   canvasTransform: {fileID: 728638258}
   inventoryHighlight: {fileID: 0}
+  defaultItemGrid: {fileID: 91246896}
   hoveredEquipmentSlot: {fileID: 0}
 --- !u!114 &1869444786
 MonoBehaviour:
