@@ -10,10 +10,13 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject confirmPanel;
     [SerializeField] private GameObject deathPanel;
+    [SerializeField] private GameObject settingsPanel;
 
     public GameObject playerActive;
     [SerializeField] private SennaPlayerMovement playerMovement;
     [SerializeField] private SchootingRaycast shooting;
+
+    public ScoreManager scoreManager;
 
     private bool _playing;
 
@@ -81,6 +84,7 @@ public class GameStateManager : MonoBehaviour
         Cursor.visible = false;
 
         playerActive.SetActive(true);
+        scoreManager?.StartTimer();
     }
 
     public void OnResumePressed() => Resume();
@@ -116,6 +120,7 @@ public class GameStateManager : MonoBehaviour
         playerMovement?.DisableMovement();
         playerMovement?.DisableMouseLook();
         shooting?.DisableShoot();
+        scoreManager?.OnPlayerDeath();
         deathPanel?.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -130,13 +135,24 @@ public class GameStateManager : MonoBehaviour
         playerMovement?.EnableMovement();
         playerMovement?.EnableMouseLook();
         shooting?.EnableShoot();
+        scoreManager?.StartTimer();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     public void OnContinuePressed() => OnStartPressed();
 
-    public void OnSettingsPressed() => Debug.Log("Settings not yet implemented");
+    public void OnSettingsPressed()
+    {
+        startPanel.SetActive(false);        // or pausePanel, depending on caller
+        settingsPanel.SetActive(true);
+    }
+
+    public void OnSettingsClosed()
+    {
+        settingsPanel.SetActive(false);
+        startPanel.SetActive(true);         // return to whichever panel opened it
+    }
 
     public void OnCreditsPressed() => Debug.Log("Credits not yet implemented");
 
