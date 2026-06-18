@@ -751,18 +751,6 @@ PrefabInstance:
       propertyPath: enemyPrefab
       value: 
       objectReference: {fileID: 210649245}
-    - target: {fileID: 2124527370120303166, guid: 5c13fdb67d4e1134aa9b1a47b76622c6, type: 3}
-      propertyPath: nextWaveTime
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2124527370120303166, guid: 5c13fdb67d4e1134aa9b1a47b76622c6, type: 3}
-      propertyPath: enemiesPerWave
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2124527370120303166, guid: 5c13fdb67d4e1134aa9b1a47b76622c6, type: 3}
-      propertyPath: timeBetweenWaves
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 2203005200834138069, guid: 5c13fdb67d4e1134aa9b1a47b76622c6, type: 3}
       propertyPath: m_Name
       value: WaveSpawner
