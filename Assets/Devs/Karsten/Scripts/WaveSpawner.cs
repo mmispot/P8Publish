@@ -7,7 +7,7 @@ public class WaveSpawner : MonoBehaviour
     public float spawnRadius = 5f;
     public GameObject enemyPrefab;
     public int enemiesPerWave = 5;
-    public float timeBetweenWaves = 10f;
+    public float timeBetweenWaves = 5f;
     public float nextWaveTime = 0f;
     
 
@@ -18,11 +18,15 @@ public class WaveSpawner : MonoBehaviour
 
     IEnumerator SpawnWave()
     {
-        for (int i = 0; i < enemiesPerWave; i++)
+        while(true)
         {
-            SpawnEnemy();
-        }
         yield return new WaitForSeconds(timeBetweenWaves);
+
+            for (int i = 0; i < enemiesPerWave; i++)
+            {
+                SpawnEnemy();
+            }
+        }
     }
 
     void SpawnEnemy()
@@ -43,6 +47,6 @@ public class WaveSpawner : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 }

@@ -1,15 +1,13 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-// World pickup for quest objectives. Needs a TRIGGER collider so the
-// interactor's ray can hit it (QueryTriggerInteraction.Collide) while
-// bullets (QueryTriggerInteraction.Ignore) pass straight through.
 public class SennaQuestItem : MonoBehaviour, ISennaInteractable
 {
     [SerializeField] private ItemData itemData;
-    [SerializeField] private string displayName; // falls back to the asset name when empty
+    [SerializeField] private string displayName;
+    [SerializeField] private GridController gridController;
 
-    public UnityEvent onPickedUp; // SFX/VFX hook
+    public UnityEvent onPickedUp;
 
     private string _prompt;
 
@@ -26,8 +24,35 @@ public class SennaQuestItem : MonoBehaviour, ISennaInteractable
 
     public void Interact(GameObject interactor)
     {
+        AddToInventory();
         SennaQuestManager.Instance?.ReportItemCollected(itemData);
         onPickedUp?.Invoke();
+    }
+
+    private void AddToInventory()
+    {
+        if (gridController == null)
+        {
+            Debug.LogWarning("SennaQuestItem: No GridController assigned.");
+            gameObject.SetActive(false);
+            return;
+        }
+
+        GameObject go = Instantiate(gridController.ItemPrefab);
+        InventoryItem inventoryItem = go.GetComponent<InventoryItem>();
+
+        RectTransform rt = go.GetComponent<RectTransform>();
+        rt.SetParent(gridController.CanvasTransform);
+
+        CanvasGroup cg = go.GetComponent<CanvasGroup>();
+        if (cg != null) cg.blocksRaycasts = false;
+
+        inventoryItem.Set(itemData);
+        gridController.InsertItem(inventoryItem);
+
+        // Only disable after successful inventory insertion.
+        // If inventory is full, InsertItem leaves the item held in hand —
+        // the world object still disappears since the player "grabbed" it.
         gameObject.SetActive(false);
     }
 }

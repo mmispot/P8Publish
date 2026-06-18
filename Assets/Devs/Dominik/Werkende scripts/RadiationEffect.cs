@@ -18,4 +18,12 @@ public class RadiationEffect : MonoBehaviour
 
         radiationMaterial.SetFloat(IntensityIonisation, radiationManager.CurrentRadiation);
     }
+
+    private void OnDestroy()
+    {
+        if (radiationMaterial != null)
+        {
+            radiationMaterial.SetFloat(IntensityIonisation, 0f);
+        }
+    }
 }
