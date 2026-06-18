@@ -1,13 +1,11 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 // Top-left quest panel: quest title, main objectives, and side quests.
-// Polls the manager instead of subscribing — same init-order reasoning as
-// SennaHealthBarUI. The manager caches its display strings, so the reference
-// compares keep this allocation-free per frame. Empty rows are deactivated so
-// the panel's layout shrinks around them; the background hides when the whole
-// panel is empty (e.g. a scene without a SennaQuestManager).
+// Polls the manager every frame — same pattern as SennaHealthBarUI.
+// Reference compares on cached strings keep it allocation-free.
 public class SennaQuestHUD : MonoBehaviour
 {
     [SerializeField] private Image background;
@@ -16,9 +14,21 @@ public class SennaQuestHUD : MonoBehaviour
     [SerializeField] private GameObject sideHeader;
     [SerializeField] private TextMeshProUGUI sideQuestText;
 
+    [Header("Reward Banner")]
+    [SerializeField] private GameObject rewardBannerRoot;
+    [SerializeField] private TextMeshProUGUI rewardBannerTitle;
+    [SerializeField] private TextMeshProUGUI rewardBanner;
+    [SerializeField] private float bannerDuration = 1.5f;
+
     private string _lastTitle;
     private string _lastMain;
     private string _lastSide;
+    private string _lastReward;
+    private bool _wasAllDone;
+    private Coroutine _bannerRoutine;
+
+    private static readonly Color ColorObjective  = new Color(0.95f, 0.93f, 0.88f, 1f);
+    private static readonly Color ColorAllDone    = new Color(1f,    0.82f, 0.25f, 1f);
 
     private void Update()
     {
@@ -39,6 +49,62 @@ public class SennaQuestHUD : MonoBehaviour
             if (background.enabled != anyRow)
                 background.enabled = anyRow;
         }
+
+        // Turn the objective text gold when all quests are done
+        bool allDone = manager != null && manager.AllMainQuestsDone;
+        if (allDone != _wasAllDone)
+        {
+            _wasAllDone = allDone;
+            if (questText != null)
+                questText.color = allDone ? ColorAllDone : ColorObjective;
+        }
+
+        // Reward banner: fire when RewardMessage changes to a new non-empty string.
+        // Using the same reference-equality trick as the text rows above — the manager
+        // creates a new string object each time a reward is granted, so the reference
+        // changes even if the text content happens to be the same two quests in a row.
+        string reward = manager != null ? manager.RewardMessage : null;
+        if (!ReferenceEquals(reward, _lastReward))
+        {
+            _lastReward = reward;
+            if (!string.IsNullOrEmpty(reward) && rewardBannerRoot != null)
+            {
+                if (_bannerRoutine != null) StopCoroutine(_bannerRoutine);
+                _bannerRoutine = StartCoroutine(ShowBanner(reward));
+            }
+        }
+    }
+
+    private IEnumerator ShowBanner(string rewardLine)
+    {
+        if (rewardBannerTitle != null) rewardBannerTitle.text = "YOU GOT";
+        if (rewardBanner != null) rewardBanner.text = rewardLine;
+
+        var rt = rewardBannerRoot.GetComponent<RectTransform>();
+        rt.localScale = Vector3.zero;
+        rewardBannerRoot.SetActive(true);
+
+        yield return ScaleTo(rt, 0f, 1.12f, 0.15f);   // punch in
+        yield return ScaleTo(rt, 1.12f, 1.0f, 0.08f);  // settle
+
+        yield return new WaitForSeconds(bannerDuration);
+
+        yield return ScaleTo(rt, 1.0f, 0f, 0.1f);      // pop out
+        rewardBannerRoot.SetActive(false);
+        rt.localScale = Vector3.one;
+        _bannerRoutine = null;
+    }
+
+    private IEnumerator ScaleTo(RectTransform rt, float from, float to, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            rt.localScale = Vector3.one * Mathf.Lerp(from, to, Mathf.Clamp01(elapsed / duration));
+            yield return null;
+        }
+        rt.localScale = Vector3.one * to;
     }
 
     private bool UpdateRow(TextMeshProUGUI row, string value, ref string last)

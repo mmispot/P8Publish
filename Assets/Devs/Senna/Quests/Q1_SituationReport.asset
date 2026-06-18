@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05e2688cf9b85db42a32c862a1e7c33a, type: 3}
+  m_Name: Q1_SituationReport
+  m_EditorClassIdentifier: Assembly-CSharp::SennaQuestData
+  questName: Situation Report
+  description: Find the mission briefing to understand your objectives.
+  isMainQuest: 1
+  objectives:
+  - type: 0
+    targetItem: {fileID: 11400000, guid: a79318c4516bc59408ed18ae8ebeaf95, type: 2}
+    interactKey: 
+    requiredCount: 1
+    shortLabel: Find the briefing
+  rewardItems: []
+  rewardAmmo: 15
+  rewardMessage: Briefing recovered. +15 rounds.
