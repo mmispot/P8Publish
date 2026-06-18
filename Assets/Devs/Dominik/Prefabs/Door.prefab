@@ -1,0 +1,121 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8048599152765218610
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 6.26
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.52362424
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -6.259588
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      propertyPath: m_Name
+      value: Door
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -8068073526183931155, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 38823321704960462}
+    - targetCorrespondingSourceObject: {fileID: -8068073526183931155, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 875686676415419464}
+    - targetCorrespondingSourceObject: {fileID: -8068073526183931155, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5576121158734054181}
+  m_SourcePrefab: {fileID: 100100000, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+--- !u!1 &9203721112360746463 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8068073526183931155, guid: 8df1b074dcc8de64a87a974899e69216, type: 3}
+  m_PrefabInstance: {fileID: 8048599152765218610}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &38823321704960462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9203721112360746463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37ae770f5dfe8a041acc253573c2f1d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Door
+  openAngle: 90
+  speed: 5
+--- !u!114 &875686676415419464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9203721112360746463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8407fee0dcbaf284086fcfb6b6d3042d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoorTrigger
+  door: {fileID: 38823321704960462}
+--- !u!65 &5576121158734054181
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9203721112360746463}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.2500002, y: 2.1, z: 0.33292434}
+  m_Center: {x: 0.6250001, y: 1.05, z: 0}
