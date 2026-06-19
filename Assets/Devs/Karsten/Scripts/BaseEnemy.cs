@@ -83,11 +83,16 @@ public class EnemyMovement : MonoBehaviour
     }
 
 
-    private void Die()
+    public void Die()
     {
-        int randomDeath = Random.Range(1, 4); // picks Death 1, 2, or 3
-        animator.Play("Death " + randomDeath);
-        Invoke("DestroyEnemy", 2f); 
+        enabled = false;
+        animator.SetBool("isAttacking", false);
+        animator.SetBool("isWalking", false);
+
+        int randomDeath = Random.Range(1, 4); 
+        animator.SetInteger("DeathIndex", randomDeath);
+        animator.SetTrigger("Death");
+        Invoke("DestroyEnemy", 5f); 
     }
     private void DestroyEnemy()
     {
