@@ -22,5 +22,13 @@ MonoBehaviour:
     requiredCount: 1
     shortLabel: Find the ammo cache
   rewardItems: []
-  rewardAmmo: 30
-  rewardMessage: Supplies secured. +30 rounds.
+  rewardPool:
+  - displayLabel: Ammo x30
+    ammoAmount: 30
+    weight: 10
+  - displayLabel: Ammo x20
+    ammoAmount: 20
+    weight: 6
+  - displayLabel: Scrap Metal x3
+    ammoAmount: 0
+    weight: 4

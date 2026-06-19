@@ -22,5 +22,13 @@ MonoBehaviour:
     requiredCount: 1
     shortLabel: Activate extraction
   rewardItems: []
-  rewardAmmo: 50
-  rewardMessage: Extraction signaled. Full resupply.
+  rewardPool:
+  - displayLabel: Ammo x50
+    ammoAmount: 50
+    weight: 10
+  - displayLabel: Ammo x40
+    ammoAmount: 40
+    weight: 6
+  - displayLabel: Scrap Metal x5
+    ammoAmount: 0
+    weight: 4

@@ -22,5 +22,13 @@ MonoBehaviour:
     requiredCount: 1
     shortLabel: Find the briefing
   rewardItems: []
-  rewardAmmo: 15
-  rewardMessage: Briefing recovered. +15 rounds.
+  rewardPool:
+  - displayLabel: Ammo x15
+    ammoAmount: 15
+    weight: 10
+  - displayLabel: Scrap Metal x2
+    ammoAmount: 0
+    weight: 6
+  - displayLabel: Ammo x10
+    ammoAmount: 10
+    weight: 4

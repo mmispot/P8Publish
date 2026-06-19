@@ -22,5 +22,13 @@ MonoBehaviour:
     requiredCount: 1
     shortLabel: Use the terminal
   rewardItems: []
-  rewardAmmo: 10
-  rewardMessage: Access granted. +10 rounds.
+  rewardPool:
+  - displayLabel: Ammo x10
+    ammoAmount: 10
+    weight: 10
+  - displayLabel: Scrap Metal x1
+    ammoAmount: 0
+    weight: 8
+  - displayLabel: Ammo x15
+    ammoAmount: 15
+    weight: 4

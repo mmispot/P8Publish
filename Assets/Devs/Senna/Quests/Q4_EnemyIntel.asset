@@ -22,5 +22,13 @@ MonoBehaviour:
     requiredCount: 1
     shortLabel: Recover the intel
   rewardItems: []
-  rewardAmmo: 20
-  rewardMessage: Intel retrieved. +20 rounds.
+  rewardPool:
+  - displayLabel: Ammo x20
+    ammoAmount: 20
+    weight: 10
+  - displayLabel: Ammo x30
+    ammoAmount: 30
+    weight: 5
+  - displayLabel: Scrap Metal x4
+    ammoAmount: 0
+    weight: 5
