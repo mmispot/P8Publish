@@ -23,7 +23,7 @@ public class SennaQuestHUD : MonoBehaviour
     private string _lastTitle;
     private string _lastMain;
     private string _lastSide;
-    private string _lastReward;
+    private string _lastBanner;
     private bool _wasAllDone;
     private Coroutine _bannerRoutine;
 
@@ -59,26 +59,25 @@ public class SennaQuestHUD : MonoBehaviour
                 questText.color = allDone ? ColorAllDone : ColorObjective;
         }
 
-        // Reward banner: fire when RewardMessage changes to a new non-empty string.
-        // Using the same reference-equality trick as the text rows above — the manager
-        // creates a new string object each time a reward is granted, so the reference
-        // changes even if the text content happens to be the same two quests in a row.
-        string reward = manager != null ? manager.RewardMessage : null;
-        if (!ReferenceEquals(reward, _lastReward))
+        // Quest-complete banner: fire when BannerBody changes to a new non-empty string. Same
+        // reference-equality trick as the text rows — the manager makes a fresh string each
+        // completion, so the reference changes even if two quests share a name.
+        string banner = manager != null ? manager.BannerBody : null;
+        if (!ReferenceEquals(banner, _lastBanner))
         {
-            _lastReward = reward;
-            if (!string.IsNullOrEmpty(reward) && rewardBannerRoot != null)
+            _lastBanner = banner;
+            if (!string.IsNullOrEmpty(banner) && rewardBannerRoot != null)
             {
                 if (_bannerRoutine != null) StopCoroutine(_bannerRoutine);
-                _bannerRoutine = StartCoroutine(ShowBanner(reward));
+                _bannerRoutine = StartCoroutine(ShowBanner(manager.BannerTitle, banner));
             }
         }
     }
 
-    private IEnumerator ShowBanner(string rewardLine)
+    private IEnumerator ShowBanner(string title, string body)
     {
-        if (rewardBannerTitle != null) rewardBannerTitle.text = "YOU GOT";
-        if (rewardBanner != null) rewardBanner.text = rewardLine;
+        if (rewardBannerTitle != null) rewardBannerTitle.text = title;
+        if (rewardBanner != null) rewardBanner.text = body;
 
         var rt = rewardBannerRoot.GetComponent<RectTransform>();
         rt.localScale = Vector3.zero;
