@@ -271,7 +271,22 @@ public class SennaPlayerMovement : MonoBehaviour
         }
 
         if (!_isGrounded)
-            transform.position += Vector3.up * _verticalVelocity * Time.deltaTime;
+        {
+            float deltaY = _verticalVelocity * Time.deltaTime;
+            // Sweep downward to prevent tunneling through floors when falling fast
+            if (deltaY < 0f && groundCheck != null)
+            {
+                float sweepDist = -deltaY;
+                if (Physics.SphereCast(groundCheck.position, groundCheckRadius,
+                        Vector3.down, out RaycastHit hit, sweepDist,
+                        groundMask, QueryTriggerInteraction.Ignore))
+                {
+                    _verticalVelocity = 0f;
+                    deltaY = -hit.distance;
+                }
+            }
+            transform.position += Vector3.up * deltaY;
+        }
 
         weaponSway?.SetVerticalVelocity(_isGrounded ? 0f : _verticalVelocity);
     }

@@ -17,6 +17,9 @@ public class GridController : MonoBehaviour
     public InventoryHighlight inventoryHighlight;
     public EquipmentSlot hoveredEquipmentSlot;
 
+    public GameObject ItemPrefab => itemPrefab;
+    public Transform CanvasTransform => canvasTransform;
+
     private void Awake()
     {
         inventoryHighlight = GetComponent<InventoryHighlight>();
