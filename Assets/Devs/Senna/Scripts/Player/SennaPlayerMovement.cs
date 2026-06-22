@@ -109,8 +109,11 @@ public class SennaPlayerMovement : MonoBehaviour
             _standColliderCenter = bodyCollider.center;
         }
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // Cursor state is owned entirely by GameStateManager (locks on Start/Resume/
+        // Respawn, frees on the start/pause/death panels). The player must NOT grab the
+        // cursor in Awake — in a scene where the player rig is left active behind the
+        // start panel (e.g. the GunReload test scene) that hid the mouse and made the
+        // Start button unclickable.
     }
 
     private void OnEnable()

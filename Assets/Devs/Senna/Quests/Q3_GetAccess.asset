@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05e2688cf9b85db42a32c862a1e7c33a, type: 3}
+  m_Name: Q3_GetAccess
+  m_EditorClassIdentifier: Assembly-CSharp::SennaQuestData
+  questName: Get Access
+  description: Use the security terminal to unlock the next area.
+  isMainQuest: 1
+  objectives:
+  - type: 1
+    targetItem: {fileID: 0}
+    interactKey: SecurityTerminal
+    requiredCount: 1
+    shortLabel: Use the terminal
+  rewardItems: []
+  rewardPool:
+  - displayLabel: Ammo x10
+    ammoAmount: 10
+    weight: 10
+  - displayLabel: Scrap Metal x1
+    ammoAmount: 0
+    weight: 8
+  - displayLabel: Ammo x15
+    ammoAmount: 15
+    weight: 4
