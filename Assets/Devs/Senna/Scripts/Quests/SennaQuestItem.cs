@@ -12,7 +12,16 @@ public class SennaQuestItem : MonoBehaviour, ISennaInteractable
     private string _prompt;
 
     public string PromptText => _prompt;
-    public bool CanInteract => true;
+    public bool CanInteract
+    {
+        get
+        {
+            var manager = SennaQuestManager.Instance;
+            // No manager = test scene, allow everything. Otherwise only show the
+            // prompt when this item is part of the currently active quest.
+            return manager == null || manager.IsItemCollectable(itemData);
+        }
+    }
 
     private void Awake()
     {

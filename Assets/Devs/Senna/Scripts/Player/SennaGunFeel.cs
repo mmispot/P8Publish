@@ -25,17 +25,17 @@ public class SennaGunFeel : MonoBehaviour
     [SerializeField] private SennaBulletTracer tracerPrefab; // optional — built in code when empty
 
     [Header("Fire Animation")]
-    // Arms + gun animators. Both get the "Fire" state force-restarted in the same
-    // frame, so the two animations can never drift apart — no parameters needed.
+    // Arms + gun animators. Each gets its "Fire" trigger set on the same frame, so the
+    // animations can never drift apart. The controllers route AnyState -> Fire on the trigger.
     [SerializeField] private Animator[] fireAnimators;
-    [SerializeField] private string fireStateName = "Fire";
+    [SerializeField] private string fireTrigger = "Fire";
 
     private IObjectPool<SennaBulletTracer> _tracerPool;
-    private int _fireStateHash;
+    private int _fireTriggerHash;
 
     private void Awake()
     {
-        _fireStateHash = Animator.StringToHash(fireStateName);
+        _fireTriggerHash = Animator.StringToHash(fireTrigger);
 
         if (weaponSway == null)      weaponSway      = GetComponentInChildren<WeaponSway>();
         if (playerMovement == null)  playerMovement  = GetComponentInParent<SennaPlayerMovement>();
@@ -102,10 +102,18 @@ public class SennaGunFeel : MonoBehaviour
         foreach (var animator in fireAnimators)
         {
             if (animator == null || !animator.isActiveAndEnabled) continue;
-            // CrossFadeInFixedTime with time 0 force-restarts the state even when it's
-            // already playing — rapid shots re-kick the animation instead of stacking
-            // like SetTrigger would
-            animator.CrossFadeInFixedTime(_fireStateHash, 0f, 0, 0f);
+
+            // Only fire the trigger on controllers that actually declare it (skips e.g. an
+            // idle-only controller) so Unity doesn't log a missing-parameter warning.
+            if (!HasParameter(animator, _fireTriggerHash)) continue;
+            animator.SetTrigger(_fireTriggerHash);
         }
+    }
+
+    private static bool HasParameter(Animator animator, int paramHash)
+    {
+        foreach (var p in animator.parameters)
+            if (p.nameHash == paramHash) return true;
+        return false;
     }
 }

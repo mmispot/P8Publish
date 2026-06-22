@@ -20,14 +20,14 @@ public class EquipmentSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         return item != null && item.itemData.itemType == acceptedType;
     }
 
-    public bool TryEquipItem(InventoryItem item)
+    public bool TryEquipItem(InventoryItem item, ItemGrid returnGrid = null)
     {
         if (!CanAcceptItem(item)) return false;
 
         // If something is already in the slot, swap it out to the inventory
         if (equippedItem != null)
         {
-            gridController.InsertItem(equippedItem);
+            gridController.InsertItem(equippedItem, returnGrid);
         }
 
         equippedItem = item;

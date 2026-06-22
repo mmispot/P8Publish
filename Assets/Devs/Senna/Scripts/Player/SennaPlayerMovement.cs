@@ -109,8 +109,11 @@ public class SennaPlayerMovement : MonoBehaviour
             _standColliderCenter = bodyCollider.center;
         }
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // Cursor state is owned entirely by GameStateManager (locks on Start/Resume/
+        // Respawn, frees on the start/pause/death panels). The player must NOT grab the
+        // cursor in Awake — in a scene where the player rig is left active behind the
+        // start panel (e.g. the GunReload test scene) that hid the mouse and made the
+        // Start button unclickable.
     }
 
     private void OnEnable()
@@ -268,7 +271,22 @@ public class SennaPlayerMovement : MonoBehaviour
         }
 
         if (!_isGrounded)
-            transform.position += Vector3.up * _verticalVelocity * Time.deltaTime;
+        {
+            float deltaY = _verticalVelocity * Time.deltaTime;
+            // Sweep downward to prevent tunneling through floors when falling fast
+            if (deltaY < 0f && groundCheck != null)
+            {
+                float sweepDist = -deltaY;
+                if (Physics.SphereCast(groundCheck.position, groundCheckRadius,
+                        Vector3.down, out RaycastHit hit, sweepDist,
+                        groundMask, QueryTriggerInteraction.Ignore))
+                {
+                    _verticalVelocity = 0f;
+                    deltaY = -hit.distance;
+                }
+            }
+            transform.position += Vector3.up * deltaY;
+        }
 
         weaponSway?.SetVerticalVelocity(_isGrounded ? 0f : _verticalVelocity);
     }

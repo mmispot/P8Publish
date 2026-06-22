@@ -66,34 +66,82 @@ public static class QuestSceneSetup
             Debug.Log("[QuestSceneSetup] Added SennaPlayerInteractor to the player.");
         }
 
-        // --- Test items + quest assets ---
+        // --- Quest assets ---
         if (!AssetDatabase.IsValidFolder(QuestAssetFolder))
             AssetDatabase.CreateFolder("Assets/Devs/Senna", "Quests");
 
-        var powerCell = LoadOrCreateItem("Item_PowerCell");
-        var scrap     = LoadOrCreateItem("Item_ScrapMetal");
+        var briefingItem  = LoadOrCreateItem("Item_MissionBriefing");
+        var ammoCrateItem = LoadOrCreateItem("Item_AmmoCrate");
+        var intelItem     = LoadOrCreateItem("Item_IntelDocument");
 
-        var mainQuest = LoadOrCreateQuest("Quest_Main_PowerCells", q =>
+        var q1 = LoadOrCreateQuest("Q1_SituationReport", q =>
         {
-            q.questName = "Power Cells";
-            q.description = "Find the power cells scattered around the area.";
+            q.questName   = "Situation Report";
+            q.description = "Find the mission briefing to understand your objectives.";
             q.isMainQuest = true;
-            q.objectives = new[]
+            q.objectives  = new[] { new SennaQuestObjective { type = SennaObjectiveType.CollectItem, targetItem = briefingItem, requiredCount = 1, shortLabel = "Find the briefing" } };
+            q.rewardPool  = new[]
             {
-                new SennaQuestObjective { type = SennaObjectiveType.CollectItem, targetItem = powerCell, requiredCount = 3, shortLabel = "Find power cells" }
+                new SennaRewardEntry { displayLabel = "Ammo x15",      ammoAmount = 15, weight = 10 },
+                new SennaRewardEntry { displayLabel = "Scrap Metal x2", ammoAmount = 0,  weight = 6  },
+                new SennaRewardEntry { displayLabel = "Ammo x10",      ammoAmount = 10, weight = 4  },
             };
         });
 
-        var sideQuest = LoadOrCreateQuest("Quest_Side_Scrap", q =>
+        var q2 = LoadOrCreateQuest("Q2_ArmUp", q =>
         {
-            q.questName = "Scrap Run";
-            q.description = "Grab spare scrap metal for crafting.";
-            q.isMainQuest = false;
-            q.objectives = new[]
+            q.questName   = "Arm Up";
+            q.description = "Locate the ammo cache to resupply before pushing forward.";
+            q.isMainQuest = true;
+            q.objectives  = new[] { new SennaQuestObjective { type = SennaObjectiveType.CollectItem, targetItem = ammoCrateItem, requiredCount = 1, shortLabel = "Find the ammo cache" } };
+            q.rewardPool  = new[]
             {
-                new SennaQuestObjective { type = SennaObjectiveType.CollectItem, targetItem = scrap, requiredCount = 2, shortLabel = "Collect scrap" }
+                new SennaRewardEntry { displayLabel = "Ammo x30",      ammoAmount = 30, weight = 10 },
+                new SennaRewardEntry { displayLabel = "Ammo x20",      ammoAmount = 20, weight = 6  },
+                new SennaRewardEntry { displayLabel = "Scrap Metal x3", ammoAmount = 0,  weight = 4  },
             };
-            q.rewardItems = new[] { scrap };
+        });
+
+        var q3 = LoadOrCreateQuest("Q3_GetAccess", q =>
+        {
+            q.questName   = "Get Access";
+            q.description = "Use the security terminal to unlock the next area.";
+            q.isMainQuest = true;
+            q.objectives  = new[] { new SennaQuestObjective { type = SennaObjectiveType.Interact, interactKey = "SecurityTerminal", requiredCount = 1, shortLabel = "Use the terminal" } };
+            q.rewardPool  = new[]
+            {
+                new SennaRewardEntry { displayLabel = "Ammo x10",      ammoAmount = 10, weight = 10 },
+                new SennaRewardEntry { displayLabel = "Scrap Metal x1", ammoAmount = 0,  weight = 8  },
+                new SennaRewardEntry { displayLabel = "Ammo x15",      ammoAmount = 15, weight = 4  },
+            };
+        });
+
+        var q4 = LoadOrCreateQuest("Q4_EnemyIntel", q =>
+        {
+            q.questName   = "Enemy Intel";
+            q.description = "Recover the enemy intelligence document.";
+            q.isMainQuest = true;
+            q.objectives  = new[] { new SennaQuestObjective { type = SennaObjectiveType.CollectItem, targetItem = intelItem, requiredCount = 1, shortLabel = "Recover the intel" } };
+            q.rewardPool  = new[]
+            {
+                new SennaRewardEntry { displayLabel = "Ammo x20",      ammoAmount = 20, weight = 10 },
+                new SennaRewardEntry { displayLabel = "Ammo x30",      ammoAmount = 30, weight = 5  },
+                new SennaRewardEntry { displayLabel = "Scrap Metal x4", ammoAmount = 0,  weight = 5  },
+            };
+        });
+
+        var q5 = LoadOrCreateQuest("Q5_GetOut", q =>
+        {
+            q.questName   = "Get Out";
+            q.description = "Activate the extraction beacon and get out.";
+            q.isMainQuest = true;
+            q.objectives  = new[] { new SennaQuestObjective { type = SennaObjectiveType.Interact, interactKey = "ExtractionBeacon", requiredCount = 1, shortLabel = "Activate extraction" } };
+            q.rewardPool  = new[]
+            {
+                new SennaRewardEntry { displayLabel = "Ammo x50",      ammoAmount = 50, weight = 10 },
+                new SennaRewardEntry { displayLabel = "Ammo x40",      ammoAmount = 40, weight = 6  },
+                new SennaRewardEntry { displayLabel = "Scrap Metal x5", ammoAmount = 0,  weight = 4  },
+            };
         });
 
         // --- Quest manager (re-wired every run; same values, so it stays idempotent) ---
@@ -108,41 +156,33 @@ public static class QuestSceneSetup
         var manager = managerGO.GetComponent<SennaQuestManager>();
         var managerSO = new SerializedObject(manager);
         var questsProp = managerSO.FindProperty("quests");
-        questsProp.arraySize = 2;
-        questsProp.GetArrayElementAtIndex(0).objectReferenceValue = mainQuest;
-        questsProp.GetArrayElementAtIndex(1).objectReferenceValue = sideQuest;
+        questsProp.arraySize = 5;
+        questsProp.GetArrayElementAtIndex(0).objectReferenceValue = q1;
+        questsProp.GetArrayElementAtIndex(1).objectReferenceValue = q2;
+        questsProp.GetArrayElementAtIndex(2).objectReferenceValue = q3;
+        questsProp.GetArrayElementAtIndex(3).objectReferenceValue = q4;
+        questsProp.GetArrayElementAtIndex(4).objectReferenceValue = q5;
         managerSO.FindProperty("playerInteractor").objectReferenceValue = interactor;
+        managerSO.FindProperty("ammoSystem").objectReferenceValue = player.GetComponentInChildren<SennaAmmoSystem>(true);
         managerSO.ApplyModifiedProperties();
 
-        // --- Test world props ---
-        if (GameObject.Find("QuestProps") != null)
+        // --- Game quest world props (5 objects matching the quest chain) ---
+        if (GameObject.Find("GameQuestProps") != null)
         {
-            Debug.Log("[QuestSceneSetup] QuestProps already exists — leaving it as is.");
+            Debug.Log("[QuestSceneSetup] GameQuestProps already exists — leaving it as is.");
         }
         else
         {
-            var props = new GameObject("QuestProps");
+            var props = new GameObject("GameQuestProps");
             Undo.RegisterCreatedObjectUndo(props, "Setup Quests Scene");
 
-            CreatePickup(props.transform, PrimitiveType.Capsule, "PowerCell_1", ground + new Vector3( 5f, 0.5f,  5f), powerCell, "Power Cell");
-            CreatePickup(props.transform, PrimitiveType.Capsule, "PowerCell_2", ground + new Vector3(-6f, 0.5f,  3f), powerCell, "Power Cell");
-            CreatePickup(props.transform, PrimitiveType.Capsule, "PowerCell_3", ground + new Vector3( 2f, 0.5f, -7f), powerCell, "Power Cell");
-            CreatePickup(props.transform, PrimitiveType.Cube,    "Scrap_1",     ground + new Vector3(-3f, 0.3f, -5f), scrap,     "Scrap Metal");
-            CreatePickup(props.transform, PrimitiveType.Cube,    "Scrap_2",     ground + new Vector3( 7f, 0.3f, -2f), scrap,     "Scrap Metal");
+            CreatePickup(props.transform, PrimitiveType.Capsule, "MissionBriefing", ground + new Vector3( 3f, 0.5f,  3f), briefingItem,  "Mission Briefing");
+            CreatePickup(props.transform, PrimitiveType.Cube,    "AmmoCrate",       ground + new Vector3(-5f, 0.5f,  5f), ammoCrateItem, "Ammo Crate");
+            CreateQuestInteractable(props.transform, "SecurityTerminal",  ground + new Vector3( 8f, 0.75f, 0f),  "SecurityTerminal",  "[F] Use terminal");
+            CreatePickup(props.transform, PrimitiveType.Capsule, "IntelDocument",   ground + new Vector3( 0f, 0.5f, -6f), intelItem,     "Enemy Intel");
+            CreateQuestInteractable(props.transform, "ExtractionBeacon",  ground + new Vector3(-8f, 0.5f, -4f), "ExtractionBeacon",  "[F] Activate beacon");
 
-            // Solid (non-trigger) so it behaves like a physical terminal; the
-            // interactor ray hits non-triggers too.
-            var terminal = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            terminal.name = "Terminal";
-            terminal.transform.SetParent(props.transform, false);
-            terminal.transform.position = ground + new Vector3(0f, 0.75f, 8f);
-            terminal.transform.localScale = new Vector3(1f, 1.5f, 0.5f);
-            var interactable = terminal.AddComponent<SennaInteractable>();
-            var iso = new SerializedObject(interactable);
-            iso.FindProperty("promptText").stringValue = "[F] Use terminal";
-            iso.ApplyModifiedProperties();
-
-            Debug.Log("[QuestSceneSetup] Spawned test pickups and terminal under QuestProps.");
+            Debug.Log("[QuestSceneSetup] Spawned 5 game quest props under GameQuestProps.");
         }
 
         // --- HUD ---
@@ -270,12 +310,23 @@ public static class QuestSceneSetup
     {
         string path = $"{QuestAssetFolder}/{assetName}.asset";
         var quest = AssetDatabase.LoadAssetAtPath<SennaQuestData>(path);
-        if (quest != null) return quest;
+        bool isNew = quest == null;
+        if (isNew)
+            quest = ScriptableObject.CreateInstance<SennaQuestData>();
 
-        quest = ScriptableObject.CreateInstance<SennaQuestData>();
+        // Always apply init so reward pool and objective changes land on re-runs.
         init(quest);
-        AssetDatabase.CreateAsset(quest, path);
-        Debug.Log($"[QuestSceneSetup] Created {path}.");
+
+        if (isNew)
+        {
+            AssetDatabase.CreateAsset(quest, path);
+            Debug.Log($"[QuestSceneSetup] Created {path}.");
+        }
+        else
+        {
+            EditorUtility.SetDirty(quest);
+            Debug.Log($"[QuestSceneSetup] Updated {path}.");
+        }
         return quest;
     }
 
@@ -296,6 +347,25 @@ public static class QuestSceneSetup
         var so = new SerializedObject(questItem);
         so.FindProperty("itemData").objectReferenceValue = itemData;
         so.FindProperty("displayName").stringValue = displayName;
+        so.ApplyModifiedProperties();
+    }
+
+    private static void CreateQuestInteractable(Transform parent, string objectName,
+        Vector3 position, string questKey, string prompt)
+    {
+        var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        go.name = objectName;
+        go.transform.SetParent(parent, false);
+        go.transform.position = position;
+        go.transform.localScale = new Vector3(1f, 1.5f, 0.5f);
+
+        // Trigger so the interaction ray hits it; no bullet collision needed.
+        go.GetComponent<Collider>().isTrigger = true;
+
+        var qi = go.AddComponent<SennaQuestInteractable>();
+        var so = new SerializedObject(qi);
+        so.FindProperty("questKey").stringValue = questKey;
+        so.FindProperty("promptText").stringValue = prompt;
         so.ApplyModifiedProperties();
     }
 }

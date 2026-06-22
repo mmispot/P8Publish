@@ -19,10 +19,6 @@ public class MouseLook : MonoBehaviour
 
     private void Start()
     {
-        //lock and hide the cursor on start
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
         _yRotation = transform.eulerAngles.y;
     }
 
