@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 using TMPro;
 
 public class InventoryManager : MonoBehaviour
@@ -9,8 +8,8 @@ public class InventoryManager : MonoBehaviour
     public GridInteract interactScript;
     public GridController gridControllerScript;
     public GameObject inventoryGrid;
+    public GameObject inventoryCanvas; 
     public GameObject mainCamera;
-    public TMP_Text guideTxt;
     public PlayerMovement player;
 
     void Start()
@@ -20,24 +19,19 @@ public class InventoryManager : MonoBehaviour
         gridControllerScript = mainCamera.GetComponent<GridController>();
 
         if (player != null)
-        {
             player = player.GetComponent<PlayerMovement>();
-        }
     }
 
     void Update()
     {
         if (Keyboard.current.eKey.wasPressedThisFrame)
-        {
             ToggleInventory();
-        }
     }
 
     void ToggleInventory()
     {
-        bool isOpen = !inventoryGrid.activeSelf;
-        inventoryGrid.SetActive(isOpen);
-        guideTxt.gameObject.SetActive(isOpen);
+        bool isOpen = !inventoryCanvas.activeSelf; 
+        inventoryCanvas.SetActive(isOpen);         
 
         if (isOpen)
         {
