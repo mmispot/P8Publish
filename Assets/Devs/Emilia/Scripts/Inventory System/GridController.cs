@@ -15,6 +15,7 @@ public class GridController : MonoBehaviour
     [SerializeField] private Transform canvasTransform;
 
     public InventoryHighlight inventoryHighlight;
+    public EquipmentSlot hoveredEquipmentSlot;
 
     private void Awake()
     {
@@ -24,28 +25,29 @@ public class GridController : MonoBehaviour
     private void Update()
     {
         DragItem();
-
         HandleHighlight();
 
-        if (selectedItemGrid == null) { return; }
-        
-        if (Keyboard.current.qKey.wasPressedThisFrame && selectedItem == null) //creates random item and places it, if it cant place it holds in hand
+        // Keyboard shortcuts only make sense when a grid is active and no equipment slot is hovered
+        if (selectedItemGrid != null && hoveredEquipmentSlot == null)
         {
-            InsertRandomItem();
+            if (Keyboard.current.qKey.wasPressedThisFrame && selectedItem == null)
+            {
+                InsertRandomItem();
+            }
+
+            if (Keyboard.current.rKey.wasPressedThisFrame && selectedItem != null)
+            {
+                RotateItem();
+            }
+
+            if (Keyboard.current.cKey.wasPressedThisFrame)
+            {
+                DeleteHeldItem();
+            }
         }
 
-        if (Keyboard.current.rKey.wasPressedThisFrame && selectedItem != null) //rotates item in hand
-        {
-            RotateItem();
-        }
-
-        if (Keyboard.current.cKey.wasPressedThisFrame) //delete item in hand, if there is one
-        {
-            DeleteHeldItem();
-        }
-
-
-        if (Mouse.current.leftButton.wasPressedThisFrame) 
+        // LMB is always checked — equipment slots are valid targets even without a selectedItemGrid
+        if (Mouse.current.leftButton.wasPressedThisFrame)
         {
             LMBPress();
         }
@@ -53,8 +55,7 @@ public class GridController : MonoBehaviour
 
     public void RotateItem()
     {
-        if (selectedItem == null) { return; }
-
+        if (selectedItem == null) return;
         selectedItem.Rotate();
     }
 
@@ -67,20 +68,34 @@ public class GridController : MonoBehaviour
 
     private void InsertRandomItem()
     {
-        CreateRandomItem(); //change this to param for item to be picked up to auto add to inv
+        CreateRandomItem();
         InventoryItem itemToInsert = selectedItem;
         selectedItem = null;
-
         InsertItem(itemToInsert);
     }
 
-    public void InsertItem(InventoryItem itemToInsert)
+    // FIX: InsertItem now takes an optional target grid parameter.
+    // When swapping an item out of an equipment slot, the equipped item
+    // needs to go back into the inventory grid — but selectedItemGrid
+    // may be null at that moment (player is hovering the equipment slot,
+    // not a grid). Passing the grid explicitly avoids the null-ref.
+    public void InsertItem(InventoryItem itemToInsert, ItemGrid targetGrid = null)
     {
-        // Try to stack onto an existing item first
+        ItemGrid grid = targetGrid ?? selectedItemGrid;
+
+        if (grid == null)
+        {
+            Debug.LogWarning("InsertItem: no target grid available. Item held in hand.");
+            selectedItem = itemToInsert;
+            rectTransform = selectedItem.GetComponent<RectTransform>();
+            CanvasGroup cg = selectedItem.GetComponent<CanvasGroup>();
+            if (cg != null) cg.blocksRaycasts = false;
+            return;
+        }
+
         if (itemToInsert.itemData.stackable)
         {
-            InventoryItem existingStack = selectedItemGrid.FindStackableItem(itemToInsert.itemData);
-
+            InventoryItem existingStack = grid.FindStackableItem(itemToInsert.itemData);
             if (existingStack != null)
             {
                 int added = existingStack.AddToStack(itemToInsert.currentStackSize);
@@ -89,38 +104,50 @@ public class GridController : MonoBehaviour
                 if (leftover <= 0)
                 {
                     Destroy(itemToInsert.gameObject);
-                    return; // fully merged
+                    return;
                 }
                 else
                 {
                     itemToInsert.currentStackSize = leftover;
                     itemToInsert.UpdateStackText();
-                    // fall through, place remainder as new item
                 }
             }
         }
 
-        Vector2Int posOnGrid = selectedItemGrid.FindSpaceForObject(itemToInsert);
+        Vector2Int posOnGrid = grid.FindSpaceForObject(itemToInsert);
 
         if (posOnGrid.x == -1)
         {
-            Debug.Log("No space for item");
+            Debug.Log("No space for item — held in hand.");
             selectedItem = itemToInsert;
+            rectTransform = selectedItem.GetComponent<RectTransform>();
+            CanvasGroup cg = selectedItem.GetComponent<CanvasGroup>();
+            if (cg != null) cg.blocksRaycasts = false;
             return;
         }
 
-        selectedItemGrid.PlaceItem(itemToInsert, posOnGrid.x, posOnGrid.y);
+        grid.PlaceItem(itemToInsert, posOnGrid.x, posOnGrid.y);
     }
 
     InventoryItem itemToHighlight;
 
     private void HandleHighlight()
     {
-        if (selectedItemGrid == null) { return; }
+        // When hovering an equipment slot, show no grid highlight
+        if (hoveredEquipmentSlot != null)
+        {
+            inventoryHighlight.Show(false);
+            return;
+        }
+
+        if (selectedItemGrid == null)
+        {
+            inventoryHighlight.Show(false);
+            return;
+        }
 
         Vector2Int positionOnGrid = GetTileGridPosition();
 
-        // Guard against out-of-bounds positions (e.g. mouse over equipment slots)
         if (!selectedItemGrid.BoundaryCheck(positionOnGrid.x, positionOnGrid.y, 1, 1))
         {
             inventoryHighlight.Show(false);
@@ -158,7 +185,6 @@ public class GridController : MonoBehaviour
         rectTransform = inventoryItem.GetComponent<RectTransform>();
         rectTransform.SetParent(canvasTransform);
 
-        // using canvasgroup because otherwise canvas isn't recognised (item prevents onpointerenter from working) and raycast blocking is needed to prevent picking up the item while dragging
         CanvasGroup canvasGroup = inventoryItem.GetComponent<CanvasGroup>();
         if (canvasGroup != null) canvasGroup.blocksRaycasts = false;
 
@@ -166,35 +192,32 @@ public class GridController : MonoBehaviour
         inventoryItem.Set(items[selectedItemID]);
     }
 
-    public EquipmentSlot hoveredEquipmentSlot;
-
     public void LMBPress()
     {
-        // Priority: try to equip into a hovered slot first
+        // --- Case 1: holding an item + hovering an equipment slot → try to equip ---
         if (selectedItem != null && hoveredEquipmentSlot != null)
         {
-            bool equipped = hoveredEquipmentSlot.TryEquipItem(selectedItem);
+            // FIX: pass selectedItemGrid into TryEquipItem so the slot
+            // knows which grid to return a swapped-out item to
+            bool equipped = hoveredEquipmentSlot.TryEquipItem(selectedItem, selectedItemGrid);
             if (equipped)
             {
                 selectedItem = null;
-                return;
             }
             else
             {
-                Debug.Log("Wrong item type for this slot");
-                return;
+                Debug.Log("Wrong item type for this slot.");
             }
+            return;
         }
 
-        // Check if we're clicking on an equipment slot to pick up
+        // --- Case 2: empty hand + hovering an equipment slot → pick up equipped item ---
         if (selectedItem == null && hoveredEquipmentSlot != null)
         {
             if (hoveredEquipmentSlot.equippedItem != null)
             {
                 selectedItem = hoveredEquipmentSlot.UnequipItem();
                 rectTransform = selectedItem.GetComponent<RectTransform>();
-
-                // Re-parent to canvas so DragItem works correctly
                 rectTransform.SetParent(canvasTransform);
                 rectTransform.localScale = Vector3.one;
 
@@ -204,7 +227,8 @@ public class GridController : MonoBehaviour
             return;
         }
 
-        if (selectedItemGrid == null) { return; }
+        // --- Case 3: interacting with the inventory grid ---
+        if (selectedItemGrid == null) return;
 
         Vector2Int tileGridPosition = GetTileGridPosition();
         if (selectedItem == null) PickUpItem(tileGridPosition);
@@ -213,19 +237,14 @@ public class GridController : MonoBehaviour
 
     public Vector2Int GetTileGridPosition()
     {
-
-        Vector2Int tileGridPosition = selectedItemGrid.GetTileGridPosition(Mouse.current.position.ReadValue());
-        return tileGridPosition; 
+        return selectedItemGrid.GetTileGridPosition(Mouse.current.position.ReadValue());
     }
 
     public void PlaceItem(Vector2Int tileGridPosition)
     {
         if (!selectedItemGrid.BoundaryCheck(tileGridPosition.x, tileGridPosition.y, 1, 1))
-        {
-            return; // clicked outside the grid, do nothing & prevent errors
-        }
-        
-        // Check what's currently under the cursor before attempting placement
+            return;
+
         InventoryItem itemUnderCursor = selectedItemGrid.GetItem(tileGridPosition.x, tileGridPosition.y);
 
         if (itemUnderCursor != null
@@ -246,9 +265,7 @@ public class GridController : MonoBehaviour
             {
                 selectedItem.currentStackSize = leftover;
                 selectedItem.UpdateStackText();
-                // selectedItem stays in hand with the leftover amount
             }
-
             return;
         }
 
