@@ -25,23 +25,17 @@ public class SennaGunFeel : MonoBehaviour
     [SerializeField] private SennaBulletTracer tracerPrefab; // optional — built in code when empty
 
     [Header("Fire Animation")]
-    // Arms + gun animators. Each gets its fire state force-restarted on the same
-    // frame, so the animations can never drift apart — no parameters needed.
+    // Arms + gun animators. Each gets its "Fire" trigger set on the same frame, so the
+    // animations can never drift apart. The controllers route AnyState -> Fire on the trigger.
     [SerializeField] private Animator[] fireAnimators;
-    [SerializeField] private string fireStateName = "Fire";
-    // The gun's fire clip imports under its FBX take name, so the gun controller's
-    // state is called this rather than plain "Fire". Used as a fallback per animator:
-    // controllers without either state (e.g. the arms' idle-only controller) are skipped.
-    [SerializeField] private string gunFireStateName = "TT33Rig|GunTT33_Fire";
+    [SerializeField] private string fireTrigger = "Fire";
 
     private IObjectPool<SennaBulletTracer> _tracerPool;
-    private int _fireStateHash;
-    private int _gunFireStateHash;
+    private int _fireTriggerHash;
 
     private void Awake()
     {
-        _fireStateHash = Animator.StringToHash(fireStateName);
-        _gunFireStateHash = Animator.StringToHash(gunFireStateName);
+        _fireTriggerHash = Animator.StringToHash(fireTrigger);
 
         if (weaponSway == null)      weaponSway      = GetComponentInChildren<WeaponSway>();
         if (playerMovement == null)  playerMovement  = GetComponentInParent<SennaPlayerMovement>();
@@ -109,19 +103,17 @@ public class SennaGunFeel : MonoBehaviour
         {
             if (animator == null || !animator.isActiveAndEnabled) continue;
 
-            // Pick whichever fire state this animator's controller actually has.
-            // No matching state (e.g. the arms' idle-only controller) -> skip, so its
-            // current state never gets restarted and pops.
-            int stateHash =
-                animator.HasState(0, _fireStateHash)    ? _fireStateHash    :
-                animator.HasState(0, _gunFireStateHash) ? _gunFireStateHash : 0;
-
-            if (stateHash == 0) continue;
-
-            // CrossFadeInFixedTime with time 0 force-restarts the state even when it's
-            // already playing — rapid shots re-kick the animation instead of stacking
-            // like SetTrigger would.
-            animator.CrossFadeInFixedTime(stateHash, 0f, 0, 0f);
+            // Only fire the trigger on controllers that actually declare it (skips e.g. an
+            // idle-only controller) so Unity doesn't log a missing-parameter warning.
+            if (!HasParameter(animator, _fireTriggerHash)) continue;
+            animator.SetTrigger(_fireTriggerHash);
         }
+    }
+
+    private static bool HasParameter(Animator animator, int paramHash)
+    {
+        foreach (var p in animator.parameters)
+            if (p.nameHash == paramHash) return true;
+        return false;
     }
 }
