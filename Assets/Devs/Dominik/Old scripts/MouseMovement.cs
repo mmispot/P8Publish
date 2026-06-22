@@ -15,10 +15,6 @@ public class MouseMovement : MonoBehaviour
 
     void Start()
     {
-        //Locks the cursor in the middle of the screen 
-        Cursor.lockState = CursorLockMode.Locked;
-
-
     }
 
     void Update()
