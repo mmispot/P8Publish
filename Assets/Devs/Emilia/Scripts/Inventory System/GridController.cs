@@ -184,6 +184,7 @@ public class GridController : MonoBehaviour
 
         rectTransform = inventoryItem.GetComponent<RectTransform>();
         rectTransform.SetParent(canvasTransform);
+        rectTransform.SetAsLastSibling();
 
         CanvasGroup canvasGroup = inventoryItem.GetComponent<CanvasGroup>();
         if (canvasGroup != null) canvasGroup.blocksRaycasts = false;
@@ -194,11 +195,9 @@ public class GridController : MonoBehaviour
 
     public void LMBPress()
     {
-        // --- Case 1: holding an item + hovering an equipment slot → try to equip ---
+        //Case 1: holding an item + hovering an equipment slot = try to equip
         if (selectedItem != null && hoveredEquipmentSlot != null)
         {
-            // FIX: pass selectedItemGrid into TryEquipItem so the slot
-            // knows which grid to return a swapped-out item to
             bool equipped = hoveredEquipmentSlot.TryEquipItem(selectedItem, selectedItemGrid);
             if (equipped)
             {
@@ -211,7 +210,7 @@ public class GridController : MonoBehaviour
             return;
         }
 
-        // --- Case 2: empty hand + hovering an equipment slot → pick up equipped item ---
+        //Case 2: empty hand + hovering an equipment slot = pick up equipped item
         if (selectedItem == null && hoveredEquipmentSlot != null)
         {
             if (hoveredEquipmentSlot.equippedItem != null)
@@ -219,6 +218,7 @@ public class GridController : MonoBehaviour
                 selectedItem = hoveredEquipmentSlot.UnequipItem();
                 rectTransform = selectedItem.GetComponent<RectTransform>();
                 rectTransform.SetParent(canvasTransform);
+                rectTransform.SetAsLastSibling(); // NEW
                 rectTransform.localScale = Vector3.one;
 
                 CanvasGroup cg = selectedItem.GetComponent<CanvasGroup>();
@@ -227,7 +227,7 @@ public class GridController : MonoBehaviour
             return;
         }
 
-        // --- Case 3: interacting with the inventory grid ---
+        //Case 3: interacting with the inventory grid
         if (selectedItemGrid == null) return;
 
         Vector2Int tileGridPosition = GetTileGridPosition();
@@ -292,6 +292,9 @@ public class GridController : MonoBehaviour
         if (selectedItem != null)
         {
             rectTransform = selectedItem.GetComponent<RectTransform>();
+            rectTransform.SetParent(canvasTransform); 
+            rectTransform.SetAsLastSibling();        
+
             CanvasGroup canvasGroup = selectedItem.GetComponent<CanvasGroup>();
             if (canvasGroup != null) canvasGroup.blocksRaycasts = false;
         }
