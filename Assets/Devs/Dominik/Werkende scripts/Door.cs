@@ -1,12 +1,16 @@
 using UnityEngine;
+using System.Collections;
 
 public class Door : MonoBehaviour
 {
     public float openAngle = 90f;
     public float speed = 5f;
+    public float closeDelay = 1f;
 
     private Quaternion closedRot;
     private Quaternion targetRot;
+
+    private Coroutine closeCoroutine;
 
     void Start()
     {
@@ -25,6 +29,13 @@ public class Door : MonoBehaviour
 
     public void Open(Transform player)
     {
+        // cancel closing if player comes back
+        if (closeCoroutine != null)
+        {
+            StopCoroutine(closeCoroutine);
+            closeCoroutine = null;
+        }
+
         Vector3 dir = player.position - transform.position;
 
         float side = Vector3.Dot(transform.forward, dir);
@@ -34,8 +45,20 @@ public class Door : MonoBehaviour
         targetRot = closedRot * Quaternion.Euler(0, angle, 0);
     }
 
-    public void Close()
+
+    public void StartClose()
     {
+        if (closeCoroutine != null)
+            StopCoroutine(closeCoroutine);
+
+        closeCoroutine = StartCoroutine(CloseAfterDelay());
+    }
+
+
+    IEnumerator CloseAfterDelay()
+    {
+        yield return new WaitForSeconds(closeDelay);
+
         targetRot = closedRot;
     }
 }
