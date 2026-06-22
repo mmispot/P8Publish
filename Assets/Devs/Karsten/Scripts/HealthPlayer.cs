@@ -53,6 +53,6 @@ public class PlayerHealth : MonoBehaviour
     private void Die()
     {
 
-        Destroy(gameObject);
+        enemymovement.Die();
     }
 }
