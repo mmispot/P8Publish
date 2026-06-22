@@ -2,12 +2,11 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// Drives the reload: on the Reload action (R) it force-restarts the "Reload" state on
-// the arms + gun animators, then refills the magazine once the animation finishes.
-// Mirrors SennaGunFeel's approach exactly — both animators get re-kicked on the same
-// frame with CrossFadeInFixedTime, no Animator parameters, so the two halves of the
-// reload can never drift apart. Firing is blocked while IsReloading is true
-// (SchootingRaycast checks it before each shot).
+// Drives the reload: on the Reload action (R) it sets the "Reload" trigger on the arms +
+// gun animators (controllers route AnyState -> Reload), then refills the magazine once the
+// animation finishes. Mirrors SennaGunFeel's approach — both animators are triggered on the
+// same frame so the two halves of the reload can never drift apart. Firing is blocked while
+// IsReloading is true (SchootingRaycast checks it before each shot).
 public class SennaGunReload : MonoBehaviour
 {
     [Header("Input")]
@@ -23,25 +22,19 @@ public class SennaGunReload : MonoBehaviour
     // Arms + gun animators — the same two SennaGunFeel fires. Left empty, Awake grabs
     // every Animator under this object so it auto-wires on the player rig.
     [SerializeField] private Animator[] reloadAnimators;
-    [SerializeField] private string reloadStateName = "Reload";
-    // Fallback for a controller whose reload state kept its FBX take name (e.g.
-    // "TT33Rig|GunTT33_Reload"). Checked per animator; controllers with neither
-    // state are skipped so nothing else gets restarted and pops.
-    [SerializeField] private string gunReloadStateName = "Reload";
+    [SerializeField] private string reloadTrigger = "Reload";
 
     [Tooltip("Seconds before the magazine refills. Match this to the reload clip length.")]
     [SerializeField] private float reloadDuration = 1.5f;
 
     public bool IsReloading { get; private set; }
 
-    private int _reloadStateHash;
-    private int _gunReloadStateHash;
+    private int _reloadTriggerHash;
     private Coroutine _reloadRoutine;
 
     private void Awake()
     {
-        _reloadStateHash = Animator.StringToHash(reloadStateName);
-        _gunReloadStateHash = Animator.StringToHash(gunReloadStateName);
+        _reloadTriggerHash = Animator.StringToHash(reloadTrigger);
 
         if (ammo == null) ammo = GetComponentInParent<SennaAmmoSystem>();
         if (ammo == null) ammo = GetComponentInChildren<SennaAmmoSystem>();
@@ -107,17 +100,17 @@ public class SennaGunReload : MonoBehaviour
         {
             if (animator == null || !animator.isActiveAndEnabled) continue;
 
-            // Pick whichever reload state this animator's controller actually has;
-            // no match (e.g. an idle-only controller) -> skip so its state never pops.
-            int stateHash =
-                animator.HasState(0, _reloadStateHash)    ? _reloadStateHash    :
-                animator.HasState(0, _gunReloadStateHash) ? _gunReloadStateHash : 0;
-
-            if (stateHash == 0) continue;
-
-            // time 0 force-restarts the state even mid-play, so spamming R re-kicks the
-            // reload instead of stacking like SetTrigger would.
-            animator.CrossFadeInFixedTime(stateHash, 0f, 0, 0f);
+            // Only trigger controllers that declare the parameter (skips an idle-only
+            // controller) so Unity doesn't log a missing-parameter warning.
+            if (!HasParameter(animator, _reloadTriggerHash)) continue;
+            animator.SetTrigger(_reloadTriggerHash);
         }
+    }
+
+    private static bool HasParameter(Animator animator, int paramHash)
+    {
+        foreach (var p in animator.parameters)
+            if (p.nameHash == paramHash) return true;
+        return false;
     }
 }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2334212d2b17a2546b58aa2fc6d77f5d
+guid: 00faf35762cadf742bcea72b78fa35fe
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
@@ -31,9 +31,67 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: ArmRig|ArmsTT33_Idle
-      takeName: ArmRig|ArmsTT33_Reload
-      internalID: 4338160695692485928
+      name: TT33Rig|CameraAction
+      takeName: TT33Rig|CameraAction
+      internalID: -4271219293791339274
+      firstFrame: 0
+      lastFrame: 0
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: TT33Rig|GunTT33_Fire
+      takeName: TT33Rig|GunTT33_Fire
+      internalID: -1991716083469680777
+      firstFrame: 0
+      lastFrame: 13
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: TT33Rig|GunTT33_Idle
+      takeName: TT33Rig|GunTT33_Idle
+      internalID: 8860287448030376258
       firstFrame: 0
       lastFrame: 0
       wrapMode: 0
@@ -60,11 +118,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: ArmRig|ArmsTT33_Reload
-      takeName: ArmRig|ArmsTT33_Reload
-      internalID: 4338160695692485929
+      name: TT33Rig|GunTT33_Reload
+      takeName: TT33Rig|GunTT33_Reload
+      internalID: 8856828889585815475
       firstFrame: 0
-      lastFrame: 117
+      lastFrame: 119
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
