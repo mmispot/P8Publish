@@ -5,10 +5,9 @@ public enum SoundType
 {
     TOKAREV,
     JUMP,
-    ENEMYWALK,
-    ENEMYDEATH,
+    WALK,
+    DEATH,
     PEEPER,
-    ENEMYAGRO
 }
 
 [System.Serializable]

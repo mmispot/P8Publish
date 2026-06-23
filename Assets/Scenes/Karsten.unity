@@ -266,7 +266,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.06666667
+  m_VoxelSize: 0.1
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 4772928be156d434cb3794a6ebfa3b97, type: 2}
   m_BuildHeightMesh: 0
@@ -906,7 +906,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2203005200834138069, guid: 5c13fdb67d4e1134aa9b1a47b76622c6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5483022872568836065, guid: 5c13fdb67d4e1134aa9b1a47b76622c6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -953,63 +953,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c13fdb67d4e1134aa9b1a47b76622c6, type: 3}
---- !u!1001 &3108009957691392451
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2428433364627588651, guid: e5554d8de852cfb459ad04b18feab47d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 2.90008
-      objectReference: {fileID: 0}
-    - target: {fileID: 2428433364627588651, guid: e5554d8de852cfb459ad04b18feab47d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2428433364627588651, guid: e5554d8de852cfb459ad04b18feab47d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 4.08301
-      objectReference: {fileID: 0}
-    - target: {fileID: 2428433364627588651, guid: e5554d8de852cfb459ad04b18feab47d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2428433364627588651, guid: e5554d8de852cfb459ad04b18feab47d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2428433364627588651, guid: e5554d8de852cfb459ad04b18feab47d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2428433364627588651, guid: e5554d8de852cfb459ad04b18feab47d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2428433364627588651, guid: e5554d8de852cfb459ad04b18feab47d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2428433364627588651, guid: e5554d8de852cfb459ad04b18feab47d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2428433364627588651, guid: e5554d8de852cfb459ad04b18feab47d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2958638554642857015, guid: e5554d8de852cfb459ad04b18feab47d, type: 3}
-      propertyPath: m_Name
-      value: SoundManager
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: e5554d8de852cfb459ad04b18feab47d, type: 3}
 --- !u!1001 &5273391514308119257
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1018,6 +961,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7615676841059063510, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 885177923400677427, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1062,6 +1009,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: KipschasPlaceholder (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7550124684535668372, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+      propertyPath: lightCooldownTime
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1071,7 +1022,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 3108009957691392451}
   - {fileID: 1464993109}
   - {fileID: 1173508413}
   - {fileID: 1522010008}
