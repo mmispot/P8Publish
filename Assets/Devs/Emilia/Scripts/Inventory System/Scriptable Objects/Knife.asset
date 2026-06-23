@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Knife
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   width: 3
-  height: 2
+  height: 1
   itemIcon: {fileID: 21300000, guid: 9881fd71f89e49d428b71a1ea7c2eb1e, type: 3}
   itemType: 3
+  stackable: 0
+  maxStackSize: 0
