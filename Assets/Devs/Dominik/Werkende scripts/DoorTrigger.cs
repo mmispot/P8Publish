@@ -2,14 +2,23 @@ using UnityEngine;
 
 public class DoorTrigger : MonoBehaviour
 {
-    public Door door;
+    public Door doorScript;
 
+    private void Awake()
+    {
+        if (doorScript == null)
+            doorScript = GetComponentInParent<Door>();
+
+        if (doorScript == null)
+            Debug.LogError("DoorTrigger could not find a Door script in parent!");
+    }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            door.Open(other.transform);
+            Debug.Log("Player entered the trigger");
+            doorScript.Open(other.transform);
         }
     }
 
@@ -18,7 +27,8 @@ public class DoorTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            door.StartClose();
+            Debug.Log("Player exited the trigger");
+            doorScript.StartClose();
         }
     }
 }

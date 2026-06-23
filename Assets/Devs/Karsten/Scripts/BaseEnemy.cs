@@ -86,6 +86,11 @@ public class EnemyMovement : MonoBehaviour
     public void Die()
     {
         enabled = false;
+        CancelInvoke();
+
+        animator.SetLayerWeight(1, 0f);
+        animator.SetLayerWeight(2, 0f);
+        Debug.Log("Die called, setting isAttacking false"); // ADD THIS
         animator.SetBool("isAttacking", false);
         animator.SetBool("isWalking", false);
 

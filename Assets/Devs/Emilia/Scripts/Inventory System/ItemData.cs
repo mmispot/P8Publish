@@ -19,7 +19,9 @@ public class ItemData : ScriptableObject
         SecondaryWeapon,
         Throwable,
         Knife,
-        VestArmor,
         Other
     }
+
+    public int damageCount;
+    public int ammoCount;
 }
