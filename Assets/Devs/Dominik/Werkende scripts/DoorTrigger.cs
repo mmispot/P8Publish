@@ -4,13 +4,13 @@ public class DoorTrigger : MonoBehaviour
 {
     public Door doorScript;
 
-    private void Update()
+    private void Awake()
     {
         if (doorScript == null)
-        {
-            Debug.LogError("Door script is not assigned in the inspector.");
             doorScript = GetComponentInParent<Door>();
-        }
+
+        if (doorScript == null)
+            Debug.LogError("DoorTrigger could not find a Door script in parent!");
     }
 
     private void OnTriggerEnter(Collider other)
