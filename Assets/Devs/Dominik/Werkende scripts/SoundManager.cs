@@ -8,6 +8,7 @@ public enum SoundType
     WALK,
     DEATH,
     PEEPER,
+    ENEMYAGRO
 }
 
 [System.Serializable]

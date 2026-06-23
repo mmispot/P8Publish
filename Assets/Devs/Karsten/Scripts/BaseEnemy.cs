@@ -71,6 +71,7 @@ public class EnemyMovement : MonoBehaviour
         int randomAttack = Random.Range(1, 4);
         animator.SetInteger("AttackIndex", randomAttack);
         animator.SetTrigger("Attack");
+        SoundManager.PlaySound(SoundType.ENEMYAGRO);
     }
 
     public void TurnOnLightAttack()
@@ -90,7 +91,7 @@ public class EnemyMovement : MonoBehaviour
 
         animator.SetLayerWeight(1, 0f);
         animator.SetLayerWeight(2, 0f);
-        Debug.Log("Die called, setting isAttacking false"); // ADD THIS
+        Debug.Log("Die called, setting isAttacking false"); 
         animator.SetBool("isAttacking", false);
         animator.SetBool("isWalking", false);
 
