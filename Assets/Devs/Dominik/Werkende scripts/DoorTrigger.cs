@@ -15,26 +15,20 @@ public class DoorTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //if (other.CompareTag("Player"))
-        //{
-        //    Debug.Log("Player entered the trigger");
-        //    doorScript.Open(other.transform);
-        //}
-
-        Debug.Log("Player entered the trigger");
-        doorScript.Open(other.transform);
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("Player entered the trigger");
+            doorScript.Open(other.transform);
+        }
     }
 
 
     private void OnTriggerExit(Collider other)
     {
-        //if (other.CompareTag("Player"))
-        //{
-        //    Debug.Log("Player exited the trigger");
-        //    doorScript.StartClose();
-        //}
-
-        Debug.Log("Player exited the trigger");
-        doorScript.StartClose();
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("Player exited the trigger");
+            doorScript.StartClose();
+        }
     }
 }
