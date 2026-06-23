@@ -7,6 +7,7 @@ public class VoiceLogSystem : MonoBehaviour
     public AudioSource audioSource;
 
     [Header("UI")]
+    public GameObject subtitleObject;
     public TextMeshProUGUI subtitleText;
 
     [Header("Subtitles")]
@@ -15,42 +16,47 @@ public class VoiceLogSystem : MonoBehaviour
     private int index = 0;
     private bool isPlaying = false;
 
+
     void Update()
     {
         if (!audioSource.isPlaying)
         {
             subtitleText.text = "";
-            index = 0;
+            subtitleObject.SetActive(false);
             isPlaying = false;
+            index = 0;
             return;
         }
 
-        isPlaying = true;
+        float time = audioSource.time;
 
-        float t = audioSource.time;
-
-        while (index < subtitles.Length && t > subtitles[index].endTime)
+        while (index < subtitles.Length && time > subtitles[index].endTime)
         {
             index++;
         }
 
         if (index < subtitles.Length)
         {
-            var line = subtitles[index];
+            SubtitleLine line = subtitles[index];
 
-            if (t >= line.startTime && t <= line.endTime)
+            if (time >= line.startTime && time <= line.endTime)
+            {
+                subtitleObject.SetActive(true);
                 subtitleText.text = line.text;
-            else
-                subtitleText.text = "";
+            }
         }
     }
 
+
     public void PlayLog()
     {
-        if (isPlaying) return;
+        if (isPlaying)
+            return;
 
         index = 0;
-        audioSource.time = 0;
+        isPlaying = true;
+
+        subtitleObject.SetActive(true);
         audioSource.Play();
     }
 }
