@@ -196,17 +196,45 @@ public class SennaPlayerMovement : MonoBehaviour
         if (!_isGrounded) rate *= airControlMultiplier;
         _smoothVelocity = Vector3.Lerp(_smoothVelocity, target, rate * Time.deltaTime);
 
-        // Keep agent in sync with transform, then apply our movement through NavMesh
+        // Clamp horizontal movement against walls before handing off to the agent or
+        // raw transform — NavMesh alone doesn't do physics collision, so thin walls
+        // can be tunnelled through without this sweep.
+        Vector3 move = ClampToWalls(_smoothVelocity * Time.deltaTime);
+
         if (_agent.enabled)
         {
             _agent.nextPosition = transform.position;
-            _agent.Move(_smoothVelocity * Time.deltaTime);
+            _agent.Move(move);
             transform.position = _agent.nextPosition;
         }
         else
         {
-            transform.position += _smoothVelocity * Time.deltaTime;
+            transform.position += move;
         }
+    }
+
+    private Vector3 ClampToWalls(Vector3 move)
+    {
+        if (bodyCollider == null || move.sqrMagnitude <= 0.0001f) return move;
+
+        Vector3 center = transform.TransformPoint(bodyCollider.center);
+        float halfHeight = Mathf.Max(0f, bodyCollider.height * 0.5f - bodyCollider.radius);
+        Vector3 p1 = center + Vector3.up * halfHeight;
+        Vector3 p2 = center - Vector3.up * halfHeight;
+
+        if (Physics.CapsuleCast(p1, p2, bodyCollider.radius - 0.01f, move.normalized,
+                out RaycastHit wallHit, move.magnitude, groundMask, QueryTriggerInteraction.Ignore))
+        {
+            Vector3 wallNormal = new Vector3(wallHit.normal.x, 0f, wallHit.normal.z);
+            if (wallNormal.sqrMagnitude > 0.01f)
+            {
+                wallNormal.Normalize();
+                _smoothVelocity -= Vector3.Dot(_smoothVelocity, wallNormal) * wallNormal;
+                return _smoothVelocity * Time.deltaTime;
+            }
+        }
+
+        return move;
     }
 
     private bool CheckGrounded()

@@ -118,30 +118,35 @@ public static class AmmoHUDSetup
             return;
         }
 
-        // Ensure the inventory prefab is in the scene — instantiate it if InventoryGrid is absent.
+        // Find ItemGrid by component type (includes inactive objects) — more reliable than
+        // GameObject.Find("InventoryGrid") which silently skips inactive GameObjects.
         const string InventoryPrefabPath = "Assets/Devs/Emilia/Scripts/Inventory System/INV PREFAB/Inventory.prefab";
-        var inventoryGridGO = GameObject.Find("InventoryGrid");
-        if (inventoryGridGO == null)
+        var grid = Object.FindFirstObjectByType<ItemGrid>(FindObjectsInactive.Include);
+
+        if (grid == null)
         {
             var invPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(InventoryPrefabPath);
             if (invPrefab == null)
             {
-                Debug.LogError($"[WireAmmoInventory] No InventoryGrid in scene and couldn't find prefab at {InventoryPrefabPath}. Add the inventory prefab manually first.");
+                Debug.LogError($"[WireAmmoInventory] No ItemGrid in scene and couldn't find prefab at {InventoryPrefabPath}. Add the inventory prefab manually first.");
                 return;
             }
             var invInstance = (GameObject)PrefabUtility.InstantiatePrefab(invPrefab);
             Undo.RegisterCreatedObjectUndo(invInstance, "Wire Ammo Inventory");
+            // Grab ItemGrid from the prefab instance BEFORE setting it inactive —
+            // GameObject.Find cannot see inactive objects.
+            grid = invInstance.GetComponentInChildren<ItemGrid>(true);
             invInstance.SetActive(false); // closed by default
-            inventoryGridGO = GameObject.Find("InventoryGrid");
             Debug.Log("[WireAmmoInventory] Instantiated Inventory prefab.");
         }
 
-        var grid = inventoryGridGO != null ? inventoryGridGO.GetComponent<ItemGrid>() : null;
         if (grid == null)
         {
-            Debug.LogError("[WireAmmoInventory] Found 'InventoryGrid' but it has no ItemGrid component.");
+            Debug.LogError("[WireAmmoInventory] Inventory prefab has no ItemGrid component anywhere in its hierarchy.");
             return;
         }
+
+        var inventoryGridGO = grid.gameObject;
 
         var ammoData = AssetDatabase.LoadAssetAtPath<ItemData>(AmmoAssetPath);
         if (ammoData == null)
