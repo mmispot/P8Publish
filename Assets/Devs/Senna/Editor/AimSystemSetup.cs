@@ -73,6 +73,40 @@ public static class AimSystemSetup
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
             UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene());
 
-        Debug.Log("[AimSystemSetup] Done. Hold RMB to aim. Tune 'Aim Position Offset' on WeaponSway and FOV values on SennaAimSystem to taste.");
+        Debug.Log("[AimSystemSetup] Done. Next: run 'Tools > Senna > Create Scope Point' — place the resulting empty on the gun's iron sight, then assign it to SennaAimSystem > Scope Point.");
+    }
+
+    // Creates an empty "ScopePoint" GameObject parented to the arms rig so you can drag it
+    // onto the iron sight in the scene view, then assign it to SennaAimSystem > Scope Point.
+    [MenuItem("Tools/Senna/Create Scope Point")]
+    public static void CreateScopePoint()
+    {
+        var sway = Object.FindFirstObjectByType<WeaponSway>(FindObjectsInactive.Include);
+        if (sway == null)
+        {
+            Debug.LogError("[CreateScopePoint] No WeaponSway in scene. Open the quest scene first.");
+            return;
+        }
+
+        const string pointName = "ScopePoint";
+        Transform existing = sway.transform.Find(pointName);
+        if (existing != null)
+        {
+            Debug.Log($"[CreateScopePoint] ScopePoint already exists on '{sway.gameObject.name}'. Select it and position it at the iron sight.");
+            Selection.activeGameObject = existing.gameObject;
+            return;
+        }
+
+        var go = new GameObject(pointName);
+        Undo.RegisterCreatedObjectUndo(go, "Create Scope Point");
+        go.transform.SetParent(sway.transform, false);
+        go.transform.localPosition = Vector3.zero;
+
+        EditorUtility.SetDirty(sway.gameObject);
+        UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
+            UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene());
+
+        Selection.activeGameObject = go;
+        Debug.Log($"[CreateScopePoint] Created '{pointName}' on '{sway.gameObject.name}'. Move it to the iron sight in the scene view, then assign it to SennaAimSystem > Scope Point.");
     }
 }

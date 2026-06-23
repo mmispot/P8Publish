@@ -88,6 +88,8 @@ public class WeaponSway : MonoBehaviour
     private float _lagYawVelocity;
     private bool _lagInitialized;
     private float _aimBlend;
+    private Vector3 _computedAimOffset;
+    private bool _hasComputedOffset;
 
     private void Awake()
     {
@@ -171,7 +173,8 @@ public class WeaponSway : MonoBehaviour
         float posY = Mathf.Clamp(-_smoothedLook.y * lookSwayAmount, -maxLookSwayAmount, maxLookSwayAmount) * swayScale;
         float strafeOffset = -_smoothedMove.x * strafeSwayAmount * swayScale;
 
-        Vector3 adsOffset = Vector3.Lerp(Vector3.zero, aimPositionOffset, _aimBlend);
+        Vector3 activeAimOffset = _hasComputedOffset ? _computedAimOffset : aimPositionOffset;
+        Vector3 adsOffset = Vector3.Lerp(Vector3.zero, activeAimOffset, _aimBlend);
         transform.localPosition = _restPosition + adsOffset - _cameraBob * bobCounterAmount + new Vector3(
             posX + strafeOffset,
             posY + _framingOffset + _landingKickOffset + _jumpDrift,
@@ -215,4 +218,13 @@ public class WeaponSway : MonoBehaviour
     }
 
     public void SetAimBlend(float t) => _aimBlend = t;
+
+    // Called by SennaAimSystem.Start() when a scopePoint is assigned.
+    // Overrides the manual aimPositionOffset with the exact delta needed to
+    // bring the scope to camera center.
+    public void SetAimOffset(Vector3 offset)
+    {
+        _computedAimOffset = offset;
+        _hasComputedOffset = true;
+    }
 }
