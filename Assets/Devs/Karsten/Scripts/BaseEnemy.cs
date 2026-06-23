@@ -16,6 +16,8 @@ public class EnemyMovement : MonoBehaviour
     public float DetectionRange = 10f;
     private Animator animator;
     private bool hasAgrrod = false;
+    public float footstepInterval = 3.8f; 
+    private float nextFootstepTime = 4f;
 
     void Start()
     {
@@ -38,6 +40,11 @@ public class EnemyMovement : MonoBehaviour
                 agent.SetDestination(targetPosition.transform.position);
                 animator.SetBool("isWalking", true);
                 animator.SetBool("isAttacking", false);
+                if (Time.time > nextFootstepTime)
+                {
+                    SoundManager.PlaySound(SoundType.ENEMYWALK);
+                    nextFootstepTime = Time.time + footstepInterval;
+                }
                 if (!hasAgrrod)
                 {
                     hasAgrrod = true;
@@ -95,7 +102,8 @@ public class EnemyMovement : MonoBehaviour
         animator.SetBool("isAttacking", false);
         animator.SetBool("isWalking", false);
 
-        int randomDeath = Random.Range(1, 4); 
+        int randomDeath = Random.Range(1, 4);
+        SoundManager.PlaySound(SoundType.ENEMYDEATH);
         animator.SetInteger("DeathIndex", randomDeath);
         animator.SetTrigger("Death");
         Invoke("DestroyEnemy", 5f); 

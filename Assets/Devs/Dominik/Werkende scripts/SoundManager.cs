@@ -5,8 +5,8 @@ public enum SoundType
 {
     TOKAREV,
     JUMP,
-    WALK,
-    DEATH,
+    ENEMYWALK,
+    ENEMYDEATH,
     PEEPER,
     ENEMYAGRO
 }
