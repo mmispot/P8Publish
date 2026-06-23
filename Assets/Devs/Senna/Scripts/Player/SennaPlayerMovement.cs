@@ -54,13 +54,14 @@ public class SennaPlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundMask = ~0;
 
     [Header("Landing")]
-    [SerializeField] private float cameraLandingDip = 0.06f;
+    [SerializeField] private float cameraLandingDip = 0.09f;
     [SerializeField] private float cameraJumpImpulse = 0.03f;
-    [SerializeField] private float cameraLandingSpring = 180f;
-    [SerializeField] private float cameraLandingDamping = 14f;
+    [SerializeField] private float cameraLandingSpring = 110f;
+    [SerializeField] private float cameraLandingDamping = 11f;
     [SerializeField] private float landingMinSpeed = 2f;
     [SerializeField] private float landingMaxSpeed = 10f;
     [SerializeField] private float cameraJumpDriftScale = 0.003f;
+    [SerializeField] private float landingPitchKick = 1.2f;
     [SerializeField] private WeaponSway weaponSway;
 
     [Header("Input Actions")]
@@ -222,12 +223,13 @@ public class SennaPlayerMovement : MonoBehaviour
         // Landing
         if (!wasGrounded && _isGrounded)
         {
-            if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 0.5f, NavMesh.AllAreas))
-                transform.position = hit.position;
+            // Re-enable the agent without snapping — let it correct position gradually.
+            // (NavMesh.SamplePosition was here but caused a visible teleport on touchdown.)
             _agent.enabled = true;
 
             float impact = Mathf.InverseLerp(landingMinSpeed, landingMaxSpeed, -_verticalVelocity);
             _cameraLandingVelocity -= cameraLandingDip * impact;
+            _recoilPitch += landingPitchKick * impact;   // forward head-nod on impact
             weaponSway?.TriggerLandingKick(impact);
         }
 

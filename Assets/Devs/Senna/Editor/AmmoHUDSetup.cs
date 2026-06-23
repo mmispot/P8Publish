@@ -118,13 +118,28 @@ public static class AmmoHUDSetup
             return;
         }
 
-        // Find the main inventory grid specifically — there are multiple ItemGrids in the scene
-        // (weapon slots, knife slot, etc.) and FindFirstObjectByType picks the wrong one.
+        // Ensure the inventory prefab is in the scene — instantiate it if InventoryGrid is absent.
+        const string InventoryPrefabPath = "Assets/Devs/Emilia/Scripts/Inventory System/INV PREFAB/Inventory.prefab";
         var inventoryGridGO = GameObject.Find("InventoryGrid");
+        if (inventoryGridGO == null)
+        {
+            var invPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(InventoryPrefabPath);
+            if (invPrefab == null)
+            {
+                Debug.LogError($"[WireAmmoInventory] No InventoryGrid in scene and couldn't find prefab at {InventoryPrefabPath}. Add the inventory prefab manually first.");
+                return;
+            }
+            var invInstance = (GameObject)PrefabUtility.InstantiatePrefab(invPrefab);
+            Undo.RegisterCreatedObjectUndo(invInstance, "Wire Ammo Inventory");
+            invInstance.SetActive(false); // closed by default
+            inventoryGridGO = GameObject.Find("InventoryGrid");
+            Debug.Log("[WireAmmoInventory] Instantiated Inventory prefab.");
+        }
+
         var grid = inventoryGridGO != null ? inventoryGridGO.GetComponent<ItemGrid>() : null;
         if (grid == null)
         {
-            Debug.LogError("[WireAmmoInventory] No GameObject named 'InventoryGrid' with an ItemGrid component found. Check the name in the hierarchy.");
+            Debug.LogError("[WireAmmoInventory] Found 'InventoryGrid' but it has no ItemGrid component.");
             return;
         }
 
@@ -194,9 +209,7 @@ public static class AmmoHUDSetup
         }
         Debug.Log($"[WireAmmoInventory] Wired GridController + mainCamera ('{cameraGO.name}') on all inventory components.");
 
-        // InventoryManager expects Dominik's old PlayerMovement which isn't in this scene.
-        // InventoryPlayerBridge handles the E-key toggle — disable InventoryManager to stop the conflict
-        // and wire the inventory canvas into InventoryPlayerBridge so it can show/hide it.
+        // InventoryManager expects Dominik's old PlayerMovement — disable it, InventoryPlayerBridge owns the toggle.
         var invManager = Object.FindFirstObjectByType<InventoryManager>(FindObjectsInactive.Include);
         if (invManager != null && invManager.enabled)
         {
@@ -205,18 +218,33 @@ public static class AmmoHUDSetup
             Debug.Log($"[WireAmmoInventory] Disabled InventoryManager on '{invManager.gameObject.name}'.");
         }
 
+        // The inventory canvas to toggle is the parent of InventoryGrid (e.g. "Inventory" GameObject).
+        var inventoryCanvas = inventoryGridGO.transform.parent != null
+            ? inventoryGridGO.transform.parent.gameObject
+            : inventoryGridGO;
+
+        // Add InventoryPlayerBridge to the player if missing.
+        var playerMovement = Object.FindFirstObjectByType<SennaPlayerMovement>(FindObjectsInactive.Include);
         var bridge = Object.FindFirstObjectByType<InventoryPlayerBridge>(FindObjectsInactive.Include);
-        if (bridge != null && invManager != null)
+        if (bridge == null && playerMovement != null)
         {
+            bridge = Undo.AddComponent<InventoryPlayerBridge>(playerMovement.transform.root.gameObject);
+            Debug.Log($"[WireAmmoInventory] Added InventoryPlayerBridge to '{playerMovement.transform.root.name}'.");
+        }
+
+        if (bridge != null)
+        {
+            var shooter   = Object.FindFirstObjectByType<SchootingRaycast>(FindObjectsInactive.Include);
             var bSO = new SerializedObject(bridge);
-            var canvasProp = bSO.FindProperty("inventoryCanvas");
-            if (canvasProp.objectReferenceValue == null && invManager.inventoryCanvas != null)
-            {
-                canvasProp.objectReferenceValue = invManager.inventoryCanvas;
-                bSO.ApplyModifiedProperties();
-                EditorUtility.SetDirty(bridge);
-                Debug.Log($"[WireAmmoInventory] Wired inventory canvas into InventoryPlayerBridge.");
-            }
+            if (bSO.FindProperty("playerMovement").objectReferenceValue == null)
+                bSO.FindProperty("playerMovement").objectReferenceValue = playerMovement;
+            if (bSO.FindProperty("shooting").objectReferenceValue == null && shooter != null)
+                bSO.FindProperty("shooting").objectReferenceValue = shooter;
+            if (bSO.FindProperty("inventoryCanvas").objectReferenceValue == null)
+                bSO.FindProperty("inventoryCanvas").objectReferenceValue = inventoryCanvas;
+            bSO.ApplyModifiedProperties();
+            EditorUtility.SetDirty(bridge);
+            Debug.Log($"[WireAmmoInventory] Wired InventoryPlayerBridge (canvas: '{inventoryCanvas.name}').");
         }
 
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
