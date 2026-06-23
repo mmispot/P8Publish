@@ -18,3 +18,5 @@ MonoBehaviour:
   itemType: 3
   stackable: 0
   maxStackSize: 0
+  damageCount: 15
+  ammoCount: 0

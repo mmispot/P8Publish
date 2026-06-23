@@ -62,6 +62,10 @@ public class WeaponSway : MonoBehaviour
     [SerializeField] private InputActionReference lookAction;
     [SerializeField] private InputActionReference moveAction;
 
+    [Header("ADS")]
+    [SerializeField] private Vector3 aimPositionOffset = new Vector3(0f, 0.05f, 0.1f);
+    [SerializeField] [Range(0f, 1f)] private float aimSwayDampen = 0.15f;
+
     private Vector3 _restPosition;
     private Quaternion _restRotation;
     private Vector2 _smoothedLook;
@@ -83,6 +87,9 @@ public class WeaponSway : MonoBehaviour
     private float _lagYaw;
     private float _lagYawVelocity;
     private bool _lagInitialized;
+    private float _aimBlend;
+    private Vector3 _computedAimOffset;
+    private bool _hasComputedOffset;
 
     private void Awake()
     {
@@ -161,18 +168,21 @@ public class WeaponSway : MonoBehaviour
 
         // --- Compose. Inputs are already smoothed or spring-driven, so apply directly:
         // an extra lerp here would just muffle the kicks. ---
-        float posX = Mathf.Clamp(-_smoothedLook.x * lookSwayAmount, -maxLookSwayAmount, maxLookSwayAmount);
-        float posY = Mathf.Clamp(-_smoothedLook.y * lookSwayAmount, -maxLookSwayAmount, maxLookSwayAmount);
-        float strafeOffset = -_smoothedMove.x * strafeSwayAmount;
+        float swayScale = Mathf.Lerp(1f, aimSwayDampen, _aimBlend);
+        float posX = Mathf.Clamp(-_smoothedLook.x * lookSwayAmount, -maxLookSwayAmount, maxLookSwayAmount) * swayScale;
+        float posY = Mathf.Clamp(-_smoothedLook.y * lookSwayAmount, -maxLookSwayAmount, maxLookSwayAmount) * swayScale;
+        float strafeOffset = -_smoothedMove.x * strafeSwayAmount * swayScale;
 
-        transform.localPosition = _restPosition - _cameraBob * bobCounterAmount + new Vector3(
+        Vector3 activeAimOffset = _hasComputedOffset ? _computedAimOffset : aimPositionOffset;
+        Vector3 adsOffset = Vector3.Lerp(Vector3.zero, activeAimOffset, _aimBlend);
+        transform.localPosition = _restPosition + adsOffset - _cameraBob * bobCounterAmount + new Vector3(
             posX + strafeOffset,
             posY + _framingOffset + _landingKickOffset + _jumpDrift,
             _recoilZOffset);
 
-        float rotX = _lagPitch - _recoilPitchOffset;
-        float rotY = _lagYaw;
-        float rotZ = -_lagYaw * yawRollFactor - _smoothedMove.x * strafeRollAngle;
+        float rotX = _lagPitch * swayScale - _recoilPitchOffset;
+        float rotY = _lagYaw * swayScale;
+        float rotZ = (-_lagYaw * yawRollFactor - _smoothedMove.x * strafeRollAngle) * swayScale;
 
         transform.localRotation = _restRotation * Quaternion.Euler(rotX, rotY, rotZ);
     }
@@ -205,5 +215,16 @@ public class WeaponSway : MonoBehaviour
     public void SetCameraBob(Vector3 bob)
     {
         _cameraBob = bob;
+    }
+
+    public void SetAimBlend(float t) => _aimBlend = t;
+
+    // Called by SennaAimSystem.Start() when a scopePoint is assigned.
+    // Overrides the manual aimPositionOffset with the exact delta needed to
+    // bring the scope to camera center.
+    public void SetAimOffset(Vector3 offset)
+    {
+        _computedAimOffset = offset;
+        _hasComputedOffset = true;
     }
 }

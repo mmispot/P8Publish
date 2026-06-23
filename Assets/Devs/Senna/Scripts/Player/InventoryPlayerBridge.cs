@@ -5,8 +5,9 @@ public class InventoryPlayerBridge : MonoBehaviour
 {
     [SerializeField] private SennaPlayerMovement playerMovement;
     [SerializeField] private SchootingRaycast shooting;
+    [SerializeField] private GameObject inventoryCanvas;
 
-    private bool _inventoryOpen = true;
+    private bool _inventoryOpen = false;
 
     private void Update()
     {
@@ -21,6 +22,7 @@ public class InventoryPlayerBridge : MonoBehaviour
     private void Toggle()
     {
         _inventoryOpen = !_inventoryOpen;
+        inventoryCanvas?.SetActive(_inventoryOpen);
 
         if (_inventoryOpen)
         {

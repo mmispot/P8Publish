@@ -38,6 +38,10 @@ public class SennaPlayerMovement : MonoBehaviour
     [SerializeField] private float recoilReturnSpring = 120f;
     [SerializeField] private float recoilReturnDamping = 12f;
 
+    [Header("ADS")]
+    [SerializeField] private float aimSpeedMultiplier = 0.5f;
+    [SerializeField] private float aimSensMultiplier = 0.6f;
+
     [Header("Jump")]
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float gravity = 20f;
@@ -50,13 +54,14 @@ public class SennaPlayerMovement : MonoBehaviour
     [SerializeField] private LayerMask groundMask = ~0;
 
     [Header("Landing")]
-    [SerializeField] private float cameraLandingDip = 0.06f;
+    [SerializeField] private float cameraLandingDip = 0.09f;
     [SerializeField] private float cameraJumpImpulse = 0.03f;
-    [SerializeField] private float cameraLandingSpring = 180f;
-    [SerializeField] private float cameraLandingDamping = 14f;
+    [SerializeField] private float cameraLandingSpring = 110f;
+    [SerializeField] private float cameraLandingDamping = 11f;
     [SerializeField] private float landingMinSpeed = 2f;
     [SerializeField] private float landingMaxSpeed = 10f;
     [SerializeField] private float cameraJumpDriftScale = 0.003f;
+    [SerializeField] private float landingPitchKick = 1.2f;
     [SerializeField] private WeaponSway weaponSway;
 
     [Header("Input Actions")]
@@ -92,6 +97,7 @@ public class SennaPlayerMovement : MonoBehaviour
 
     private float _recoilPitch;
     private float _recoilPitchVelocity;
+    private float _aimBlend;
 
     private void Awake()
     {
@@ -173,7 +179,7 @@ public class SennaPlayerMovement : MonoBehaviour
     {
         if (!_mouseLookEnabled) return;
 
-        Vector2 look = lookAction.action.ReadValue<Vector2>() * mouseSensitivity;
+        Vector2 look = lookAction.action.ReadValue<Vector2>() * mouseSensitivity * Mathf.Lerp(1f, aimSensMultiplier, _aimBlend);
         _verticalRotation = Mathf.Clamp(_verticalRotation - look.y, -verticalClamp, downwardClamp);
         transform.Rotate(Vector3.up * look.x);
     }
@@ -182,7 +188,8 @@ public class SennaPlayerMovement : MonoBehaviour
     {
         Vector2 input = _movementEnabled ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
         bool sprinting = _movementEnabled && !_isCrouching && sprintAction.action.IsPressed();
-        float targetSpeed = _isCrouching ? crouchSpeed : (sprinting ? sprintSpeed : walkSpeed);
+        float targetSpeed = (_isCrouching ? crouchSpeed : (sprinting ? sprintSpeed : walkSpeed))
+                          * Mathf.Lerp(1f, aimSpeedMultiplier, _aimBlend);
 
         Vector3 target = (transform.right * input.x + transform.forward * input.y) * targetSpeed;
         float rate = input.magnitude > 0.01f ? acceleration : deceleration;
@@ -216,12 +223,13 @@ public class SennaPlayerMovement : MonoBehaviour
         // Landing
         if (!wasGrounded && _isGrounded)
         {
-            if (NavMesh.SamplePosition(transform.position, out NavMeshHit hit, 0.5f, NavMesh.AllAreas))
-                transform.position = hit.position;
+            // Re-enable the agent without snapping — let it correct position gradually.
+            // (NavMesh.SamplePosition was here but caused a visible teleport on touchdown.)
             _agent.enabled = true;
 
             float impact = Mathf.InverseLerp(landingMinSpeed, landingMaxSpeed, -_verticalVelocity);
             _cameraLandingVelocity -= cameraLandingDip * impact;
+            _recoilPitch += landingPitchKick * impact;   // forward head-nod on impact
             weaponSway?.TriggerLandingKick(impact);
         }
 
@@ -361,4 +369,5 @@ public class SennaPlayerMovement : MonoBehaviour
     public void DisableMovement() { _movementEnabled = false; _smoothVelocity = Vector3.zero; }
     public void EnableMouseLook() => _mouseLookEnabled = true;
     public void DisableMouseLook() => _mouseLookEnabled = false;
+    public void SetAimBlend(float t) => _aimBlend = t;
 }
