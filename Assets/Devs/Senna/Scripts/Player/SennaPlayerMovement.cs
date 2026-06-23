@@ -38,6 +38,10 @@ public class SennaPlayerMovement : MonoBehaviour
     [SerializeField] private float recoilReturnSpring = 120f;
     [SerializeField] private float recoilReturnDamping = 12f;
 
+    [Header("ADS")]
+    [SerializeField] private float aimSpeedMultiplier = 0.5f;
+    [SerializeField] private float aimSensMultiplier = 0.6f;
+
     [Header("Jump")]
     [SerializeField] private float jumpForce = 5f;
     [SerializeField] private float gravity = 20f;
@@ -92,6 +96,7 @@ public class SennaPlayerMovement : MonoBehaviour
 
     private float _recoilPitch;
     private float _recoilPitchVelocity;
+    private float _aimBlend;
 
     private void Awake()
     {
@@ -173,7 +178,7 @@ public class SennaPlayerMovement : MonoBehaviour
     {
         if (!_mouseLookEnabled) return;
 
-        Vector2 look = lookAction.action.ReadValue<Vector2>() * mouseSensitivity;
+        Vector2 look = lookAction.action.ReadValue<Vector2>() * mouseSensitivity * Mathf.Lerp(1f, aimSensMultiplier, _aimBlend);
         _verticalRotation = Mathf.Clamp(_verticalRotation - look.y, -verticalClamp, downwardClamp);
         transform.Rotate(Vector3.up * look.x);
     }
@@ -182,7 +187,8 @@ public class SennaPlayerMovement : MonoBehaviour
     {
         Vector2 input = _movementEnabled ? moveAction.action.ReadValue<Vector2>() : Vector2.zero;
         bool sprinting = _movementEnabled && !_isCrouching && sprintAction.action.IsPressed();
-        float targetSpeed = _isCrouching ? crouchSpeed : (sprinting ? sprintSpeed : walkSpeed);
+        float targetSpeed = (_isCrouching ? crouchSpeed : (sprinting ? sprintSpeed : walkSpeed))
+                          * Mathf.Lerp(1f, aimSpeedMultiplier, _aimBlend);
 
         Vector3 target = (transform.right * input.x + transform.forward * input.y) * targetSpeed;
         float rate = input.magnitude > 0.01f ? acceleration : deceleration;
@@ -361,4 +367,5 @@ public class SennaPlayerMovement : MonoBehaviour
     public void DisableMovement() { _movementEnabled = false; _smoothVelocity = Vector3.zero; }
     public void EnableMouseLook() => _mouseLookEnabled = true;
     public void DisableMouseLook() => _mouseLookEnabled = false;
+    public void SetAimBlend(float t) => _aimBlend = t;
 }
