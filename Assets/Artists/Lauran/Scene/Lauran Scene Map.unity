@@ -554,7 +554,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8407fee0dcbaf284086fcfb6b6d3042d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorTrigger
-  door: {fileID: 148527397}
+  doorScript: {fileID: 0}
 --- !u!114 &148527397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1261,7 +1261,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &718976040
 Light:
   m_ObjectHideFlags: 0
@@ -1440,7 +1440,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8407fee0dcbaf284086fcfb6b6d3042d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorTrigger
-  door: {fileID: 754709344}
+  doorScript: {fileID: 0}
 --- !u!114 &754709344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1901,7 +1901,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8407fee0dcbaf284086fcfb6b6d3042d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorTrigger
-  door: {fileID: 1032656754}
+  doorScript: {fileID: 0}
 --- !u!114 &1032656754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2464,7 +2464,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.1
+  m_VoxelSize: 0.06666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 809f6851211d9824bb39f68e7551bd21, type: 2}
   m_BuildHeightMesh: 0
@@ -3058,7 +3058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8407fee0dcbaf284086fcfb6b6d3042d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorTrigger
-  door: {fileID: 1458009048}
+  doorScript: {fileID: 0}
 --- !u!114 &1458009048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4023,7 +4023,7 @@ MonoBehaviour:
   m_OverrideTileSize: 0
   m_TileSize: 256
   m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.1
+  m_VoxelSize: 0.06666667
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: 25fbc6a00c3b7e544ba215dadbaefdb8, type: 2}
   m_BuildHeightMesh: 0
