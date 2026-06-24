@@ -19,9 +19,20 @@ public class ItemGrid : MonoBehaviour
 
     [SerializeField] GameObject inventoryItemPrefab;
 
+    public bool IsInitialized => inventoryItemSlot != null;
+
     private void Start()
     {
-        rectTransform = GetComponent<RectTransform>();
+        EnsureInitialized();
+    }
+
+    // Safe to call at any time — initializes the slot array and sizes the
+    // RectTransform even if the panel is currently inactive/hidden.
+    public void EnsureInitialized()
+    {
+        if (inventoryItemSlot != null) return;
+        if (rectTransform == null)
+            rectTransform = GetComponent<RectTransform>();
         Init(gridSizeWidth, gridSizeHeight);
     }
 
@@ -183,6 +194,45 @@ public class ItemGrid : MonoBehaviour
         }
 
         return true;
+    }
+
+    public int CountAmmoOfType(ItemData ammoData)
+    {
+        if (ammoData == null || inventoryItemSlot == null) return 0;
+        int total = 0;
+        for (int y = 0; y < gridSizeHeight; y++)
+            for (int x = 0; x < gridSizeWidth; x++)
+            {
+                var item = inventoryItemSlot[x, y];
+                if (item != null && item.itemData == ammoData
+                    && item.tileGridPosition.x == x && item.tileGridPosition.y == y)
+                    total += item.currentStackSize;
+            }
+        return total;
+    }
+
+    // Returns how many rounds were actually consumed (may be less than amount if inventory is short).
+    public int ConsumeAmmoOfType(ItemData ammoData, int amount)
+    {
+        if (ammoData == null || amount <= 0) return 0;
+        int remaining = amount;
+        for (int y = 0; y < gridSizeHeight && remaining > 0; y++)
+            for (int x = 0; x < gridSizeWidth && remaining > 0; x++)
+            {
+                var item = inventoryItemSlot[x, y];
+                if (item == null || item.itemData != ammoData
+                    || item.tileGridPosition.x != x || item.tileGridPosition.y != y)
+                    continue;
+                int take = Mathf.Min(remaining, item.currentStackSize);
+                item.currentStackSize -= take;
+                remaining -= take;
+                if (item.currentStackSize <= 0)
+                {
+                    CleanGridReference(item);
+                    Destroy(item.gameObject);
+                }
+            }
+        return amount - remaining;
     }
 
     private bool PositionCheck(int posX, int posY) //checkt of een positie binnen de grenzen van het grid ligt (MATH)

@@ -45,8 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WaveSpawner
   SpawnPoint: {fileID: 2203005200834138069}
-  spawnRadius: 10
-  enemyPrefab: {fileID: 0}
-  enemiesPerWave: 5
+  spawnRadius: 2.99
+  enemyPrefab: {fileID: 3004264227089466526, guid: 41c25e4e8fc27b44a8eed315df91a458, type: 3}
+  enemiesPerWave: 2
   timeBetweenWaves: 10
   nextWaveTime: 0

@@ -1,23 +1,31 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-// Owns the gun's ammo state: rounds loaded in the magazine plus a reserve pool.
-// SchootingRaycast calls TryConsume() before firing, so an empty mag blocks the shot.
-// v1 is count-only: Reload()/AddReserve() exist for the reload + inventory work that lands later.
+// Owns the gun's ammo state: mag + reserve.
+// Reserve can be backed by the inventory (quest scene) or a standalone counter (other scenes).
+// Wire inventoryGrid + ammoItemData in the inspector to use inventory; leave them empty to use
+// the local reserveAmmo field as before — other scenes are unaffected.
 public class SennaAmmoSystem : MonoBehaviour
 {
     [Header("Magazine")]
     [SerializeField] private int magazineSize = 12;
     [SerializeField] private int currentInMag = 12;
 
-    [Header("Reserve")]
+    [Header("Reserve (standalone fallback)")]
     [SerializeField] private int reserveAmmo = 60;
 
+    [Header("Inventory Link (quest scene)")]
+    [SerializeField] private ItemGrid inventoryGrid;
+    [SerializeField] private ItemData ammoItemData;
+    [SerializeField] private GridController gridController;
+
     [Header("Events")]
-    public UnityEvent<int, int> onAmmoChanged;   // passes (currentInMag, reserveAmmo)
+    public UnityEvent<int, int> onAmmoChanged;   // passes (currentInMag, ReserveAmmo)
 
     public int CurrentInMag => currentInMag;
-    public int ReserveAmmo => reserveAmmo;
+    public int ReserveAmmo => (inventoryGrid != null && ammoItemData != null)
+        ? inventoryGrid.CountAmmoOfType(ammoItemData)
+        : reserveAmmo;
     public int MagazineSize => magazineSize;
     public bool HasAmmo => currentInMag > 0;
     public bool IsFull => currentInMag >= magazineSize;
@@ -25,46 +33,61 @@ public class SennaAmmoSystem : MonoBehaviour
     private void Awake()
     {
         currentInMag = Mathf.Clamp(currentInMag, 0, magazineSize);
-        onAmmoChanged.Invoke(currentInMag, reserveAmmo);
+        onAmmoChanged.Invoke(currentInMag, ReserveAmmo);
     }
 
-    // Called by SchootingRaycast before it fires. Returns false when the mag is empty.
     public bool TryConsume()
     {
         if (currentInMag <= 0) return false;
-
         currentInMag--;
-        onAmmoChanged.Invoke(currentInMag, reserveAmmo);
+        onAmmoChanged.Invoke(currentInMag, ReserveAmmo);
         return true;
     }
 
-    // Refills the magazine from the reserve. Not bound to any input yet — reload wiring lands later;
-    // this is the method that input/animation will call when it does.
     public void Reload()
     {
-        if (IsFull || reserveAmmo <= 0) return;
-
+        int reserve = ReserveAmmo;
+        if (IsFull || reserve <= 0) return;
         int needed = magazineSize - currentInMag;
-        int loaded = Mathf.Min(needed, reserveAmmo);
-
+        int loaded = Mathf.Min(needed, reserve);
         currentInMag += loaded;
-        reserveAmmo -= loaded;
-        onAmmoChanged.Invoke(currentInMag, reserveAmmo);
+        if (inventoryGrid != null && ammoItemData != null)
+            inventoryGrid.ConsumeAmmoOfType(ammoItemData, loaded);
+        else
+            reserveAmmo -= loaded;
+        onAmmoChanged.Invoke(currentInMag, ReserveAmmo);
     }
 
-    // Adds rounds to the reserve. Seam for the inventory system to feed picked-up ammo in later.
+    // Adds ammo to the inventory when linked, otherwise the local reserve.
     public void AddReserve(int amount)
     {
         if (amount <= 0) return;
-
-        reserveAmmo += amount;
-        onAmmoChanged.Invoke(currentInMag, reserveAmmo);
+        if (inventoryGrid != null && ammoItemData != null && gridController != null)
+        {
+            inventoryGrid.EnsureInitialized();
+            AddAmmoToInventory(amount);
+        }
+        else
+        {
+            reserveAmmo += amount;
+            onAmmoChanged.Invoke(currentInMag, ReserveAmmo);
+        }
     }
 
-    // --- Inventory integration (pending) -------------------------------------------------
-    // Ammo will eventually come from the inventory system (Assets/Devs/Emilia/Scripts/Inventory
-    // System). Plan: add an ItemType.Ammo to ItemData, then on ammo pickup call AddReserve(stack),
-    // and on reload decrement the matching ItemData stack instead of the local reserveAmmo field.
-    // Kept standalone for now so this system works without touching Emilia's inventory yet.
-    // -------------------------------------------------------------------------------------
+    private void AddAmmoToInventory(int amount)
+    {
+        int toAdd = Mathf.Clamp(amount, 1, ammoItemData.maxStackSize);
+        var go = Object.Instantiate(gridController.ItemPrefab, gridController.CanvasTransform);
+        var item = go.GetComponent<InventoryItem>();
+        item.Set(ammoItemData);
+        item.currentStackSize = toAdd;
+        item.UpdateStackText();
+
+        // blocksRaycasts must stay true for placed items so the player can drag them.
+        // (Only set to false when an item is being held/dragged by the cursor.)
+        var cg = go.GetComponent<CanvasGroup>();
+        if (cg != null) cg.blocksRaycasts = true;
+
+        gridController.InsertItem(item, inventoryGrid);
+    }
 }

@@ -100,4 +100,161 @@ public static class AmmoHUDSetup
             EditorUtility.SetDirty(target);
         }
     }
+
+    // -------------------------------------------------------------------------
+    // Wires SennaAmmoSystem.inventoryGrid + ammoItemData so reserve ammo comes
+    // from whatever Ammo stacks are sitting in the inventory grid.
+    // Run this after the inventory canvas is in the Quest scene.
+    // -------------------------------------------------------------------------
+    [MenuItem("Tools/Senna/Wire Ammo Inventory")]
+    public static void WireAmmoInventory()
+    {
+        const string AmmoAssetPath = "Assets/Devs/Emilia/Scripts/Inventory System/Scriptable Objects/Ammo.asset";
+
+        var ammo = Object.FindFirstObjectByType<SennaAmmoSystem>(FindObjectsInactive.Include);
+        if (ammo == null)
+        {
+            Debug.LogError("[WireAmmoInventory] No SennaAmmoSystem found in the scene. Run Tools > Senna > Setup Ammo HUD first.");
+            return;
+        }
+
+        // Find ItemGrid by component type (includes inactive objects) — more reliable than
+        // GameObject.Find("InventoryGrid") which silently skips inactive GameObjects.
+        const string InventoryPrefabPath = "Assets/Devs/Emilia/Scripts/Inventory System/INV PREFAB/Inventory.prefab";
+        var grid = Object.FindFirstObjectByType<ItemGrid>(FindObjectsInactive.Include);
+
+        if (grid == null)
+        {
+            var invPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(InventoryPrefabPath);
+            if (invPrefab == null)
+            {
+                Debug.LogError($"[WireAmmoInventory] No ItemGrid in scene and couldn't find prefab at {InventoryPrefabPath}. Add the inventory prefab manually first.");
+                return;
+            }
+            var invInstance = (GameObject)PrefabUtility.InstantiatePrefab(invPrefab);
+            Undo.RegisterCreatedObjectUndo(invInstance, "Wire Ammo Inventory");
+            // Grab ItemGrid from the prefab instance BEFORE setting it inactive —
+            // GameObject.Find cannot see inactive objects.
+            grid = invInstance.GetComponentInChildren<ItemGrid>(true);
+            invInstance.SetActive(false); // closed by default
+            Debug.Log("[WireAmmoInventory] Instantiated Inventory prefab.");
+        }
+
+        if (grid == null)
+        {
+            Debug.LogError("[WireAmmoInventory] Inventory prefab has no ItemGrid component anywhere in its hierarchy.");
+            return;
+        }
+
+        var inventoryGridGO = grid.gameObject;
+
+        var ammoData = AssetDatabase.LoadAssetAtPath<ItemData>(AmmoAssetPath);
+        if (ammoData == null)
+        {
+            Debug.LogError($"[WireAmmoInventory] Could not load Ammo.asset at {AmmoAssetPath}. Check the path.");
+            return;
+        }
+
+        // Find the GridController — its GameObject is also the mainCamera ref for GridInteract/InventoryManager.
+        var gridController = Object.FindFirstObjectByType<GridController>(FindObjectsInactive.Include);
+        if (gridController == null)
+        {
+            Debug.LogWarning("[WireAmmoInventory] No GridController found — make sure the inventory canvas is in the scene.");
+            return;
+        }
+
+        // Ensure GridController has its item prefab assigned — without it spawning inventory items crashes.
+        const string ItemPrefabPath = "Assets/Devs/Emilia/Scripts/Inventory System/Tests/Item.prefab";
+        var gcSO = new SerializedObject(gridController);
+        if (gcSO.FindProperty("itemPrefab").objectReferenceValue == null)
+        {
+            var itemPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(ItemPrefabPath);
+            if (itemPrefab != null)
+            {
+                gcSO.FindProperty("itemPrefab").objectReferenceValue = itemPrefab;
+                gcSO.ApplyModifiedProperties();
+                EditorUtility.SetDirty(gridController);
+                Debug.Log("[WireAmmoInventory] Assigned item prefab to GridController.");
+            }
+            else
+            {
+                Debug.LogError($"[WireAmmoInventory] Could not find item prefab at {ItemPrefabPath}. Assign it manually to GridController.");
+                return;
+            }
+        }
+
+        var so = new SerializedObject(ammo);
+        so.FindProperty("inventoryGrid").objectReferenceValue   = grid;
+        so.FindProperty("ammoItemData").objectReferenceValue    = ammoData;
+        so.FindProperty("gridController").objectReferenceValue  = gridController;
+        so.ApplyModifiedProperties();
+        EditorUtility.SetDirty(ammo);
+
+        // GridInteract and InventoryManager need the camera GameObject that holds GridController.
+        var cameraGO = gridController.gameObject;
+        foreach (var gi in Object.FindObjectsByType<GridInteract>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            var giSO = new SerializedObject(gi);
+            if (giSO.FindProperty("mainCamera").objectReferenceValue == null)
+            {
+                giSO.FindProperty("mainCamera").objectReferenceValue = cameraGO;
+                giSO.ApplyModifiedProperties();
+                EditorUtility.SetDirty(gi);
+            }
+        }
+        foreach (var im in Object.FindObjectsByType<InventoryManager>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            var imSO = new SerializedObject(im);
+            if (imSO.FindProperty("mainCamera").objectReferenceValue == null)
+            {
+                imSO.FindProperty("mainCamera").objectReferenceValue = cameraGO;
+                imSO.ApplyModifiedProperties();
+                EditorUtility.SetDirty(im);
+            }
+        }
+        Debug.Log($"[WireAmmoInventory] Wired GridController + mainCamera ('{cameraGO.name}') on all inventory components.");
+
+        // InventoryManager expects Dominik's old PlayerMovement — disable it, InventoryPlayerBridge owns the toggle.
+        var invManager = Object.FindFirstObjectByType<InventoryManager>(FindObjectsInactive.Include);
+        if (invManager != null && invManager.enabled)
+        {
+            invManager.enabled = false;
+            EditorUtility.SetDirty(invManager);
+            Debug.Log($"[WireAmmoInventory] Disabled InventoryManager on '{invManager.gameObject.name}'.");
+        }
+
+        // The inventory canvas to toggle is the parent of InventoryGrid (e.g. "Inventory" GameObject).
+        var inventoryCanvas = inventoryGridGO.transform.parent != null
+            ? inventoryGridGO.transform.parent.gameObject
+            : inventoryGridGO;
+
+        // Add InventoryPlayerBridge to the player if missing.
+        var playerMovement = Object.FindFirstObjectByType<SennaPlayerMovement>(FindObjectsInactive.Include);
+        var bridge = Object.FindFirstObjectByType<InventoryPlayerBridge>(FindObjectsInactive.Include);
+        if (bridge == null && playerMovement != null)
+        {
+            bridge = Undo.AddComponent<InventoryPlayerBridge>(playerMovement.transform.root.gameObject);
+            Debug.Log($"[WireAmmoInventory] Added InventoryPlayerBridge to '{playerMovement.transform.root.name}'.");
+        }
+
+        if (bridge != null)
+        {
+            var shooter   = Object.FindFirstObjectByType<SchootingRaycast>(FindObjectsInactive.Include);
+            var bSO = new SerializedObject(bridge);
+            if (bSO.FindProperty("playerMovement").objectReferenceValue == null)
+                bSO.FindProperty("playerMovement").objectReferenceValue = playerMovement;
+            if (bSO.FindProperty("shooting").objectReferenceValue == null && shooter != null)
+                bSO.FindProperty("shooting").objectReferenceValue = shooter;
+            if (bSO.FindProperty("inventoryCanvas").objectReferenceValue == null)
+                bSO.FindProperty("inventoryCanvas").objectReferenceValue = inventoryCanvas;
+            bSO.ApplyModifiedProperties();
+            EditorUtility.SetDirty(bridge);
+            Debug.Log($"[WireAmmoInventory] Wired InventoryPlayerBridge (canvas: '{inventoryCanvas.name}').");
+        }
+
+        UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
+            UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene());
+
+        Debug.Log($"[WireAmmoInventory] Done. SennaAmmoSystem on '{ammo.gameObject.name}' now reads reserve ammo from '{grid.gameObject.name}' using '{ammoData.name}'.");
+    }
 }
