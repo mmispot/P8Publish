@@ -63,7 +63,10 @@ public class SennaAmmoSystem : MonoBehaviour
     {
         if (amount <= 0) return;
         if (inventoryGrid != null && ammoItemData != null && gridController != null)
+        {
+            inventoryGrid.EnsureInitialized();
             AddAmmoToInventory(amount);
+        }
         else
         {
             reserveAmmo += amount;
