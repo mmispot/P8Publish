@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1516885554388098784}
   - component: {fileID: 8938181785871155762}
   - component: {fileID: 3548004229782408597}
-  - component: {fileID: 3099862254084054283}
+  - component: {fileID: 7337469884644799070}
   m_Layer: 0
   m_Name: RadiationZone
   m_TagString: Untagged
@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RadiationZone
   radiationPerSecond: 0.01
---- !u!54 &3099862254084054283
+--- !u!54 &7337469884644799070
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
