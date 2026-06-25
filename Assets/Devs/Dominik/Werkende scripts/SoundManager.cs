@@ -45,6 +45,12 @@ public class SoundManager : MonoBehaviour
 
     public static void PlaySound(SoundType sound, float volume = 1)
     {
+        if (instance == null)
+        {
+            Debug.LogWarning("[SoundManager] No SoundManager in scene — add one to hear sounds.");
+            return;
+        }
+
         if (instance.soundDictionary.TryGetValue(sound, out AudioClip[] clips))
         {
             AudioClip randomClip = clips[Random.Range(0, clips.Length)];

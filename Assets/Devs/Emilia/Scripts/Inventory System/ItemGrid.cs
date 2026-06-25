@@ -19,9 +19,20 @@ public class ItemGrid : MonoBehaviour
 
     [SerializeField] GameObject inventoryItemPrefab;
 
+    public bool IsInitialized => inventoryItemSlot != null;
+
     private void Start()
     {
-        rectTransform = GetComponent<RectTransform>();
+        EnsureInitialized();
+    }
+
+    // Safe to call at any time — initializes the slot array and sizes the
+    // RectTransform even if the panel is currently inactive/hidden.
+    public void EnsureInitialized()
+    {
+        if (inventoryItemSlot != null) return;
+        if (rectTransform == null)
+            rectTransform = GetComponent<RectTransform>();
         Init(gridSizeWidth, gridSizeHeight);
     }
 

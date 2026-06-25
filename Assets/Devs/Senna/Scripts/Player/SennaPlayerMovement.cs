@@ -64,6 +64,9 @@ public class SennaPlayerMovement : MonoBehaviour
     [SerializeField] private float landingPitchKick = 1.2f;
     [SerializeField] private WeaponSway weaponSway;
 
+    [Header("Wall Collision")]
+    [SerializeField] private LayerMask wallMask = ~0;
+
     [Header("Input Actions")]
     [SerializeField] private InputActionReference moveAction;
     [SerializeField] private InputActionReference sprintAction;
@@ -79,6 +82,7 @@ public class SennaPlayerMovement : MonoBehaviour
     private Vector3 _cameraRestPos;
     private bool _movementEnabled = true;
     private bool _mouseLookEnabled = true;
+    private readonly Collider[] _overlapBuffer = new Collider[8];
 
     private float _verticalVelocity;
     private bool _isGrounded;
@@ -196,17 +200,77 @@ public class SennaPlayerMovement : MonoBehaviour
         if (!_isGrounded) rate *= airControlMultiplier;
         _smoothVelocity = Vector3.Lerp(_smoothVelocity, target, rate * Time.deltaTime);
 
-        // Keep agent in sync with transform, then apply our movement through NavMesh
+        // Clamp horizontal movement against walls before handing off to the agent or
+        // raw transform — NavMesh alone doesn't do physics collision, so thin walls
+        // can be tunnelled through without this sweep.
+        Vector3 move = ClampToWalls(_smoothVelocity * Time.deltaTime);
+
         if (_agent.enabled)
         {
             _agent.nextPosition = transform.position;
-            _agent.Move(_smoothVelocity * Time.deltaTime);
+            _agent.Move(move);
             transform.position = _agent.nextPosition;
         }
         else
         {
-            transform.position += _smoothVelocity * Time.deltaTime;
+            transform.position += move;
         }
+
+        Depenetrate();
+    }
+
+    // Pushes the player out of any physics collider it has overlapped.
+    // This is the safety net when the NavMesh bake doesn't match wall geometry.
+    private void Depenetrate()
+    {
+        if (bodyCollider == null) return;
+
+        Vector3 center = transform.TransformPoint(bodyCollider.center);
+        float r = bodyCollider.radius;
+        float halfHeight = Mathf.Max(0f, bodyCollider.height * 0.5f - r);
+        Vector3 p1 = center + Vector3.up * halfHeight;
+        Vector3 p2 = center - Vector3.up * halfHeight;
+
+        int count = Physics.OverlapCapsuleNonAlloc(p1, p2, r, _overlapBuffer, wallMask, QueryTriggerInteraction.Ignore);
+        for (int i = 0; i < count; i++)
+        {
+            Collider other = _overlapBuffer[i];
+            if (other == bodyCollider) continue;
+            if (Physics.ComputePenetration(
+                    bodyCollider, transform.position, transform.rotation,
+                    other, other.transform.position, other.transform.rotation,
+                    out Vector3 dir, out float dist))
+            {
+                transform.position += dir * dist;
+            }
+        }
+
+        if (_agent.enabled)
+            _agent.nextPosition = transform.position;
+    }
+
+    private Vector3 ClampToWalls(Vector3 move)
+    {
+        if (bodyCollider == null || move.sqrMagnitude <= 0.0001f) return move;
+
+        Vector3 center = transform.TransformPoint(bodyCollider.center);
+        float halfHeight = Mathf.Max(0f, bodyCollider.height * 0.5f - bodyCollider.radius);
+        Vector3 p1 = center + Vector3.up * halfHeight;
+        Vector3 p2 = center - Vector3.up * halfHeight;
+
+        if (Physics.CapsuleCast(p1, p2, bodyCollider.radius - 0.01f, move.normalized,
+                out RaycastHit wallHit, move.magnitude, wallMask, QueryTriggerInteraction.Ignore))
+        {
+            Vector3 wallNormal = new Vector3(wallHit.normal.x, 0f, wallHit.normal.z);
+            if (wallNormal.sqrMagnitude > 0.01f)
+            {
+                wallNormal.Normalize();
+                _smoothVelocity -= Vector3.Dot(_smoothVelocity, wallNormal) * wallNormal;
+                return _smoothVelocity * Time.deltaTime;
+            }
+        }
+
+        return move;
     }
 
     private bool CheckGrounded()
@@ -281,9 +345,23 @@ public class SennaPlayerMovement : MonoBehaviour
         if (!_isGrounded)
         {
             float deltaY = _verticalVelocity * Time.deltaTime;
-            // Sweep downward to prevent tunneling through floors when falling fast
-            if (deltaY < 0f && groundCheck != null)
+
+            if (deltaY > 0f && bodyCollider != null)
             {
+                // Upward sweep — prevent tunneling into ceilings
+                Vector3 center = transform.TransformPoint(bodyCollider.center);
+                float halfHeight = Mathf.Max(0f, bodyCollider.height * 0.5f - bodyCollider.radius);
+                Vector3 top = center + Vector3.up * halfHeight;
+                if (Physics.SphereCast(top, bodyCollider.radius - 0.01f, Vector3.up,
+                        out RaycastHit ceilHit, deltaY, wallMask, QueryTriggerInteraction.Ignore))
+                {
+                    _verticalVelocity = 0f;
+                    deltaY = ceilHit.distance;
+                }
+            }
+            else if (deltaY < 0f && groundCheck != null)
+            {
+                // Downward sweep — prevent tunneling through floors when falling fast
                 float sweepDist = -deltaY;
                 if (Physics.SphereCast(groundCheck.position, groundCheckRadius,
                         Vector3.down, out RaycastHit hit, sweepDist,
@@ -293,6 +371,7 @@ public class SennaPlayerMovement : MonoBehaviour
                     deltaY = -hit.distance;
                 }
             }
+
             transform.position += Vector3.up * deltaY;
         }
 

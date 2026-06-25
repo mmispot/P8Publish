@@ -26,10 +26,15 @@ public class SennaAmmoPickup : MonoBehaviour, ISennaInteractable
         if (_pickedUp) return;
         _pickedUp = true;
 
-        if (ammoSystem != null)
-            ammoSystem.AddReserve(amount);
+        SennaAmmoSystem target = ammoSystem;
+        if (target == null)
+            target = interactor.GetComponentInChildren<SennaAmmoSystem>()
+                  ?? interactor.GetComponentInParent<SennaAmmoSystem>();
+
+        if (target != null)
+            target.AddReserve(amount);
         else
-            Debug.LogWarning("SennaAmmoPickup: ammoSystem not assigned.");
+            Debug.LogWarning("SennaAmmoPickup: no SennaAmmoSystem found on interactor.");
 
         onPickedUp?.Invoke();
         gameObject.SetActive(false);
