@@ -16,6 +16,7 @@ public class SennaQuestManager : MonoBehaviour
     [SerializeField] private SennaPlayerInteractor playerInteractor;
     [SerializeField] private SennaAmmoSystem ammoSystem;
 
+
     [Header("Events")]
     public UnityEvent<SennaQuestData> onQuestCompleted;
     // Fires once when the last main quest completes — the base teleport hooks in here later
@@ -169,7 +170,7 @@ public class SennaQuestManager : MonoBehaviour
 
     private void GrantReward(SennaQuestData quest)
     {
-        RewardMessage = ""; // cleared per-completion so a rewardless quest can't show a stale reward
+        RewardMessage = "";
         if (quest.rewardPool == null || quest.rewardPool.Length == 0) return;
 
         var entry = PickReward(quest.rewardPool);
