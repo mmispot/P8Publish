@@ -3,32 +3,51 @@ using UnityEngine;
 public class DoorTrigger : MonoBehaviour
 {
     public Door doorScript;
+    public float openRange = 2f;
+
+    private Transform _player;
+    private bool _isOpen = false;
 
     private void Awake()
     {
         if (doorScript == null)
             doorScript = GetComponentInParent<Door>();
+        if (doorScript == null)
+            doorScript = GetComponent<Door>();
 
         if (doorScript == null)
-            Debug.LogError("DoorTrigger could not find a Door script in parent!");
+            Debug.LogError("DoorTrigger could not find a Door script!", this);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void Update()
     {
-        if (other.CompareTag("Player"))
+        if (doorScript == null) return;
+
+        // Keep trying to find the player until we have it
+        if (_player == null)
         {
-            Debug.Log("Player entered the trigger");
-            doorScript.Open(other.transform);
+            GameObject playerObj = GameObject.FindWithTag("Player");
+            if (playerObj == null) return; // not spawned yet, try next frame
+            _player = playerObj.transform;
         }
-    }
 
+        float distance = Vector3.Distance(transform.position, _player.position);
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
+        if (distance <= openRange && !_isOpen)
         {
-            Debug.Log("Player exited the trigger");
+            _isOpen = true;
+            doorScript.Open(_player);
+        }
+        else if (distance > openRange && _isOpen)
+        {
+            _isOpen = false;
             doorScript.StartClose();
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.pink;
+        Gizmos.DrawWireSphere(transform.position, openRange);
     }
 }
