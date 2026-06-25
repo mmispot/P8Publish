@@ -1211,7 +1211,7 @@ MonoBehaviour:
   - {fileID: 707202217}
   - {fileID: 667130427}
   rightOpenOffset: {x: 0.02, y: 0, z: 0}
-  speed: 0.05
+  speed: 0.03
   player: {fileID: 1476046631}
   openRange: 3
 --- !u!1 &770254662
