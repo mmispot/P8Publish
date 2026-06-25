@@ -2274,7 +2274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RadiationManager
   maxRadiation: 1
-  decayPerSecond: 0.005
+  decayPerSecond: 0.15
   stage2Threshold: 0.4
   stage3Threshold: 0.8
   stage2DamagePerSecond: 5
@@ -5981,7 +5981,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3548004229782408597, guid: d5f7492a9d7f5b9408179e10c7eb7eb5, type: 3}
       propertyPath: radiationPerSecond
-      value: 0.5
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4035122692475267078, guid: d5f7492a9d7f5b9408179e10c7eb7eb5, type: 3}
       propertyPath: m_LocalPosition.x
