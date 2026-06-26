@@ -11,6 +11,7 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameObject confirmPanel;
     [SerializeField] private GameObject deathPanel;
     [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject creditsPanel;
 
     public GameObject playerActive;
     [SerializeField] private SennaPlayerMovement playerMovement;
@@ -155,7 +156,17 @@ public class GameStateManager : MonoBehaviour
         startPanel.SetActive(true);         // return to whichever panel opened it
     }
 
-    public void OnCreditsPressed() => Debug.Log("Credits not yet implemented");
+    public void OnCreditsPressed()
+    {
+        startPanel.SetActive(false);        // or pausePanel, depending on caller
+        creditsPanel.SetActive(true);
+    }
+
+    public void OnCreditsClosed()
+    {
+        creditsPanel.SetActive(false);
+        startPanel.SetActive(true);         // return to whichever panel opened it
+    }
 
     public void OnQuitPressed() => Application.Quit();
 }
