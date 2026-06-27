@@ -142,7 +142,11 @@ public class GameStateManager : MonoBehaviour
         Cursor.visible = false;
     }
 
-    public void OnContinuePressed() => OnStartPressed();
+    public void OnContinuePressed()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 
     public void OnSettingsPressed()
     {

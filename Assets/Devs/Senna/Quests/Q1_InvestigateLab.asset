@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05e2688cf9b85db42a32c862a1e7c33a, type: 3}
+  m_Name: Q1_InvestigateLab
+  m_EditorClassIdentifier: Assembly-CSharp::SennaQuestData
+  questName: Investigate the Lab
+  description: Something went wrong in the research lab. Eliminate the hostiles and
+    find a way to arm yourself.
+  isMainQuest: 1
+  objectives:
+  - type: 2
+    targetItem: {fileID: 0}
+    interactKey: 
+    requiredCount: 2
+    shortLabel: Kill hostiles
+  - type: 1
+    targetItem: {fileID: 0}
+    interactKey: find_pistol
+    requiredCount: 1
+    shortLabel: Find a weapon
+  fixedRewards:
+  - item: {fileID: 11400000, guid: 829326a0850ecbb4c98184853b64b90d, type: 2}
+    quantity: 1
+    displayLabel: Researcher's Note x1
+  - item: {fileID: 11400000, guid: d055c6f4fbe6ed449b5ea7cdb911bb92, type: 2}
+    quantity: 3
+    displayLabel: Glass Bottle x3
+  rewardPool: []

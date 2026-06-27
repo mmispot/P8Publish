@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 8963351673069247189}
   - component: {fileID: 2699126955909870445}
   - component: {fileID: 3445041510971440286}
+  - component: {fileID: 1264248403257611028}
+  - component: {fileID: 8343564648291051875}
   m_Layer: 0
   m_Name: Meat
   m_TagString: Untagged
@@ -90,3 +92,42 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!135 &1264248403257611028
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4240488302693020853}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0.00019038096, y: 0.06450501, z: -2.0079198}
+--- !u!114 &8343564648291051875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4240488302693020853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66eedf26d6b780b4a977e608e83bedac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SennaQuestItem
+  itemData: {fileID: 11400000, guid: b26925b6629b37a429f0d2b8d737c235, type: 2}
+  displayName: Meat
+  gridController: {fileID: 0}
+  onPickedUp:
+    m_PersistentCalls:
+      m_Calls: []

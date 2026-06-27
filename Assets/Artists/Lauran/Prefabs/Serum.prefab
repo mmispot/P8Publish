@@ -180,8 +180,58 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1fde70ac683b8fa40884b06fcf794a77, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7028261687053915706}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1fde70ac683b8fa40884b06fcf794a77, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5635305692375140236}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1fde70ac683b8fa40884b06fcf794a77, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3524059838220003293}
   m_SourcePrefab: {fileID: 100100000, guid: 1fde70ac683b8fa40884b06fcf794a77, type: 3}
+--- !u!1 &8555356291417850201 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 1fde70ac683b8fa40884b06fcf794a77, type: 3}
+  m_PrefabInstance: {fileID: 8825879796703591432}
+  m_PrefabAsset: {fileID: 0}
+--- !u!135 &5635305692375140236
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8555356291417850201}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3524059838220003293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8555356291417850201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66eedf26d6b780b4a977e608e83bedac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SennaQuestItem
+  itemData: {fileID: 11400000, guid: 829326a0850ecbb4c98184853b64b90d, type: 2}
+  displayName: Serum
+  gridController: {fileID: 0}
+  onPickedUp:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &9075153010185542627 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1fde70ac683b8fa40884b06fcf794a77, type: 3}

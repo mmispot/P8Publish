@@ -3,47 +3,43 @@ using UnityEngine;
 using UnityEngine.Events;
 
 // Scene-level quest tracking. Quest assets are read-only; per-quest counters
-// live here and reset with the scene. The HUD polls ActiveQuestDisplayText and
-// CurrentPromptText (same init-order reasoning as SennaHealthBarUI).
+// live here and reset with the scene.
 public class SennaQuestManager : MonoBehaviour
 {
     public static SennaQuestManager Instance { get; private set; }
 
     [Header("Quests")]
-    [SerializeField] private SennaQuestData[] quests; // main quests advance in array order
+    [SerializeField] private SennaQuestData[] quests;
+    [SerializeField] private string allQuestsCompleteMessage = "Find the second elevator";
 
     [Header("References")]
     [SerializeField] private SennaPlayerInteractor playerInteractor;
     [SerializeField] private SennaAmmoSystem ammoSystem;
 
+    [Header("Inventory (for item rewards)")]
+    [SerializeField] private GridController gridController;
+    [SerializeField] private ItemGrid inventoryGrid;
 
     [Header("Events")]
     public UnityEvent<SennaQuestData> onQuestCompleted;
-    // Fires once when the last main quest completes — the base teleport hooks in here later
     public UnityEvent onAllMainQuestsCompleted;
 
-    // Code-only mirrors of the inspector events
     public event System.Action<SennaQuestData> QuestCompleted;
     public event System.Action AllMainQuestsCompleted;
 
-    // Cached so HUD polling can compare by reference without per-frame string work
     public string ActiveQuestTitle { get; private set; } = "";
     public string ActiveQuestDisplayText { get; private set; } = "";
     public string SideQuestDisplayText { get; private set; } = "";
     public string CurrentPromptText => playerInteractor != null ? playerInteractor.CurrentPromptText : null;
     public string RewardMessage { get; private set; } = "";
-
-    // Quest-complete banner, polled by SennaQuestHUD with the same reference-swap trick as
-    // RewardMessage: BannerBody gets a fresh string each completion so the HUD detects the change.
     public string BannerTitle { get; private set; } = "";
     public string BannerBody { get; private set; } = "";
-
     public bool AllMainQuestsDone => _allMainsDone;
 
     private readonly List<ItemData> _collectedItems = new List<ItemData>();
-    public IReadOnlyList<ItemData> CollectedItems => _collectedItems; // for later inventory insertion
+    public IReadOnlyList<ItemData> CollectedItems => _collectedItems;
 
-    private int[][] _progress; // [quest][objective]
+    private int[][] _progress;
     private bool[] _questDone;
     private bool _hasMainQuest;
     private bool _allMainsDone;
@@ -58,12 +54,40 @@ public class SennaQuestManager : MonoBehaviour
         _questDone = new bool[quests.Length];
         for (int q = 0; q < quests.Length; q++)
         {
-            int objectiveCount = quests[q] != null && quests[q].objectives != null ? quests[q].objectives.Length : 0;
-            _progress[q] = new int[objectiveCount];
+            int count = quests[q] != null && quests[q].objectives != null ? quests[q].objectives.Length : 0;
+            _progress[q] = new int[count];
             if (quests[q] != null && quests[q].isMainQuest)
                 _hasMainQuest = true;
         }
+        RebuildDisplayText();
+    }
 
+    // Called by EnemyHealth.Die() for every enemy death.
+    public void ReportEnemyKilled()
+    {
+        int activeMain = ActiveMainQuestIndex();
+
+        for (int q = 0; q < quests.Length; q++)
+        {
+            if (quests[q] == null || _questDone[q]) continue;
+            if (quests[q].isMainQuest && q != activeMain) continue;
+
+            bool changed = false;
+            var objectives = quests[q].objectives;
+            for (int i = 0; objectives != null && i < objectives.Length; i++)
+            {
+                var obj = objectives[i];
+                if (obj.type != SennaObjectiveType.KillEnemy) continue;
+                if (_progress[q][i] >= obj.requiredCount) continue;
+                _progress[q][i]++;
+                changed = true;
+            }
+
+            if (changed && IsQuestComplete(q))
+                CompleteQuest(q);
+        }
+
+        CheckAllMainsDone();
         RebuildDisplayText();
     }
 
@@ -77,17 +101,16 @@ public class SennaQuestManager : MonoBehaviour
         for (int q = 0; q < quests.Length; q++)
         {
             if (quests[q] == null || _questDone[q]) continue;
-            // Only the active main quest counts; side quests all progress in parallel
             if (quests[q].isMainQuest && q != activeMain) continue;
 
             bool changed = false;
             var objectives = quests[q].objectives;
             for (int i = 0; objectives != null && i < objectives.Length; i++)
             {
-                var objective = objectives[i];
-                if (objective.type != SennaObjectiveType.CollectItem) continue;
-                if (objective.targetItem != item) continue;
-                if (_progress[q][i] >= objective.requiredCount) continue;
+                var obj = objectives[i];
+                if (obj.type != SennaObjectiveType.CollectItem) continue;
+                if (obj.targetItem != item) continue;
+                if (_progress[q][i] >= obj.requiredCount) continue;
                 _progress[q][i]++;
                 changed = true;
             }
@@ -96,18 +119,10 @@ public class SennaQuestManager : MonoBehaviour
                 CompleteQuest(q);
         }
 
-        if (!_allMainsDone && _hasMainQuest && ActiveMainQuestIndex() < 0)
-        {
-            _allMainsDone = true;
-            onAllMainQuestsCompleted?.Invoke();
-            AllMainQuestsCompleted?.Invoke();
-        }
-
+        CheckAllMainsDone();
         RebuildDisplayText();
     }
 
-    // Returns true if any quest objective accepted the interaction.
-    // SennaQuestInteractable uses this to decide whether to mark itself used.
     public bool ReportInteractionCompleted(string key)
     {
         if (string.IsNullOrEmpty(key)) return false;
@@ -124,10 +139,10 @@ public class SennaQuestManager : MonoBehaviour
             var objectives = quests[q].objectives;
             for (int i = 0; objectives != null && i < objectives.Length; i++)
             {
-                var objective = objectives[i];
-                if (objective.type != SennaObjectiveType.Interact) continue;
-                if (objective.interactKey != key) continue;
-                if (_progress[q][i] >= objective.requiredCount) continue;
+                var obj = objectives[i];
+                if (obj.type != SennaObjectiveType.Interact) continue;
+                if (obj.interactKey != key) continue;
+                if (_progress[q][i] >= obj.requiredCount) continue;
                 _progress[q][i]++;
                 changed = true;
                 anyAccepted = true;
@@ -137,19 +152,21 @@ public class SennaQuestManager : MonoBehaviour
                 CompleteQuest(q);
         }
 
+        CheckAllMainsDone();
+        RebuildDisplayText();
+        return anyAccepted;
+    }
+
+    private void CheckAllMainsDone()
+    {
         if (!_allMainsDone && _hasMainQuest && ActiveMainQuestIndex() < 0)
         {
             _allMainsDone = true;
             onAllMainQuestsCompleted?.Invoke();
             AllMainQuestsCompleted?.Invoke();
         }
-
-        RebuildDisplayText();
-        return anyAccepted;
     }
 
-    // Marks quest q complete and fires its reward, completion banner, and events. Shared by both
-    // report paths (item collect + interaction) so they can't drift.
     private void CompleteQuest(int q)
     {
         _questDone[q] = true;
@@ -159,8 +176,6 @@ public class SennaQuestManager : MonoBehaviour
         QuestCompleted?.Invoke(quests[q]);
     }
 
-    // Builds the "QUEST COMPLETE" banner as fresh strings so the HUD's reference-equality poll
-    // detects the change. Appends the reward line when GrantReward set one.
     private void SetCompletionBanner(SennaQuestData quest)
     {
         BannerTitle = "QUEST COMPLETE";
@@ -170,16 +185,65 @@ public class SennaQuestManager : MonoBehaviour
 
     private void GrantReward(SennaQuestData quest)
     {
-        RewardMessage = "";
-        if (quest.rewardPool == null || quest.rewardPool.Length == 0) return;
+        var labelParts = new System.Text.StringBuilder();
 
-        var entry = PickReward(quest.rewardPool);
-        if (entry == null) return;
+        // Grant all fixed rewards (main quest guaranteed loot)
+        if (quest.fixedRewards != null)
+        {
+            foreach (var reward in quest.fixedRewards)
+            {
+                if (reward.item == null) continue;
+                InsertItemToInventory(reward.item, reward.quantity);
+                if (!string.IsNullOrEmpty(reward.displayLabel))
+                {
+                    if (labelParts.Length > 0) labelParts.Append(", ");
+                    labelParts.Append(reward.displayLabel);
+                }
+            }
+        }
 
-        if (entry.ammoAmount > 0)
-            ammoSystem?.AddReserve(entry.ammoAmount);
+        // Pick one random reward from the pool (side mission loot)
+        if (quest.rewardPool != null && quest.rewardPool.Length > 0)
+        {
+            var entry = PickReward(quest.rewardPool);
+            if (entry != null)
+            {
+                if (entry.ammoAmount > 0)
+                    ammoSystem?.AddReserve(entry.ammoAmount);
 
-        RewardMessage = entry.displayLabel ?? "";
+                if (entry.rewardItem != null)
+                    InsertItemToInventory(entry.rewardItem, Mathf.Max(1, entry.quantity));
+
+                if (!string.IsNullOrEmpty(entry.displayLabel))
+                {
+                    if (labelParts.Length > 0) labelParts.Append(", ");
+                    labelParts.Append(entry.displayLabel);
+                }
+            }
+        }
+
+        RewardMessage = labelParts.ToString();
+    }
+
+    private void InsertItemToInventory(ItemData item, int quantity)
+    {
+        if (gridController == null || inventoryGrid == null)
+        {
+            Debug.LogWarning($"SennaQuestManager: GridController/ItemGrid not assigned — cannot insert {item.name} to inventory.");
+            return;
+        }
+
+        inventoryGrid.EnsureInitialized();
+        var go = Object.Instantiate(gridController.ItemPrefab, gridController.CanvasTransform);
+        var invItem = go.GetComponent<InventoryItem>();
+        invItem.Set(item);
+        invItem.currentStackSize = Mathf.Clamp(quantity, 1, item.stackable ? item.maxStackSize : 1);
+        invItem.UpdateStackText();
+
+        var cg = go.GetComponent<CanvasGroup>();
+        if (cg != null) cg.blocksRaycasts = true;
+
+        gridController.InsertItem(invItem, inventoryGrid);
     }
 
     private SennaRewardEntry PickReward(SennaRewardEntry[] pool)
@@ -197,8 +261,6 @@ public class SennaQuestManager : MonoBehaviour
         return pool[pool.Length - 1];
     }
 
-    // Returns true if picking up this item would count toward any currently active quest.
-    // SennaQuestItem uses this to hide its interact prompt until the right quest is active.
     public bool IsItemCollectable(ItemData item)
     {
         if (item == null) return false;
@@ -241,7 +303,7 @@ public class SennaQuestManager : MonoBehaviour
         if (active < 0)
         {
             ActiveQuestTitle = "";
-            ActiveQuestDisplayText = _hasMainQuest ? "All objectives complete" : "";
+            ActiveQuestDisplayText = _hasMainQuest ? allQuestsCompleteMessage : "";
         }
         else
         {
@@ -251,10 +313,10 @@ public class SennaQuestManager : MonoBehaviour
             var sb = new System.Text.StringBuilder();
             for (int i = 0; quest.objectives != null && i < quest.objectives.Length; i++)
             {
-                var objective = quest.objectives[i];
+                var obj = quest.objectives[i];
                 if (i > 0) sb.Append('\n');
-                string label = string.IsNullOrEmpty(objective.shortLabel) ? quest.questName : objective.shortLabel;
-                sb.Append(label).Append(' ').Append(_progress[active][i]).Append('/').Append(objective.requiredCount);
+                string label = string.IsNullOrEmpty(obj.shortLabel) ? quest.questName : obj.shortLabel;
+                sb.Append(label).Append(' ').Append(_progress[active][i]).Append('/').Append(obj.requiredCount);
             }
             ActiveQuestDisplayText = sb.ToString();
         }
@@ -271,10 +333,10 @@ public class SennaQuestManager : MonoBehaviour
             var objectives = quests[q].objectives;
             for (int i = 0; objectives != null && i < objectives.Length; i++)
             {
-                var objective = objectives[i];
+                var obj = objectives[i];
                 if (sb.Length > 0) sb.Append('\n');
-                string label = string.IsNullOrEmpty(objective.shortLabel) ? quests[q].questName : objective.shortLabel;
-                sb.Append(label).Append(' ').Append(_progress[q][i]).Append('/').Append(objective.requiredCount);
+                string label = string.IsNullOrEmpty(obj.shortLabel) ? quests[q].questName : obj.shortLabel;
+                sb.Append(label).Append(' ').Append(_progress[q][i]).Append('/').Append(obj.requiredCount);
             }
         }
         return sb.ToString();

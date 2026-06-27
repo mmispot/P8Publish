@@ -20,11 +20,25 @@ public static class HealthHUDSetup
         }
 
         var playerHealth = Object.FindFirstObjectByType<SennaPlayerHealth>(FindObjectsInactive.Include);
-        var cameraShake  = Object.FindFirstObjectByType<SennaCameraShake>(FindObjectsInactive.Include);
         if (playerHealth == null)
-            Debug.LogWarning("[HealthHUDSetup] No SennaPlayerHealth in scene — wire the Player Health reference manually on HealthBar and DamageFlash.");
+            Debug.LogWarning("[HealthHUDSetup] No SennaPlayerHealth in scene — wire Player Health manually on HealthBar and DamageFlash.");
+
+        // Add SennaCameraShake to the camera automatically if it isn't there yet
+        var cameraShake = Object.FindFirstObjectByType<SennaCameraShake>(FindObjectsInactive.Include);
         if (cameraShake == null)
-            Debug.LogWarning("[HealthHUDSetup] No SennaCameraShake in scene — wire the Camera Shake reference manually on DamageFlash.");
+        {
+            var cam = Camera.main;
+            if (cam == null) cam = Object.FindFirstObjectByType<Camera>(FindObjectsInactive.Include);
+            if (cam != null)
+            {
+                cameraShake = Undo.AddComponent<SennaCameraShake>(cam.gameObject);
+                Debug.Log($"[HealthHUDSetup] Added SennaCameraShake to {cam.gameObject.name}.");
+            }
+            else
+            {
+                Debug.LogWarning("[HealthHUDSetup] No camera found — add SennaCameraShake to your camera manually.");
+            }
+        }
 
         // Built-in placeholder sprite; real art can be swapped in on the Images later.
         var uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");

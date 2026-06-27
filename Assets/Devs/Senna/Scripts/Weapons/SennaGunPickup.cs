@@ -13,6 +13,10 @@ public class SennaGunPickup : MonoBehaviour, ISennaInteractable
     [Tooltip("The disabled gun GameObject on the player rig that gets enabled on pickup.")]
     [SerializeField] private GameObject playerGun;
 
+    [Header("Quest")]
+    [Tooltip("If set, reports this key to SennaQuestManager when the gun is picked up.")]
+    [SerializeField] private string questInteractKey;
+
     public UnityEvent onPickedUp;
 
     private bool _pickedUp;
@@ -29,6 +33,9 @@ public class SennaGunPickup : MonoBehaviour, ISennaInteractable
             playerGun.SetActive(true);
         else
             Debug.LogWarning("SennaGunPickup: playerGun not assigned.");
+
+        if (!string.IsNullOrEmpty(questInteractKey))
+            SennaQuestManager.Instance?.ReportInteractionCompleted(questInteractKey);
 
         onPickedUp?.Invoke();
         gameObject.SetActive(false);

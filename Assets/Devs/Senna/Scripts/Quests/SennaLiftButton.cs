@@ -10,10 +10,15 @@ namespace P8Publish.Quests
         [SerializeField] private GameObject player;
         [SerializeField] private Transform spawnPoint;
 
+        [SerializeField] private string questInteractKey;
+
         public void Teleport()
         {
             if (spawnPoint == null) { Debug.LogError("SennaLiftButton: spawnPoint not assigned.", this); return; }
             if (player == null)     { Debug.LogError("SennaLiftButton: player not assigned.", this); return; }
+
+            if (!string.IsNullOrEmpty(questInteractKey))
+                SennaQuestManager.Instance?.ReportInteractionCompleted(questInteractKey);
 
             var agent = player.GetComponent<NavMeshAgent>();
             if (agent != null && agent.enabled)
