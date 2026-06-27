@@ -291,8 +291,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5f7b8f716c617774a8f000ca881aec1b, type: 2}
   - {fileID: 11400000, guid: 0d4b5a8b172eb35419310a035794129b, type: 2}
   - {fileID: 11400000, guid: 98d4fa8e0dba96a4eb05f6e21f433c47, type: 2}
+  allQuestsCompleteMessage: Find the second elevator
   playerInteractor: {fileID: 1476046608}
   ammoSystem: {fileID: 1476046624}
+  gridController: {fileID: 0}
+  inventoryGrid: {fileID: 0}
   onQuestCompleted:
     m_PersistentCalls:
       m_Calls: []
@@ -4667,6 +4670,10 @@ PrefabInstance:
     - target: {fileID: 7393611440598157857, guid: fdb03ddab8f50a64295630eff5f39c5a, type: 3}
       propertyPath: m_Name
       value: AmmoPickup
+      objectReference: {fileID: 0}
+    - target: {fileID: 7864251788289392594, guid: fdb03ddab8f50a64295630eff5f39c5a, type: 3}
+      propertyPath: amount
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7864251788289392594, guid: fdb03ddab8f50a64295630eff5f39c5a, type: 3}
       propertyPath: ammoSystem

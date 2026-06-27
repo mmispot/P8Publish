@@ -106,23 +106,27 @@ public static class QuestAssetCreator
         var qm = Object.FindFirstObjectByType<SennaQuestManager>(FindObjectsInactive.Include);
         if (qm == null) { Debug.LogError("[QuestAssetCreator] No SennaQuestManager in scene."); return; }
 
-        var gc  = Object.FindFirstObjectByType<GridController>(FindObjectsInactive.Include);
-        var ig  = Object.FindFirstObjectByType<ItemGrid>(FindObjectsInactive.Include);
-        var pi  = Object.FindFirstObjectByType<SennaPlayerInteractor>(FindObjectsInactive.Include);
+        var gc   = Object.FindFirstObjectByType<GridController>(FindObjectsInactive.Include);
+        var ig   = Object.FindFirstObjectByType<ItemGrid>(FindObjectsInactive.Include);
+        var pi   = Object.FindFirstObjectByType<SennaPlayerInteractor>(FindObjectsInactive.Include);
         var ammo = Object.FindFirstObjectByType<SennaAmmoSystem>(FindObjectsInactive.Include);
 
-        var q1 = AssetDatabase.LoadAssetAtPath<SennaQuestData>($"{QuestFolder}/Q1_InvestigateLab.asset");
-        var q2 = AssetDatabase.LoadAssetAtPath<SennaQuestData>($"{QuestFolder}/Q2_FindElevator.asset");
+        var q1   = AssetDatabase.LoadAssetAtPath<SennaQuestData>($"{QuestFolder}/Q1_InvestigateLab.asset");
+        var q2   = AssetDatabase.LoadAssetAtPath<SennaQuestData>($"{QuestFolder}/Q2_FindElevator.asset");
+        var side = AssetDatabase.LoadAssetAtPath<SennaQuestData>($"{QuestFolder}/SideMission_ResourceRun.asset");
 
         if (q1 == null || q2 == null) { Debug.LogError("[QuestAssetCreator] Quest assets missing. Run Create Quest Assets first."); return; }
 
         var so = new SerializedObject(qm);
 
-        // Quests array: only main quests — side missions are triggered separately, not active from the start
+        // Main quests + side mission so all rewards are granted correctly
         var questsProp = so.FindProperty("quests");
-        questsProp.arraySize = 2;
+        int questCount = side != null ? 3 : 2;
+        questsProp.arraySize = questCount;
         questsProp.GetArrayElementAtIndex(0).objectReferenceValue = q1;
         questsProp.GetArrayElementAtIndex(1).objectReferenceValue = q2;
+        if (side != null)
+            questsProp.GetArrayElementAtIndex(2).objectReferenceValue = side;
 
         if (gc   != null) so.FindProperty("gridController").objectReferenceValue   = gc;
         if (ig   != null) so.FindProperty("inventoryGrid").objectReferenceValue    = ig;
@@ -131,6 +135,87 @@ public static class QuestAssetCreator
 
         so.ApplyModifiedProperties();
         EditorUtility.SetDirty(qm);
+
+        // Wire SennaAmmoSystem for inventory mode so ammo pickups land in the grid.
+        // Only fills empty slots — won't overwrite anything you've already assigned.
+        const string AmmoAssetPath = "Assets/Devs/Emilia/Scripts/Inventory System/Scriptable Objects/Ammo.asset";
+        var ammoItemData = AssetDatabase.LoadAssetAtPath<ItemData>(AmmoAssetPath);
+        if (ammo != null && gc != null && ig != null)
+        {
+            if (ammoItemData != null)
+            {
+                // Patch ammoCount = 12 (bullets per mag) if it's still at the default 0.
+                var ammoDataSO = new SerializedObject(ammoItemData);
+                if (ammoDataSO.FindProperty("ammoCount").intValue == 0)
+                {
+                    ammoDataSO.FindProperty("ammoCount").intValue = 12;
+                    ammoDataSO.ApplyModifiedProperties();
+                    EditorUtility.SetDirty(ammoItemData);
+                    Debug.Log("[QuestAssetCreator] Set Ammo.asset ammoCount = 12 (bullets per mag).");
+                }
+
+                var ammoSO = new SerializedObject(ammo);
+                bool changed = false;
+                if (ammoSO.FindProperty("inventoryGrid").objectReferenceValue == null)
+                    { ammoSO.FindProperty("inventoryGrid").objectReferenceValue = ig; changed = true; }
+                if (ammoSO.FindProperty("ammoItemData").objectReferenceValue == null)
+                    { ammoSO.FindProperty("ammoItemData").objectReferenceValue = ammoItemData; changed = true; }
+                if (ammoSO.FindProperty("gridController").objectReferenceValue == null)
+                    { ammoSO.FindProperty("gridController").objectReferenceValue = gc; changed = true; }
+                if (changed)
+                {
+                    ammoSO.ApplyModifiedProperties();
+                    EditorUtility.SetDirty(ammo);
+                    Debug.Log("[QuestAssetCreator] Wired SennaAmmoSystem for inventory mode.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("[QuestAssetCreator] Ammo.asset not found — wire SennaAmmoSystem manually.");
+            }
+        }
+
+        // Patch SideMission reward pool to use Emilia's Scrap and Medicine assets,
+        // which already have inventory icons. Senna's Item_ScrapMetal / Item_Medicine
+        // have no icon set, so they'd appear as blank tiles in the inventory grid.
+        if (side != null)
+        {
+            const string ScrapPath    = "Assets/Devs/Emilia/Scripts/Inventory System/Scriptable Objects/Scrap.asset";
+            const string MedicinePath = "Assets/Devs/Emilia/Scripts/Inventory System/Scriptable Objects/Medicine.asset";
+            var scrapData    = AssetDatabase.LoadAssetAtPath<ItemData>(ScrapPath);
+            var medicineData = AssetDatabase.LoadAssetAtPath<ItemData>(MedicinePath);
+
+            var sideSO = new SerializedObject(side);
+            var pool   = sideSO.FindProperty("rewardPool");
+            bool sideChanged = false;
+
+            for (int i = 0; i < pool.arraySize; i++)
+            {
+                var entry      = pool.GetArrayElementAtIndex(i);
+                var label      = entry.FindPropertyRelative("displayLabel").stringValue;
+                var rewardProp = entry.FindPropertyRelative("rewardItem");
+
+                if (scrapData != null && label.ToLower().Contains("scrap") && rewardProp.objectReferenceValue != scrapData)
+                {
+                    rewardProp.objectReferenceValue = scrapData;
+                    sideChanged = true;
+                }
+                else if (medicineData != null && label.ToLower().Contains("medicine") && rewardProp.objectReferenceValue != medicineData)
+                {
+                    rewardProp.objectReferenceValue = medicineData;
+                    sideChanged = true;
+                }
+            }
+
+            if (sideChanged)
+            {
+                sideSO.ApplyModifiedProperties();
+                EditorUtility.SetDirty(side);
+                AssetDatabase.SaveAssets();
+                Debug.Log("[QuestAssetCreator] SideMission reward pool now uses Emilia's Scrap and Medicine assets.");
+            }
+        }
+
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
             UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene());
 

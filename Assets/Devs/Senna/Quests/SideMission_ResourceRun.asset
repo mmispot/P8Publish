@@ -30,12 +30,12 @@ MonoBehaviour:
     weight: 40
   - displayLabel: Scraps x3
     ammoAmount: 0
-    rewardItem: {fileID: 11400000, guid: d42bcbcbb971d424fa2148aecea2916d, type: 2}
+    rewardItem: {fileID: 11400000, guid: d770ae1da96f5fa4d8f6550d53ae4fa7, type: 2}
     quantity: 3
     weight: 35
   - displayLabel: Medicine x1
     ammoAmount: 0
-    rewardItem: {fileID: 11400000, guid: 795cbf2529581de489989ddc49138281, type: 2}
+    rewardItem: {fileID: 11400000, guid: 69e5e90fdf6e23240a56f5caa3667a16, type: 2}
     quantity: 1
     weight: 20
   - displayLabel: Ammo x15

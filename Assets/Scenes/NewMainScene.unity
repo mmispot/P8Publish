@@ -300,14 +300,47 @@ PrefabInstance:
       value: AmmoPickup
       objectReference: {fileID: 0}
     - target: {fileID: 7864251788289392594, guid: fdb03ddab8f50a64295630eff5f39c5a, type: 3}
+      propertyPath: amount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7864251788289392594, guid: fdb03ddab8f50a64295630eff5f39c5a, type: 3}
       propertyPath: ammoSystem
       value: 
       objectReference: {fileID: 286670478}
+    - target: {fileID: 7864251788289392594, guid: fdb03ddab8f50a64295630eff5f39c5a, type: 3}
+      propertyPath: inventoryItemData
+      value: 
+      objectReference: {fileID: 11400000, guid: 82802ddb32e3ffc4eb6e4f95004f7bb9, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7393611440598157857, guid: fdb03ddab8f50a64295630eff5f39c5a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 72108277}
   m_SourcePrefab: {fileID: 100100000, guid: fdb03ddab8f50a64295630eff5f39c5a, type: 3}
+--- !u!1 &72108276 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7393611440598157857, guid: fdb03ddab8f50a64295630eff5f39c5a, type: 3}
+  m_PrefabInstance: {fileID: 72108275}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &72108277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72108276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63a46265b82d2b949abddcdde2674af5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SennaInteractable
+  promptText: '[F] Pickup'
+  singleUse: 0
+  onInteracted:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &89162585
 GameObject:
   m_ObjectHideFlags: 0
@@ -3229,7 +3262,7 @@ MonoBehaviour:
   magazineSize: 12
   currentInMag: 12
   reserveAmmo: 0
-  inventoryGrid: {fileID: 0}
+  inventoryGrid: {fileID: 1166508159}
   ammoItemData: {fileID: 11400000, guid: 82802ddb32e3ffc4eb6e4f95004f7bb9, type: 2}
   gridController: {fileID: 1600947177}
   onAmmoChanged:
@@ -6312,6 +6345,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8923080908335481493, guid: c5bc29ff019909745998ac5fcada3f81, type: 3}
   m_PrefabInstance: {fileID: 752337684}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &752337687 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7558043070473734242, guid: c5bc29ff019909745998ac5fcada3f81, type: 3}
+  m_PrefabInstance: {fileID: 752337684}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752337686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0efb9c9eab705e843ac49444de92dbda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemGrid
 --- !u!1 &779730042
 GameObject:
   m_ObjectHideFlags: 0
@@ -7945,11 +7989,12 @@ MonoBehaviour:
   quests:
   - {fileID: 11400000, guid: 0c59b725d14f073408e2b47a30cd1579, type: 2}
   - {fileID: 11400000, guid: 210d2389d7e244f4bb815a55b0e3e153, type: 2}
+  - {fileID: 11400000, guid: 5a1786705fffafc4eadf36da496f6a11, type: 2}
   allQuestsCompleteMessage: Find the second elevator
   playerInteractor: {fileID: 286670480}
   ammoSystem: {fileID: 286670478}
   gridController: {fileID: 1600947177}
-  inventoryGrid: {fileID: 1503003961}
+  inventoryGrid: {fileID: 752337687}
   onQuestCompleted:
     m_PersistentCalls:
       m_Calls: []
@@ -9470,6 +9515,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2297885972365839680, guid: 2fbd2f742634392429f929c0f1e526d3, type: 3}
   m_PrefabInstance: {fileID: 1155723717}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1166508159 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8968715055705807413, guid: 26162b76b68ed3c459ac9714dae6da65, type: 3}
+  m_PrefabInstance: {fileID: 1228153711}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0efb9c9eab705e843ac49444de92dbda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemGrid
 --- !u!1 &1185610155
 GameObject:
   m_ObjectHideFlags: 0
@@ -10071,6 +10127,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 3286999506818430452, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4268827516284944428, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -10083,9 +10143,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 5518278006771579243, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6223963894994719049, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6231935464671858523, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6298427639601431083, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: m_Layer
@@ -11865,8 +11933,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 693f5a4ea8acd29438daf9c23322736a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SennaDamageFeedback
-  playerHealth: {fileID: 0}
-  cameraShake: {fileID: 0}
+  playerHealth: {fileID: 286670493}
+  cameraShake: {fileID: 160708596}
   damageFlashImage: {fileID: 1422052116}
   shakeTrauma: 0.35
   flashAlpha: 0.35
@@ -12393,6 +12461,10 @@ PrefabInstance:
       propertyPath: questInteractKey
       value: find_pistol
       objectReference: {fileID: 0}
+    - target: {fileID: 5859369441561077024, guid: 1cb6bc5fc30ea0c409fd98b32fa21b56, type: 3}
+      propertyPath: inventoryItemData
+      value: 
+      objectReference: {fileID: 11400000, guid: fc4537de2184c3d478fede3af3e85e5e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12872,17 +12944,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8923080908335481493, guid: c5bc29ff019909745998ac5fcada3f81, type: 3}
   m_PrefabInstance: {fileID: 1503003957}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1503003961 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7558043070473734242, guid: c5bc29ff019909745998ac5fcada3f81, type: 3}
-  m_PrefabInstance: {fileID: 1503003957}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1503003959}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0efb9c9eab705e843ac49444de92dbda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemGrid
 --- !u!1 &1507026776
 GameObject:
   m_ObjectHideFlags: 0
@@ -14323,6 +14384,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 3286999506818430452, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4268827516284944428, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -14339,9 +14404,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 5518278006771579243, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6223963894994719049, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6231935464671858523, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6298427639601431083, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: m_Layer
@@ -14760,6 +14833,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 3286999506818430452, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4268827516284944428, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -14772,9 +14849,17 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
+    - target: {fileID: 5518278006771579243, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6223963894994719049, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6231935464671858523, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6298427639601431083, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: m_Layer
