@@ -5264,10 +5264,18 @@ PrefabInstance:
       propertyPath: m_Radius
       value: 0.05
       objectReference: {fileID: 0}
+    - target: {fileID: 2317845609128374019, guid: 783e911b68dfffd49a54f7cb20988451, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3074918562039485211, guid: 783e911b68dfffd49a54f7cb20988451, type: 3}
       propertyPath: m_Name
       value: ResearchNote
       objectReference: {fileID: 0}
+    - target: {fileID: 5891023746182930147, guid: 783e911b68dfffd49a54f7cb20988451, type: 3}
+      propertyPath: gridController
+      value: 
+      objectReference: {fileID: 1600947177}
     - target: {fileID: 6486431855237911175, guid: 783e911b68dfffd49a54f7cb20988451, type: 3}
       propertyPath: m_LocalScale.x
       value: 20
@@ -5323,8 +5331,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3074918562039485211, guid: 783e911b68dfffd49a54f7cb20988451, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 609671656}
   m_SourcePrefab: {fileID: 100100000, guid: 783e911b68dfffd49a54f7cb20988451, type: 3}
+--- !u!1 &609671655 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3074918562039485211, guid: 783e911b68dfffd49a54f7cb20988451, type: 3}
+  m_PrefabInstance: {fileID: 609671654}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &609671656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609671655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63a46265b82d2b949abddcdde2674af5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SennaInteractable
+  promptText: '[F] Interact'
+  singleUse: 0
+  onInteracted:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &611203411 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4482753242910222951, guid: 8bfacbcc22c526045b34ece71dd6c0e1, type: 3}
@@ -13557,7 +13590,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 14
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
