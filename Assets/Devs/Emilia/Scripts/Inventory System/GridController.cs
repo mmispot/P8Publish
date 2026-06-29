@@ -33,10 +33,10 @@ public class GridController : MonoBehaviour
         // Keyboard shortcuts only make sense when a grid is active and no equipment slot is hovered
         if (selectedItemGrid != null && hoveredEquipmentSlot == null)
         {
-            if (Keyboard.current.qKey.wasPressedThisFrame && selectedItem == null)
-            {
-                InsertRandomItem();
-            }
+            //if (Keyboard.current.qKey.wasPressedThisFrame && selectedItem == null)
+            //{
+            //    InsertRandomItem();
+            //}
 
             if (Keyboard.current.rKey.wasPressedThisFrame && selectedItem != null)
             {
