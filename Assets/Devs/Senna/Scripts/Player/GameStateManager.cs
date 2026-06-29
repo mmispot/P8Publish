@@ -21,6 +21,7 @@ public class GameStateManager : MonoBehaviour
     public ScoreManager scoreManager;
 
     private bool _playing;
+    private bool _won;
 
     void Awake()
     {
@@ -119,6 +120,7 @@ public class GameStateManager : MonoBehaviour
 
     public void OnPlayerDied()
     {
+        if (_won) return;
         _playing = false;
         Time.timeScale = 0f;
         playerMovement?.DisableMovement();
@@ -146,12 +148,14 @@ public class GameStateManager : MonoBehaviour
 
     public void OnPlayerWon()
     {
+        _won = true;
         _playing = false;
         Time.timeScale = 0f;
         playerMovement?.DisableMovement();
         playerMovement?.DisableMouseLook();
         shooting?.DisableShoot();
         scoreManager?.OnPlayerDeath(); // stops the timer
+        deathPanel?.SetActive(false);
         winPanel?.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -165,6 +169,7 @@ public class GameStateManager : MonoBehaviour
 
     public void OnWinPlayAgainPressed()
     {
+        _won = false;
         winPanel?.SetActive(false);
         playerActive.GetComponent<SennaPlayerHealth>()?.ResetHealth();
         Time.timeScale = 1f;
