@@ -51,7 +51,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 22
+  m_Radius: 8
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3004264227089466526
 GameObject:
@@ -162,10 +162,11 @@ MonoBehaviour:
   lightCooldownTime: 1
   nextAllowedHitTime: 0
   lightDamage: 10
-  lightAttackRange: 3
+  lightAttackRange: 1.8
   lightAttackPoint: {fileID: 5399111656096041250}
   speed: 3
   DetectionRange: 22
+  footstepInterval: 3
 --- !u!114 &8375281293163301919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -306,6 +307,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AttackHitbox
   Damage: 10
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1001 &6534563367899337253
 PrefabInstance:
   m_ObjectHideFlags: 0
