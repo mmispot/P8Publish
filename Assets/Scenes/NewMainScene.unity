@@ -12453,6 +12453,8 @@ MonoBehaviour:
   - soundType: 0
     clips:
     - {fileID: 8300000, guid: ebc7ca9d21c214e498da76ca18d6446b, type: 3}
+  enemiesMixerGroup: {fileID: 8440530907193175686, guid: 5e9df113871fd9c499f44adb7acb0df6, type: 2}
+  gunsMixerGroup: {fileID: 3296894523329445352, guid: 5e9df113871fd9c499f44adb7acb0df6, type: 2}
 --- !u!82 &1304859556
 AudioSource:
   m_ObjectHideFlags: 0
@@ -12462,7 +12464,7 @@ AudioSource:
   m_GameObject: {fileID: 1304859554}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 5e9df113871fd9c499f44adb7acb0df6, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
