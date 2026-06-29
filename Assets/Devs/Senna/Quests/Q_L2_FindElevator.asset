@@ -10,21 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05e2688cf9b85db42a32c862a1e7c33a, type: 3}
-  m_Name: SideMission_ResourceRun
+  m_Name: Q_L2_FindElevator
   m_EditorClassIdentifier: Assembly-CSharp::SennaQuestData
-  questName: Resource Run
-  description: Scavenge supplies from the area. Eliminate any hostiles in your way.
-  isMainQuest: 0
+  questName: Ascend to Floor 3
+  description: You have what you need. Take the elevator up to Floor 3.
+  isMainQuest: 1
   objectives:
-  - type: 2
+  - type: 1
     targetItem: {fileID: 0}
-    interactKey:
-    requiredCount: 3
-    shortLabel: Eliminate targets
+    interactKey: elevator_l3
+    requiredCount: 1
+    shortLabel: Take the elevator to Floor 3
   fixedRewards: []
-  rewardPool:
-  - displayLabel: Ammo x1
-    ammoAmount: 1
-    rewardItem: {fileID: 0}
-    quantity: 1
-    weight: 10
+  rewardPool: []

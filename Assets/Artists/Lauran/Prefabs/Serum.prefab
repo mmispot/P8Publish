@@ -226,7 +226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66eedf26d6b780b4a977e608e83bedac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SennaQuestItem
-  itemData: {fileID: 11400000, guid: 829326a0850ecbb4c98184853b64b90d, type: 2}
+  itemData: {fileID: 11400000, guid: 73758913f6574429b01791759b1d2eb6, type: 2}
   displayName: Serum
   gridController: {fileID: 0}
   onPickedUp:

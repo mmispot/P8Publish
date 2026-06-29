@@ -18,23 +18,13 @@ MonoBehaviour:
   objectives:
   - type: 0
     targetItem: {fileID: 11400000, guid: 74a1f956a69d7f94598cb79874f46656, type: 2}
-    interactKey: 
+    interactKey:
     requiredCount: 1
     shortLabel: Recover the intel
   fixedRewards: []
   rewardPool:
-  - displayLabel: Ammo x20
-    ammoAmount: 20
+  - displayLabel: Ammo x1
+    ammoAmount: 1
     rewardItem: {fileID: 0}
     quantity: 1
     weight: 10
-  - displayLabel: Ammo x30
-    ammoAmount: 30
-    rewardItem: {fileID: 0}
-    quantity: 1
-    weight: 5
-  - displayLabel: Scrap Metal x4
-    ammoAmount: 0
-    rewardItem: {fileID: 0}
-    quantity: 1
-    weight: 5

@@ -18,23 +18,13 @@ MonoBehaviour:
   objectives:
   - type: 0
     targetItem: {fileID: 11400000, guid: 38f0a6620bac9f44da8a436f27f387b1, type: 2}
-    interactKey: 
+    interactKey:
     requiredCount: 1
     shortLabel: Find the ammo cache
   fixedRewards: []
   rewardPool:
-  - displayLabel: Ammo x30
-    ammoAmount: 30
+  - displayLabel: Ammo x1
+    ammoAmount: 1
     rewardItem: {fileID: 0}
     quantity: 1
     weight: 10
-  - displayLabel: Ammo x20
-    ammoAmount: 20
-    rewardItem: {fileID: 0}
-    quantity: 1
-    weight: 6
-  - displayLabel: Scrap Metal x3
-    ammoAmount: 0
-    rewardItem: {fileID: 0}
-    quantity: 1
-    weight: 4

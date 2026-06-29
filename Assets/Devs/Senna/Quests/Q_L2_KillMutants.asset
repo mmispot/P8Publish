@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05e2688cf9b85db42a32c862a1e7c33a, type: 3}
-  m_Name: SideMission_ResourceRun
+  m_Name: Q_L2_KillMutants
   m_EditorClassIdentifier: Assembly-CSharp::SennaQuestData
-  questName: Resource Run
-  description: Scavenge supplies from the area. Eliminate any hostiles in your way.
-  isMainQuest: 0
+  questName: Eliminate the Mutants
+  description: Floor 2 is overrun. Clear out the mutant threat before pushing further.
+  isMainQuest: 1
   objectives:
   - type: 2
     targetItem: {fileID: 0}
     interactKey:
-    requiredCount: 3
-    shortLabel: Eliminate targets
+    requiredCount: 5
+    shortLabel: Kill mutants
   fixedRewards: []
   rewardPool:
   - displayLabel: Ammo x1
