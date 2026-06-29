@@ -23,8 +23,8 @@ MonoBehaviour:
     shortLabel: Find the researcher's note
   fixedRewards: []
   rewardPool:
-  - displayLabel: Ammo x1
-    ammoAmount: 1
+  - displayLabel: Ammo x12
+    ammoAmount: 12
     rewardItem: {fileID: 0}
     quantity: 1
     weight: 10

@@ -7,6 +7,8 @@ public class Teleporter : MonoBehaviour
     public Transform spawnPoint;   // empty GameObject placed where player should land
     public GameObject destination; // the OTHER teleporter (to disable on arrival)
     public GameObject player;
+    [Tooltip("All listed quests must be completed before this teleporter activates.")]
+    public SennaQuestData[] requiredCompletedQuests;
 
     public float cooldown = 2f;
     private static float lastTeleportTime = -Mathf.Infinity;
@@ -15,6 +17,7 @@ public class Teleporter : MonoBehaviour
     {
         if (other.gameObject == player && Time.time > lastTeleportTime + cooldown)
         {
+            if (!QuestsCleared()) return;
             if (spawnPoint == null) { Debug.LogError("spawnPoint not assigned on " + gameObject.name); return; }
             if (destination == null) { Debug.LogError("destination not assigned on " + gameObject.name); return; }
 
@@ -42,6 +45,16 @@ public class Teleporter : MonoBehaviour
             }
             //StartCoroutine(DisableTemporarily(destination));
         }
+    }
+
+    private bool QuestsCleared()
+    {
+        if (requiredCompletedQuests == null || requiredCompletedQuests.Length == 0) return true;
+        var qm = SennaQuestManager.Instance;
+        foreach (var quest in requiredCompletedQuests)
+            if (quest != null && (qm == null || !qm.IsQuestCompleted(quest)))
+                return false;
+        return true;
     }
 
     //private IEnumerator DisableTemporarily(GameObject teleporter)
