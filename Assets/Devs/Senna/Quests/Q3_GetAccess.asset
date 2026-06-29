@@ -23,18 +23,8 @@ MonoBehaviour:
     shortLabel: Use the terminal
   fixedRewards: []
   rewardPool:
-  - displayLabel: Ammo x10
-    ammoAmount: 10
+  - displayLabel: Ammo x12
+    ammoAmount: 12
     rewardItem: {fileID: 0}
     quantity: 1
     weight: 10
-  - displayLabel: Scrap Metal x1
-    ammoAmount: 0
-    rewardItem: {fileID: 0}
-    quantity: 1
-    weight: 8
-  - displayLabel: Ammo x15
-    ammoAmount: 15
-    rewardItem: {fileID: 0}
-    quantity: 1
-    weight: 4

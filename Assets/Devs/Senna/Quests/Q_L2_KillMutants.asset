@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05e2688cf9b85db42a32c862a1e7c33a, type: 3}
-  m_Name: Q2_ArmUp
+  m_Name: Q_L2_KillMutants
   m_EditorClassIdentifier: Assembly-CSharp::SennaQuestData
-  questName: Arm Up
-  description: Locate the ammo cache to resupply before pushing forward.
+  questName: Eliminate the Mutants
+  description: Floor 2 is overrun. Clear out the mutant threat before pushing further.
   isMainQuest: 1
   objectives:
-  - type: 0
-    targetItem: {fileID: 11400000, guid: 38f0a6620bac9f44da8a436f27f387b1, type: 2}
+  - type: 2
+    targetItem: {fileID: 0}
     interactKey:
-    requiredCount: 1
-    shortLabel: Find the ammo cache
+    requiredCount: 5
+    shortLabel: Kill mutants
   fixedRewards: []
   rewardPool:
   - displayLabel: Ammo x12

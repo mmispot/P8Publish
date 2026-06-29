@@ -261,6 +261,13 @@ public class SennaQuestManager : MonoBehaviour
         return pool[pool.Length - 1];
     }
 
+    public bool IsQuestCompleted(SennaQuestData quest)
+    {
+        for (int q = 0; q < quests.Length; q++)
+            if (quests[q] == quest) return _questDone[q];
+        return false;
+    }
+
     public bool IsItemCollectable(ItemData item)
     {
         if (item == null) return false;

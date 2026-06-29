@@ -9,10 +9,10 @@ public class SennaAmmoSystem : MonoBehaviour
 {
     [Header("Magazine")]
     [SerializeField] private int magazineSize = 12;
-    [SerializeField] private int currentInMag = 12;
+    [SerializeField] private int currentInMag = 0;
 
     [Header("Reserve (standalone fallback)")]
-    [SerializeField] private int reserveAmmo = 60;
+    [SerializeField] private int reserveAmmo = 0;
 
     [Header("Inventory Link (quest scene)")]
     [SerializeField] private ItemGrid inventoryGrid;

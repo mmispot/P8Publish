@@ -10,6 +10,7 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject confirmPanel;
     [SerializeField] private GameObject deathPanel;
+    [SerializeField] private GameObject winPanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject creditsPanel;
 
@@ -38,6 +39,7 @@ public class GameStateManager : MonoBehaviour
         startPanel.SetActive(true);
         pausePanel.SetActive(false);
         deathPanel?.SetActive(false);
+        winPanel?.SetActive(false);
         Time.timeScale = 0f;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -131,6 +133,39 @@ public class GameStateManager : MonoBehaviour
     public void OnRespawnPressed()
     {
         deathPanel?.SetActive(false);
+        playerActive.GetComponent<SennaPlayerHealth>()?.ResetHealth();
+        Time.timeScale = 1f;
+        _playing = true;
+        playerMovement?.EnableMovement();
+        playerMovement?.EnableMouseLook();
+        shooting?.EnableShoot();
+        scoreManager?.StartTimer();
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    public void OnPlayerWon()
+    {
+        _playing = false;
+        Time.timeScale = 0f;
+        playerMovement?.DisableMovement();
+        playerMovement?.DisableMouseLook();
+        shooting?.DisableShoot();
+        scoreManager?.OnPlayerDeath(); // stops the timer
+        winPanel?.SetActive(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void OnWinMainMenuPressed()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void OnWinPlayAgainPressed()
+    {
+        winPanel?.SetActive(false);
         playerActive.GetComponent<SennaPlayerHealth>()?.ResetHealth();
         Time.timeScale = 1f;
         _playing = true;

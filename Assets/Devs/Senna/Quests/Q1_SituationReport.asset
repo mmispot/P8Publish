@@ -18,17 +18,13 @@ MonoBehaviour:
   objectives:
   - type: 0
     targetItem: {fileID: 11400000, guid: a79318c4516bc59408ed18ae8ebeaf95, type: 2}
-    interactKey: 
+    interactKey:
     requiredCount: 1
     shortLabel: Find the briefing
-  rewardItems: []
+  fixedRewards: []
   rewardPool:
-  - displayLabel: Ammo x15
-    ammoAmount: 15
+  - displayLabel: Ammo x12
+    ammoAmount: 12
+    rewardItem: {fileID: 0}
+    quantity: 1
     weight: 10
-  - displayLabel: Scrap Metal x2
-    ammoAmount: 0
-    weight: 6
-  - displayLabel: Ammo x10
-    ammoAmount: 10
-    weight: 4

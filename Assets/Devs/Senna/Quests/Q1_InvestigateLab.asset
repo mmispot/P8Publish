@@ -19,7 +19,7 @@ MonoBehaviour:
   objectives:
   - type: 2
     targetItem: {fileID: 0}
-    interactKey: 
+    interactKey:
     requiredCount: 2
     shortLabel: Kill hostiles
   - type: 1
@@ -27,11 +27,10 @@ MonoBehaviour:
     interactKey: find_pistol
     requiredCount: 1
     shortLabel: Find a weapon
-  fixedRewards:
-  - item: {fileID: 11400000, guid: 829326a0850ecbb4c98184853b64b90d, type: 2}
+  fixedRewards: []
+  rewardPool:
+  - displayLabel: Ammo x12
+    ammoAmount: 12
+    rewardItem: {fileID: 0}
     quantity: 1
-    displayLabel: Researcher's Note x1
-  - item: {fileID: 11400000, guid: d055c6f4fbe6ed449b5ea7cdb911bb92, type: 2}
-    quantity: 3
-    displayLabel: Glass Bottle x3
-  rewardPool: []
+    weight: 10

@@ -44,6 +44,7 @@ public class EnemyHealth : MonoBehaviour
     }
     public void Die()
     {
+        SennaQuestManager.Instance?.ReportEnemyKilled();
         Destroy(gameObject);
     }
 

@@ -10,21 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05e2688cf9b85db42a32c862a1e7c33a, type: 3}
-  m_Name: Q2_ArmUp
+  m_Name: Q_L2_FindElevator
   m_EditorClassIdentifier: Assembly-CSharp::SennaQuestData
-  questName: Arm Up
-  description: Locate the ammo cache to resupply before pushing forward.
+  questName: Ascend to Floor 3
+  description: You have what you need. Take the elevator up to Floor 3.
   isMainQuest: 1
   objectives:
-  - type: 0
-    targetItem: {fileID: 11400000, guid: 38f0a6620bac9f44da8a436f27f387b1, type: 2}
-    interactKey:
+  - type: 1
+    targetItem: {fileID: 0}
+    interactKey: elevator_l3
     requiredCount: 1
-    shortLabel: Find the ammo cache
+    shortLabel: Take the elevator to Floor 3
   fixedRewards: []
-  rewardPool:
-  - displayLabel: Ammo x12
-    ammoAmount: 12
-    rewardItem: {fileID: 0}
-    quantity: 1
-    weight: 10
+  rewardPool: []

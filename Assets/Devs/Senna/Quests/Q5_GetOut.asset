@@ -23,18 +23,8 @@ MonoBehaviour:
     shortLabel: Activate extraction
   fixedRewards: []
   rewardPool:
-  - displayLabel: Ammo x50
-    ammoAmount: 50
+  - displayLabel: Ammo x12
+    ammoAmount: 12
     rewardItem: {fileID: 0}
     quantity: 1
     weight: 10
-  - displayLabel: Ammo x40
-    ammoAmount: 40
-    rewardItem: {fileID: 0}
-    quantity: 1
-    weight: 6
-  - displayLabel: Scrap Metal x5
-    ammoAmount: 0
-    rewardItem: {fileID: 0}
-    quantity: 1
-    weight: 4
