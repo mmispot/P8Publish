@@ -7,26 +7,32 @@ public class SennaQuestData : ScriptableObject
 {
     public string questName;
     [TextArea] public string description;
-
-    // Main quests show in the HUD and advance in SennaQuestManager's array order.
-    // Side quests progress silently and exist for crafting rewards.
     public bool isMainQuest;
 
     public SennaQuestObjective[] objectives;
 
-    // Crafting items handed out on completion (granting comes with the inventory integration).
-    public ItemData[] rewardItems;
+    [Header("Fixed Rewards (all granted on completion)")]
+    public SennaFixedReward[] fixedRewards;
 
-    [Header("Reward Pool")]
-    [Tooltip("One entry is picked at random on quest completion.")]
+    [Header("Random Reward Pool (one entry picked on completion)")]
     public SennaRewardEntry[] rewardPool;
+}
+
+[System.Serializable]
+public class SennaFixedReward
+{
+    public ItemData item;
+    public int quantity = 1;
+    public string displayLabel;
 }
 
 [System.Serializable]
 public class SennaRewardEntry
 {
-    public string displayLabel;   // shown in the banner, e.g. "Ammo x20" or "Scrap Metal x3"
-    public int ammoAmount;        // > 0 grants ammo to reserve via SennaAmmoSystem
+    public string displayLabel;
+    public int ammoAmount;
+    public ItemData rewardItem;
+    public int quantity = 1;
     [Range(1, 100)] public int weight = 10;
 }
 
@@ -34,21 +40,15 @@ public class SennaRewardEntry
 public class SennaQuestObjective
 {
     public SennaObjectiveType type;
-
-    // CollectItem: which ItemData counts toward this objective
     public ItemData targetItem;
-
-    // Interact: string key that SennaQuestInteractable reports
     public string interactKey;
-
     public int requiredCount = 1;
-
-    // HUD label, e.g. "Find power cells" — falls back to the quest name when empty
     public string shortLabel;
 }
 
 public enum SennaObjectiveType
 {
     CollectItem,
-    Interact
+    Interact,
+    KillEnemy
 }

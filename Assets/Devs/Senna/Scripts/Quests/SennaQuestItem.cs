@@ -40,24 +40,29 @@ public class SennaQuestItem : MonoBehaviour, ISennaInteractable
 
     private void AddToInventory()
     {
-        if (gridController == null)
+        GridController gc = gridController;
+        if (gc == null)
+            gc = Object.FindFirstObjectByType<GridController>(FindObjectsInactive.Include);
+        if (gc == null)
         {
-            Debug.LogWarning("SennaQuestItem: No GridController assigned.");
+            Debug.LogWarning("SennaQuestItem: No GridController found in scene.");
             gameObject.SetActive(false);
             return;
         }
 
-        GameObject go = Instantiate(gridController.ItemPrefab);
-        InventoryItem inventoryItem = go.GetComponent<InventoryItem>();
+        ItemGrid grid = Object.FindFirstObjectByType<ItemGrid>(FindObjectsInactive.Include);
+        if (grid != null)
+            grid.EnsureInitialized();
 
-        RectTransform rt = go.GetComponent<RectTransform>();
-        rt.SetParent(gridController.CanvasTransform);
+        var go = Object.Instantiate(gc.ItemPrefab, gc.CanvasTransform);
+        var invItem = go.GetComponent<InventoryItem>();
+        invItem.Set(itemData);
 
-        CanvasGroup cg = go.GetComponent<CanvasGroup>();
-        if (cg != null) cg.blocksRaycasts = false;
+        // Placed items need raycasts enabled so the player can drag them.
+        var cg = go.GetComponent<CanvasGroup>();
+        if (cg != null) cg.blocksRaycasts = true;
 
-        inventoryItem.Set(itemData);
-        gridController.InsertItem(inventoryItem);
+        gc.InsertItem(invItem, grid);
 
         // Only disable after successful inventory insertion.
         // If inventory is full, InsertItem leaves the item held in hand —

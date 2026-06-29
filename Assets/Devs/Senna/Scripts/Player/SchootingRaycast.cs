@@ -68,13 +68,10 @@ public class SchootingRaycast : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hit, range, hitLayers, QueryTriggerInteraction.Ignore))
         {
             endPoint = hit.point;
-            hit.collider.GetComponent<PlayerHealth>()?.TakeDamage(10);
-            Debug.Log($"Hit: {hit.collider.name} | Distance: {hit.distance:F2}m");
-            PlayerHealth target = hit.collider.GetComponent<PlayerHealth>();
-            if (target != null)
-            {
-                target.TakeDamage(damage);
-            }
+            if (hit.collider.TryGetComponent<PlayerHealth>(out var ph))
+                ph.TakeDamage(damage);
+            else if (hit.collider.TryGetComponent<EnemyHealth>(out var eh))
+                eh.TakeDamage(damage);
         }
         else
         {

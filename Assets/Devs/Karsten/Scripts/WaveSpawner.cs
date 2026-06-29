@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class WaveSpawner : MonoBehaviour
 {
@@ -7,9 +8,10 @@ public class WaveSpawner : MonoBehaviour
     public float spawnRadius = 5f;
     public GameObject enemyPrefab;
     public int enemiesPerWave = 5;
+    [Tooltip("Delay before the next wave spawns after all enemies are dead")]
     public float timeBetweenWaves = 5f;
-    public float nextWaveTime = 0f;
-    
+
+    private List<GameObject> _activeEnemies = new List<GameObject>();
 
     void Start()
     {
@@ -18,10 +20,12 @@ public class WaveSpawner : MonoBehaviour
 
     IEnumerator SpawnWave()
     {
-        while(true)
+        while (true)
         {
-        yield return new WaitForSeconds(timeBetweenWaves);
+            yield return new WaitUntil(AllEnemiesDead);
+            yield return new WaitForSeconds(timeBetweenWaves);
 
+            _activeEnemies.Clear();
             for (int i = 0; i < enemiesPerWave; i++)
             {
                 SpawnEnemy();
@@ -29,11 +33,17 @@ public class WaveSpawner : MonoBehaviour
         }
     }
 
+    bool AllEnemiesDead()
+    {
+        _activeEnemies.RemoveAll(e => e == null);
+        return _activeEnemies.Count == 0;
+    }
+
     void SpawnEnemy()
     {
         Vector3 randomOffset = Random.insideUnitSphere * spawnRadius;
-        randomOffset.y = 0.19f; 
-        Instantiate(enemyPrefab, SpawnPoint.transform.position + randomOffset, Quaternion.identity);
+        randomOffset.y = 0.19f;
+        _activeEnemies.Add(Instantiate(enemyPrefab, SpawnPoint.transform.position + randomOffset, Quaternion.identity));
     }
 
     void OnDrawGizmosSelected()
@@ -43,10 +53,5 @@ public class WaveSpawner : MonoBehaviour
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(SpawnPoint.transform.position, spawnRadius);
         }
-    }
-
-    void Update()
-    {
-
     }
 }

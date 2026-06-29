@@ -23,8 +23,13 @@ public class SennaAmmoSystem : MonoBehaviour
     public UnityEvent<int, int> onAmmoChanged;   // passes (currentInMag, ReserveAmmo)
 
     public int CurrentInMag => currentInMag;
+
+    // How many bullets one inventory ammo item represents (set via ammoItemData.ammoCount).
+    // Falls back to magazineSize so one item always equals one full reload.
+    private int BulletsPerMag => (ammoItemData != null && ammoItemData.ammoCount > 0) ? ammoItemData.ammoCount : magazineSize;
+
     public int ReserveAmmo => (inventoryGrid != null && ammoItemData != null)
-        ? inventoryGrid.CountAmmoOfType(ammoItemData)
+        ? inventoryGrid.CountAmmoOfType(ammoItemData) * BulletsPerMag
         : reserveAmmo;
     public int MagazineSize => magazineSize;
     public bool HasAmmo => currentInMag > 0;
@@ -48,13 +53,19 @@ public class SennaAmmoSystem : MonoBehaviour
     {
         int reserve = ReserveAmmo;
         if (IsFull || reserve <= 0) return;
-        int needed = magazineSize - currentInMag;
-        int loaded = Mathf.Min(needed, reserve);
-        currentInMag += loaded;
         if (inventoryGrid != null && ammoItemData != null)
-            inventoryGrid.ConsumeAmmoOfType(ammoItemData, loaded);
+        {
+            // Each inventory item = 1 full mag. Swap in a fresh mag and consume 1 item.
+            inventoryGrid.ConsumeAmmoOfType(ammoItemData, 1);
+            currentInMag = magazineSize;
+        }
         else
+        {
+            int needed = magazineSize - currentInMag;
+            int loaded = Mathf.Min(needed, reserve);
+            currentInMag += loaded;
             reserveAmmo -= loaded;
+        }
         onAmmoChanged.Invoke(currentInMag, ReserveAmmo);
     }
 

@@ -14,7 +14,9 @@ public class GridInteract : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     private void Awake()
     {
-        gridController = mainCamera.GetComponent<GridController>();
+        if (mainCamera == null)
+            mainCamera = Camera.main != null ? Camera.main.gameObject : GameObject.FindFirstObjectByType<GridController>()?.gameObject;
+        gridController = mainCamera != null ? mainCamera.GetComponent<GridController>() : null;
         itemGrid = GetComponent<ItemGrid>();
     }
 
