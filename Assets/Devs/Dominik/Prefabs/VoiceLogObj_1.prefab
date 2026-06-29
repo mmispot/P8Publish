@@ -1,0 +1,236 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &27560547235028588
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8340671380860965495}
+  - component: {fileID: 1424143953914203723}
+  - component: {fileID: 108956190612935422}
+  m_Layer: 0
+  m_Name: VoiceLogObj_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8340671380860965495
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27560547235028588}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -6.86, y: 0.52537, z: -11.1094}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1424143953914203723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27560547235028588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd9ede9d73325174da62f76c30adb622, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VoiceLogSystem
+  audioSource: {fileID: 108956190612935422}
+  subtitleObject: {fileID: 0}
+  subtitleText: {fileID: 0}
+  subtitles:
+  - startTime: 0
+    endTime: 1
+    text: "[VOICE LOG \u2014 AG-L.U. COMMAND BRIEFING]"
+  - startTime: 1
+    endTime: 3
+    text: Attention, AG-L.U. soldier.
+  - startTime: 3
+    endTime: 6
+    text: 'You have been assigned to a classified recovery mission '
+  - startTime: 7
+    endTime: 9
+    text: ' in the remote village of Agyr.'
+  - startTime: 10
+    endTime: 11
+    text: 'Several weeks ago, '
+  - startTime: 12
+    endTime: 14
+    text: 'an experimental nuclear energy project  '
+  - startTime: 15
+    endTime: 16
+    text: 'inside the Agyr power facility '
+  - startTime: 17
+    endTime: 20
+    text: 'suffered a catastrophic failure, causing a massive explosion.  '
+  - startTime: 21
+    endTime: 26
+    text: 'The event resulted in the immediate death of the entire village population. '
+  - startTime: 27
+    endTime: 30
+    text: 'A cleanup and investigation team was deployed to recover research data  '
+  - startTime: 31
+    endTime: 33
+    text: and determine the cause of the incident.
+  - startTime: 34
+    endTime: 37
+    text: 'However, shortly after entering the area, '
+  - startTime: 38
+    endTime: 40
+    text: ' all communication with the team was lost.'
+  - startTime: 41
+    endTime: 43
+    text: 'The remaining data recovered from their equipment '
+  - startTime: 44
+    endTime: 47
+    text: 'shows that the explosion caused an unknown biological reaction.  '
+  - startTime: 48
+    endTime: 50
+    text: 'The radiation did not only affect the environment... '
+  - startTime: 51
+    endTime: 53
+    text: it affected human biology.
+  - startTime: 54
+    endTime: 58
+    text: 'Survivors have been reported inside the exclusion zone. '
+  - startTime: 59
+    endTime: 60
+    text: Their condition is unknown.
+  - startTime: 61
+    endTime: 66
+    text: They display extreme mutations, violent behaviour, and abnormal physical
+      changes.
+  - startTime: 67
+    endTime: 69
+    text: 'Your mission is simple:'
+  - startTime: 70
+    endTime: 71
+    text: Enter the lab in Agyr.
+  - startTime: 72
+    endTime: 73
+    text: Recover the research data.
+  - startTime: 74
+    endTime: 75
+    text: Locate the source of the mutation.
+  - startTime: 76
+    endTime: 81
+    text: And retrieve ANY information regarding a possible cure.
+  - startTime: 82
+    endTime: 83
+    text: Do not trust the infected.
+  - startTime: 84
+    endTime: 85
+    text: Do not allow yourself to be exposed.
+  - startTime: 86
+    endTime: 89
+    text: AG-L.U. command wishes you good luck, soldier.
+  - startTime: 90
+    endTime: 92
+    text: You are entering Agyr alone.
+--- !u!82 &108956190612935422
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27560547235028588}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 814867d3d9f71c3478de93e2bd512385, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
