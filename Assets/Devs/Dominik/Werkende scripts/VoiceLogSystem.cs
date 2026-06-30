@@ -15,36 +15,15 @@ public class VoiceLogSystem : MonoBehaviour
     [Header("Subtitles")]
     public SubtitleLine[] subtitles;
 
-    [Header("Mixer Groups")]
-    public AudioMixerGroup MusicMixerGroup;
-    public AudioMixerGroup VoicelogMixerGroup;
-
     private int index = 0;
     private bool isPlaying = false;
-
-    private static VoiceLogSystem instance;
-    private AudioSource defaultAudioSource;
-    private AudioSource MusicAudioSource;
-    private AudioSource VoicelogAudioSource;
-
-    private void Awake()
-    {
-        instance = this;
-
-        // The original AudioSource becomes the default (Master)
-        defaultAudioSource = GetComponent<AudioSource>();
-
-        // Create extra AudioSources for each mixer group
-        MusicAudioSource = CreateAudioSource(MusicMixerGroup);
-        VoicelogAudioSource = CreateAudioSource(VoicelogMixerGroup);
-    }
 
     void Update()
     {
         if (!audioSource.isPlaying)
         {
             subtitleText.text = "";
-            subtitleObject.SetActive(false);
+            //subtitleObject.SetActive(false);
             isPlaying = false;
             index = 0;
             return;
@@ -68,14 +47,6 @@ public class VoiceLogSystem : MonoBehaviour
             }
         }
     }
-
-    private AudioSource CreateAudioSource(AudioMixerGroup mixerGroup)
-    {
-        AudioSource source = gameObject.AddComponent<AudioSource>();
-        source.outputAudioMixerGroup = mixerGroup;
-        return source;
-    }
-
 
     public void PlayLog()
     {
