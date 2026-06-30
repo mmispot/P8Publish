@@ -3050,7 +3050,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5417093304011509827, guid: da72b7a8f2fd5fa4bb71f16d590d9641, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0048
+      value: 0.008
       objectReference: {fileID: 0}
     - target: {fileID: 5417093304011509827, guid: da72b7a8f2fd5fa4bb71f16d590d9641, type: 3}
       propertyPath: m_LocalPosition.z
@@ -17220,7 +17220,7 @@ PrefabInstance:
     - target: {fileID: 925462036172822250, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: spawnPoint
       value: 
-      objectReference: {fileID: 2043366546}
+      objectReference: {fileID: 0}
     - target: {fileID: 1837497649195160536, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: m_Layer
       value: 9
@@ -17280,6 +17280,10 @@ PrefabInstance:
     - target: {fileID: 6381157172884456538, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6605632725886731074, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
+      propertyPath: promptText
+      value: '[F] Interact Level 1 (You are here)'
       objectReference: {fileID: 0}
     - target: {fileID: 6605632725886731074, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: onInteracted.m_PersistentCalls.m_Calls.Array.size
@@ -17360,6 +17364,10 @@ PrefabInstance:
     - target: {fileID: 7291089998805170017, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7432139915516409796, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
+      propertyPath: promptText
+      value: '[F] Interact Level 3 (Locked)'
       objectReference: {fileID: 0}
     - target: {fileID: 7499887092411996226, guid: e201c04f22ad046419684aa3c9c61451, type: 3}
       propertyPath: m_Layer
