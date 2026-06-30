@@ -3522,7 +3522,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RadiationManager
   maxRadiation: 1
-  decayPerSecond: 0.005
+  decayPerSecond: 0.1
   stage2Threshold: 0.4
   stage3Threshold: 0.8
   stage2DamagePerSecond: 5
