@@ -154,7 +154,7 @@ public class GameStateManager : MonoBehaviour
         playerMovement?.DisableMovement();
         playerMovement?.DisableMouseLook();
         shooting?.DisableShoot();
-        scoreManager?.OnPlayerDeath(); // stops the timer
+        scoreManager?.OnPlayerWin();
         deathPanel?.SetActive(false);
         winPanel?.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
